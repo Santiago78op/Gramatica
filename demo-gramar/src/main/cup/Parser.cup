@@ -23,8 +23,6 @@ import java.util.List;
     Agregamos el manejo de errores.
 */
 parser code {:
-
-
     /* Reporte de error encontrado. */
     public void report_error(String message, Object info) {
         StringBuilder m = new StringBuilder("Error");
@@ -60,7 +58,7 @@ parser code {:
 
 // Terminales que no tienen un valor son listados primero.
 terminal CONJ, OPERA, EVALUAR, LBRACE, RBRACE, LPAREN, RPAREN,
-         HASH, LT_EXCL, EXCL_GT, ARROW, SEMICOLON, COLON, VIRGULILLA,
+         ARROW, SEMICOLON, COLON, VIRGULILLA,
          COMMA, UNION, INTERSECCION, COMPLEMENTO, DIFERENCIA, STRING_LITERAL;
 
 // Terminales que tienen un valor como los enteros son listados
@@ -102,3 +100,80 @@ precedence left DIFERENCIA, COMPLEMENTO;
 start with block;
 
 /* ------------------- Sección de la gramática ------------------------ */
+
+block ::= LBRACE
+            conj_list
+            oper_list
+            eval_list
+          RBRACE;
+/* La gramática para nuestro analizador sintáctico.
+
+   conj_list ::=   conj_list conj_part
+                 | conj_part
+   conj_part ::=   CONJ expr_def SEMICOLON
+   expr_def  ::=   ID ARROW conjunto_expr
+   conjunto_expr ::= conjunto_expr COMMA NUM
+                   | conjunto_expr COMMA ID
+                   | NUM
+                   | ID
+                   | ID VIRGULILLA ID
+*/
+
+/* 'conj_list' es el inicio de nuestra gramática. Puede derivar a
+   otra 'conj_list' seguida de un 'conj_part' o puede derivar
+   directamente a un 'conj_part'. */
+
+/* La parte 'conj_part' es una combinación de la palabra reservada
+   CONJ seguida por la definición de un conjunto y terminada por
+   el terminal SEMICOLON. El cuerpo de 'expr_def' define el
+   nombre del conjunto (ID) y su expresión (conjunto_expr). */
+
+   conj_list ::= conj_list conj_part
+                |
+                conj_part;
+
+/* 'expr_def' define un conjunto mediante la asignación de un
+   identificador (ID) a una expresión de conjunto (conjunto_expr).
+   La expresión puede ser una secuencia de números o identificadores
+   separados por comas, o un rango definido con el símbolo VIRGULILLA. */
+
+   conj_part ::= CONJ COLON expr_def SEMICOLON;
+
+   expr_def ::= ID ARROW conjunto_expr;
+
+/* 'conjunto_expr' define los elementos del conjunto, que pueden
+   ser números, identificadores, o un rango de valores definido por
+   el símbolo VIRGULILLA. */
+
+   conjunto_expr ::= conjunto_expr COMMA NUM
+                    | conjunto_expr COMMA ID
+                    | NUM
+                    | ID
+                    | ID VIRGULILLA ID;
+
+/* 'oper_list' define la lista de operaciones, que pueden ser
+   operaciones de intersección, unión, complemento, o diferencia
+   entre conjuntos. Cada operación está seguida por los conjuntos
+   involucrados y terminada por SEMICOLON. */
+
+   oper_list ::= oper_list oper_part
+                |
+                oper_part;
+
+   oper_part ::= OPERA COLON oper_def SEMICOLON;
+
+   oper_def ::= ID ARROW oper_expr;
+
+   oper_expr ::= UNION conjunto_expr conjunto_expr
+               | INTERSECCION conjunto_expr conjunto_expr
+               | COMPLEMENTO conjunto_expr
+               | DIFERENCIA conjunto_expr conjunto_expr;
+
+/* 'eval_expr' define la evaluación de operaciones sobre
+   conjuntos de datos. */
+
+   eval_list ::= eval_list eval_part
+               |
+               eval_part;
+
+   eval_part ::= EVALUAR LPAREN conjunto_expr COMMA ID RPAREN SEMICOLON;

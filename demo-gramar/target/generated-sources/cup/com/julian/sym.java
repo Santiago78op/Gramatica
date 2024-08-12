@@ -8,30 +8,27 @@ package com.julian;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int DIFERENCIA = 20;
-  public static final int SEMICOLON = 13;
+  public static final int DIFERENCIA = 17;
+  public static final int SEMICOLON = 10;
   public static final int RBRACE = 6;
   public static final int RPAREN = 8;
-  public static final int INTERSECCION = 18;
+  public static final int INTERSECCION = 15;
   public static final int OPERA = 3;
   public static final int LPAREN = 7;
-  public static final int COLON = 14;
+  public static final int COLON = 11;
   public static final int LBRACE = 5;
-  public static final int ID = 22;
-  public static final int HASH = 9;
-  public static final int NUM = 23;
-  public static final int STRING_LITERAL = 21;
-  public static final int COMMA = 16;
-  public static final int LT_EXCL = 10;
+  public static final int ID = 19;
+  public static final int NUM = 20;
+  public static final int STRING_LITERAL = 18;
+  public static final int COMMA = 13;
   public static final int EOF = 0;
   public static final int CONJ = 2;
-  public static final int UNION = 17;
+  public static final int UNION = 14;
   public static final int error = 1;
-  public static final int ARROW = 12;
-  public static final int COMPLEMENTO = 19;
-  public static final int VIRGULILLA = 15;
+  public static final int ARROW = 9;
+  public static final int COMPLEMENTO = 16;
+  public static final int VIRGULILLA = 12;
   public static final int EVALUAR = 4;
-  public static final int EXCL_GT = 11;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -42,9 +39,6 @@ public interface sym {
   "RBRACE",
   "LPAREN",
   "RPAREN",
-  "HASH",
-  "LT_EXCL",
-  "EXCL_GT",
   "ARROW",
   "SEMICOLON",
   "COLON",

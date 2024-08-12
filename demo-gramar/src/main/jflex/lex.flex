@@ -98,6 +98,10 @@ import java.util.List;
 
 %}
 
+%eofval{
+    return symbol(sym.EOF);
+%eofval}
+
 /*
     Macro declaraciones
 
