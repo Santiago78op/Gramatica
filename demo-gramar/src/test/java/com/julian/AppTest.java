@@ -17,6 +17,7 @@ public class AppTest {
             Lexer lexer = new Lexer(new FileReader("src/main/java/com/julian/input.txt"));
             parser parser = new parser(lexer);
             parser.parse();
+            System.out.println("Parsed Successfully");
 
             System.out.println("Tokens:");
             for (Token token : lexer.tokens) {

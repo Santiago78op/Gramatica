@@ -17,9 +17,10 @@ public interface sym {
   public static final int LPAREN = 7;
   public static final int COLON = 14;
   public static final int LBRACE = 5;
-  public static final int ID = 21;
+  public static final int ID = 22;
   public static final int HASH = 9;
-  public static final int NUM = 22;
+  public static final int NUM = 23;
+  public static final int STRING_LITERAL = 21;
   public static final int COMMA = 16;
   public static final int LT_EXCL = 10;
   public static final int EOF = 0;
@@ -53,6 +54,7 @@ public interface sym {
   "INTERSECCION",
   "COMPLEMENTO",
   "DIFERENCIA",
+  "STRING_LITERAL",
   "ID",
   "NUM"
   };
