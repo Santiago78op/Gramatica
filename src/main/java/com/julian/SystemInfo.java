@@ -203,6 +203,7 @@ public class  SystemInfo {
 
                 reporteToken = Reports.reportToken(lexer.tokens);
                 System.out.println(reporteToken);
+                Reports.saveAndOpenHtmlFile(reporteToken);
 
 
                 /*
