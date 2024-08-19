@@ -1,0 +1,223 @@
+/*
+    Siempre se debe definir el paquete
+    en el que se encuentra la clase Lexer,
+    esto es importante para que el analizador
+    lexico pueda encontrar la clase parser.
+*/
+package com.julian;
+
+// Cup es la clase que contiene los simbolos que
+// se usan en el analizador sintactico.
+import java_cup.runtime.*;
+
+/*
+    Importamos las clases necesarias para el
+    funcionamiento del analizador sintactico.
+*/
+import java.util.ArrayList;
+import java.util.List;
+
+/*
+    Codigo del parser, se copia integramente a la clase final.
+    Agregamos el manejo de errores.
+*/
+parser code {:
+    /* Reporte de error encontrado. */
+    public void report_error(String message, Object info) {
+        StringBuilder m = new StringBuilder("Errores en la entrada");
+        if (info instanceof java_cup.runtime.Symbol) {
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left >= 0) {
+                m.append(" in line "+(s.left+1));
+                if (s.right >= 0)
+                    m.append(", column "+(s.right+1));
+            }
+        }
+        m.append(" : "+message);
+        System.err.println(m);
+    }
+
+    /* Cuando se encuentra un error de donde el sistema no puede
+        recuperarse, se lanza un error fatal. Se despliega el mensaje
+        de error y se finaliza la ejecucion. */
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        //System.exit(1);
+    }
+:}
+
+/* ------------Declaracion de simbolos terminales y no terminales---------- */
+
+/* Terminales (tokens obtenidos por el analizador lexico).
+
+   Terminales que no tienen un valor son listados primero, los terminales
+   que tienen un valor como los enteros son listados en la segunda o demas
+   lineas.
+*/
+
+// Terminales que no tienen un valor son listados primero.
+terminal CONJ, OPERA, EVALUAR, LBRACE, RBRACE, LPAREN, RPAREN,
+         ARROW, SEMICOLON, COLON, VIRGULILLA, COMMA, UNION,
+         INTERSECCION, COMPLEMENTO, DIFERENCIA, STRING_LITERAL;
+
+// Terminales que tienen un valor como los enteros son listados
+// en la segunda o demas lineas.
+terminal String ID;
+terminal Double NUM;
+
+/* ------------- Sección de no terminales ----------- */
+
+/* No terminales usados en la seccion gramatical.
+
+   Primero se lista los no terminales que tienen un valor Object y despues
+   se lista los no terminales que tienen un entero. Un Object se refiere a
+   que no tienen tipo, pudiendo ser entero o String.
+*/
+
+non terminal Object     block, conj_list, conj_part, expr_def, conjunto_expr,
+                        oper_list, oper_part, oper_def, oper_expr, eval_list,
+                        eval_part, expre_conj, simbol_expr;
+
+/* ------------- Precedencia y Asociatividad de Terminales ----------- */
+
+/*
+   La precedencia de los operadores se define aquí.
+   Los operadores en las líneas inferiores tienen mayor precedencia
+   que los de las líneas superiores.
+
+   precedence left UNION, INTERSECCION;
+   precedence left DIFERENCIA, COMPLEMENTO;
+*/
+
+precedence left UNION, INTERSECCION;
+precedence left DIFERENCIA, COMPLEMENTO;
+
+/* ------------------- Sección de la gramática ------------------------ */
+
+// Inicia la gramática con el símbolo de inicio.
+/* Símbolo de inicio */
+start with block;
+
+/* ------------------- Sección de la gramática ------------------------ */
+
+/* La gramatica de nuestro analizador sintactico.
+
+   Parte de este ejemplo:
+   {
+       #Definición de conjuntos
+       CONJ : conjuntoA -> 1,2,3,a,b ;
+       CONJ : conjuntoB -> a~z;
+       CONJ : conjuntoC -> 0~9;
+
+       #Definición de operaciones
+       OPERA : operacion1 -> & {conjuntoA} {conjuntoB};
+       OPERA : operacion2 -> & U {conjuntoB} {conjuntoC} {conjuntoA};
+
+       #Evaluamos conjuntos de datos
+       EVALUAR ( {a, b, c} , operacion1 );
+       EVALUAR ( {1, b} , operacion1 );
+   }
+*/
+
+/* Bloque de definiciones */
+
+/* block es el incio de nuestra gramatica. Puede derivar a
+   otra operacion 'conj_list' seguida de 'oper_list' y
+   finalziando con 'eval_list'.
+*/
+
+block ::= LBRACE
+                conj_list
+                oper_list
+                eval_list
+          RBRACE;
+
+/* 'conj_list'  puede derivar a otra 'conj_list' seguida de un
+   'conj_part' o puede derivar directamente a un 'conj_part'. */
+
+conj_list ::= conj_list conj_part
+               |
+               conj_part;
+
+/* La parte 'conj_part' es una combinación de la palabra reservada
+   CONJ + COLON seguida del por la definición de un conjunto y
+   terminada por el terminal SEMICOLON. El cuerpo de 'expr_def'
+   define el nombre del conjunto (ID) y su expresión (conjunto_expr). */
+
+conj_part ::= CONJ COLON expr_def SEMICOLON;
+
+/* 'expr_def' define un conjunto mediante la asignación de un
+   identificador (ID) a una expresión de conjunto (conjunto_expr).
+   La expresión puede ser una secuencia de números o identificadores
+   separados por comas, o un rango definido con el símbolo VIRGULILLA. */
+
+ expr_def ::= ID ARROW conjunto_expr;
+
+ /* 'conjunto_expr' define los elementos del conjunto, que pueden
+    ser números, identificadores, o un rango de valores definido por
+    el símbolo VIRGULILLA. */
+
+conjunto_expr ::= conjunto_expr COMMA NUM
+                    | conjunto_expr COMMA ID
+                    | NUM
+                    | ID
+                    | ID VIRGULILLA ID
+                    | NUM VIRGULILLA NUM;
+
+/* 'oper_list' define la lista de operaciones, que pueden ser
+   operaciones de intersección, unión, complemento, o diferencia
+   entre conjuntos. Cada operación está seguida por los conjuntos
+   involucrados y terminada por SEMICOLON. */
+
+oper_list ::= oper_list oper_part
+            |
+            oper_part;
+
+/*
+    'oper_part' define una operación mediante la asignación de un
+    identificador (ID) a una expresión de operación (oper_expr).
+    La expresión puede ser una operación de unión, intersección,
+    complemento, o diferencia entre conjuntos. */
+oper_part ::= OPERA COLON oper_def SEMICOLON;
+
+/* 'oper_def' define una operación mediante la asignación de un
+    identificador (ID) a una expresión de operación (oper_expr).
+    La expresión puede ser una operación de unión, intersección,
+    complemento, o diferencia entre conjuntos. */
+oper_def ::= ID ARROW oper_expr expre_conj;
+
+/* 'oper_expr' define las operaciones entre conjuntos, que pueden
+    ser operaciones de unión, intersección, complemento, o diferencia
+    entre conjuntos. Cada operación está seguida por los conjuntos
+    involucrados. */
+
+oper_expr ::= oper_expr simbol_expr
+            | simbol_expr;
+
+simbol_expr ::= UNION
+            | INTERSECCION
+            | COMPLEMENTO
+            | DIFERENCIA;
+
+expre_conj ::= expre_conj LBRACE conjunto_expr RBRACE
+            | LBRACE conjunto_expr RBRACE;
+
+/*
+    'eval_list' define la lista de evaluaciones de conjuntos, que
+    pueden ser evaluaciones de conjuntos de datos con operaciones
+    de intersección, unión, complemento, o diferencia entre conjuntos.
+    Cada evaluación está seguida por los conjuntos de datos y la
+    operación involucrada y terminada por SEMICOLON. */
+
+eval_list ::= eval_list eval_part
+            |
+            eval_part;
+
+/*
+    'eval_part' define una evaluación de conjuntos mediante la
+    asignación de un identificador (ID) a una expresión de
+    evaluación (eval_expr). La expresión puede ser una evaluación
+    de conjuntos de datos con operaciones de intersección, unión,
+    complemento, o diferencia entre conjuntos. */
+
+eval_part ::= EVALUAR LPAREN LBRACE conjunto_expr RBRACE COMMA ID RPAREN SEMICOLON;

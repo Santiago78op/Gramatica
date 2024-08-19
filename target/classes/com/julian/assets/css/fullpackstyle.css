@@ -1,0 +1,126 @@
+/*
+   Elaborado por
+   Barrera Reyes, Santiago Julian
+*/
+
+/* General button styling */
+
+.button {
+
+            -fx-background-color: #4290d2;
+
+        }
+
+.button:hover {
+
+    -fx-background-color: #1b6797;
+
+}
+
+.button:pressed {
+
+    -fx-background-color: #1d79c8;
+
+}
+
+/* Table view styling */
+
+.table-view .column-header,
+
+.table-view .column-header-background .filler {
+
+    -fx-cell-size: 20;
+
+    -fx-background-color: #2D75E8;
+
+}
+
+.table-view .column-header .label {
+
+    -fx-text-fill: white;
+
+    -fx-font-weight: bold;
+
+    -fx-alignment: CENTER_LEFT;
+
+}
+
+.table-view .cell {
+
+    -fx-cell-size: 30;
+
+    -fx-alignment: center-left;
+
+    -fx-text-fill: #000000;
+
+    -fx-alignment: CENTER_LEFT;
+
+}
+
+.table-row-cell:selected {
+
+    -fx-background-color: rgb(127, 172, 243);
+
+}
+
+.table-row-cell:selected .text {
+
+    -fx-fill: white;
+
+}
+
+.table-view .cell {
+    -fx-cell-size: 30;
+    -fx-alignment: center-left;
+    -fx-text-fill: #000000;
+    -fx-alignment: CENTER_LEFT;
+}
+.table-row-cell:selected {
+    -fx-background-color: rgb(127, 172, 243);
+}
+.table-row-cell:selected .text {
+    -fx-fill: white;
+}
+/* Responsiveness for newly added sections */
+.root {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+.split-pane {
+    -fx-background-color: #FFFFFF;
+}
+.split-pane:vertical > * {
+    -fx-max-height: 100%;
+    -fx-max-width: 100%;
+}
+.split-pane:horizontal > * {
+    -fx-max-height: 100%;
+    -fx-max-width: 100%;
+}
+.anchor-pane {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+/* GridPane styling */
+.grid-pane {
+    -fx-padding: 10;
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-background-color: #FFFFFF;
+}
+.grid-pane .text-area {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #20a7f0;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, #20f0f0, 10, 0.5, 0, 0);
+}
+/* Text area styling with purple shadow */
+.text-area {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #2088f0;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, #20b2f0, 10, 0.5, 0, 0);
+}
+
+/* Add more specific styles here if needed for other components */

@@ -1,0 +1,8 @@
+com\julian\parser$CUP$parser$actions.class
+com\julian\SyntaxError.class
+com\julian\Token.class
+com\julian\App.class
+com\julian\sym.class
+com\julian\Lexer.class
+com\julian\parser.class
+com\julian\SystemInfo.class
