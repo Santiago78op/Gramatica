@@ -5,7 +5,7 @@
     CONJ : conjuntoC -> 0~9;
 
     #Definición de operaciones
-    OPERA : operacion1 -> & {conjuntoA} {conjuntoB} hola;
+    OPERA : operacion1 -> & {conjuntoA} {conjuntoB};
     OPERA : operacion2 -> & U {conjuntoB} {conjuntoC} {conjuntoA};
 
     #Evaluamos conjuntos de datos

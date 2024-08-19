@@ -11,12 +11,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.util.List;
 import java.util.Optional;
 
 public class  SystemInfo {
 
     private File currentFile;
+    private String reporteToken;
 
     @FXML
     private TextArea textInputArea;
@@ -201,15 +201,18 @@ public class  SystemInfo {
                 parser parser = new parser(lexer);
                 parser.parse();
 
-                System.out.println("Tokens:");
-                for (Token token : lexer.tokens) {
-                    System.out.println(token);
-                }
+                reporteToken = Reports.reportToken(lexer.tokens);
+                System.out.println(reporteToken);
 
+
+                /*
                 System.out.println("Tokens:");
                 for (Token token : lexer.tokens) {
                     System.out.println(token);
                 }
+                */
+
+
 
                 if (!lexer.lexicalErrors.isEmpty()) {
                     System.out.println("Lexical Errors:");
