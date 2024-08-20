@@ -202,26 +202,10 @@ public class  SystemInfo {
                 parser.parse();
 
                 reporteToken = Reports.reportToken(lexer.tokens);
-                System.out.println(reporteToken);
-                Reports.saveAndOpenHtmlFile(reporteToken);
+                Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Tokens.html");
 
-
-                /*
-                System.out.println("Tokens:");
-                for (Token token : lexer.tokens) {
-                    System.out.println(token);
-                }
-                */
-
-
-
-                if (!lexer.lexicalErrors.isEmpty()) {
-                    System.out.println("Lexical Errors:");
-                    for (String error : lexer.lexicalErrors) {
-                        System.out.println(error);
-                    }
-                }
-
+                reporteToken = Reports.reportLexErrors(lexer.lexErrors);
+                Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Lex_Error.html");
 
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while analyzing the content.");

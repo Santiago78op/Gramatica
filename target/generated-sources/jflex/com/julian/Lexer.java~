@@ -341,8 +341,8 @@ public class Lexer implements java_cup.runtime.Scanner {
 
     StringBuffer string = new StringBuffer();
 
-    public List<Token>       tokens = new ArrayList<>();
-    public List<LexError> lexErrors = new ArrayList<>();
+    public List<Token> tokens = new ArrayList<>();
+    public List<String> lexicalErrors = new ArrayList<>();
 
     /*
         Generamos un java_cup.Symbol para guardar el tipo de token
@@ -365,8 +365,7 @@ public class Lexer implements java_cup.runtime.Scanner {
     }
 
     private void addLexicalError(String message) {
-       String description = "El caracter " + message + " no pertenece al lenguaje.";
-       lexErrors.add(new LexError("Lexico", description, yyline, yycolumn));
+       lexicalErrors.add("Lexical error: " + message + " at line " + yyline + ", column " + yycolumn);
      }
 
 

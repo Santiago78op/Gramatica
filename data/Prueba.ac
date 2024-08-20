@@ -7,7 +7,11 @@
     #Definición de operaciones
     OPERA : operacion1 -> & {conjuntoA} {conjuntoB};
     OPERA : operacion2 -> & U {conjuntoB} {conjuntoC} {conjuntoA};
-
+        %
+          +
+          $
+          !!!
+          ""
     #Evaluamos conjuntos de datos
     EVALUAR ( {a, b, c} , operacion1 );
     EVALUAR ( {1, b} , operacion1 );

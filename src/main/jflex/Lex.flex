@@ -68,8 +68,8 @@ import java.util.List;
 
     StringBuffer string = new StringBuffer();
 
-    public List<Token> tokens = new ArrayList<>();
-    public List<String> lexicalErrors = new ArrayList<>();
+    public List<Token>       tokens = new ArrayList<>();
+    public List<LexError> lexErrors = new ArrayList<>();
 
     /*
         Generamos un java_cup.Symbol para guardar el tipo de token
@@ -92,7 +92,8 @@ import java.util.List;
     }
 
     private void addLexicalError(String message) {
-       lexicalErrors.add("Lexical error: " + message + " at line " + yyline + ", column " + yycolumn);
+       String description = "El caracter " + message + " no pertenece al lenguaje.";
+       lexErrors.add(new LexError("Lexico", description, yyline, yycolumn));
      }
 
 %}

@@ -1,13 +1,13 @@
 package com.julian;
 
-public class SyntaxError {
+public class LexError {
 
     private String tipo;
     private String message;
     private int line;
     private int column;
 
-    public SyntaxError(String tipo, String message, int line, int column) {
+    public LexError(String tipo, String message, int line, int column) {
         this.tipo = tipo;
         this.message = message;
         this.line = line;
@@ -22,20 +22,20 @@ public class SyntaxError {
         this.tipo = tipo;
     }
 
-    public int getLine() {
-        return line;
-    }
-
-    public void setLine(int line) {
-        this.line = line;
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line = line;
     }
 
     public int getColumn() {
@@ -48,7 +48,7 @@ public class SyntaxError {
 
     @Override
     public String toString() {
-        return "SyntaxError{" +
+        return "LexicalError{" +
                 "tipo='" + tipo + '\'' +
                 ", message='" + message + '\'' +
                 ", line=" + line +
