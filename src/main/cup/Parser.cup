@@ -22,6 +22,9 @@ import java.util.List;
     Agregamos el manejo de errores.
 */
 parser code {:
+
+    public List<SyntaxError>  syntaxError = new ArrayList<>();
+
     /* Reporte de error encontrado. */
     public void report_error(String message, Object info) {
         StringBuilder m = new StringBuilder("Errores en la entrada");
