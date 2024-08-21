@@ -199,6 +199,7 @@ public class  SystemInfo {
         try {
                 Lexer lexer = new Lexer(new StringReader(text));
                 parser parser = new parser(lexer);
+                Tree root = (Tree).parser.parser().value;
                 parser.parse();
 
                 reporteToken = Reports.reportToken(lexer.tokens);

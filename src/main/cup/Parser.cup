@@ -24,7 +24,7 @@ import java.util.List;
 parser code {:
 
     /* Reporte de error encontrado. */
-    public void report_error(String message, Tree info) {
+    public void report_error(String message, Object info) {
         StringBuilder m = new StringBuilder("Errores en la entrada");
         if (info instanceof java_cup.runtime.Symbol) {
             java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
@@ -41,87 +41,9 @@ parser code {:
     /* Cuando se encuentra un error de donde el sistema no puede
         recuperarse, se lanza un error fatal. Se despliega el mensaje
         de error y se finaliza la ejecucion. */
-    public void report_fatal_error(String message, Tree info) {
+    public void report_fatal_error(String message, Object info) {
         report_error(message, info);
         //System.exit(1);
-    }
-
-    // Funcion para crear el conjunto Union
-    public List<Tree> createUnion(List<Tree> a, List<Tree> b) {
-        List<Tree> result = new ArrayList<Tree>();
-        for (Tree o : a) {
-            if (!result.contains(o)) {
-                result.add(o);
-            }
-        }
-        for (Tree o : b) {
-            if (!result.contains(o)) {
-                result.add(o);
-            }
-        }
-        return result;
-    }
-
-    // Funcion para crear el conjunto Interseccion
-    public List<Tree> createInterseccion(List<Tree> a, List<Tree> b) {
-        List<Tree> result = new ArrayList<Tree>();
-        for (Tree o : a) {
-            if (b.contains(o)) {
-                result.add(o);
-            }
-        }
-        return result;
-    }
-
-    // Funcion para crear el conjunto Complemento
-    public List<Tree> createComplemento(List<Tree> a, List<Tree> b) {
-        List<Tree> result = new ArrayList<Tree>();
-        for (Tree o : a) {
-            if (!b.contains(o)) {
-                result.add(o);
-            }
-        }
-        return result;
-    }
-
-    // Funcion para crear el conjunto Diferencia
-    public List<Tree> createDiferencia(List<Tree> a, List<Tree> b) {
-        List<Tree> result = new ArrayList<Tree>();
-        for (Tree o : a) {
-            if (!b.contains(o)) {
-                result.add(o);
-            }
-        }
-        return result;
-    }
-
-    // Funcion para evaluar una operacion
-    public List<Tree> evaluarOperacion(String operacion, List<Tree> a, List<Tree> b) {
-        if (operacion == null || a == null || b == null) {
-            throw new IllegalArgumentException("Operation and sets must not be null");
-        }
-        switch (operacion) {
-            case "&":
-                return createInterseccion(a, b);
-            case "U":
-                return createUnion(a, b);
-            case "-":
-                return createDiferencia(a, b);
-            case "~":
-                return createComplemento(a, b);
-            default:
-                return new ArrayList<Tree>();
-        }
-    }
-
-    // Función para evaluar si los elementos están en el conjunto resultante
-    public boolean evaluarElementos(List<Tree> a, List<Tree> b) {
-        for (Tree o : a) {
-            if (!b.contains(o)) {
-                return false;
-            }
-        }
-        return true;
     }
 
 :}
@@ -237,45 +159,46 @@ conj_part ::= CONJ COLON expr_def SEMICOLON;
     ser números, identificadores, o un rango de valores definido por
     el símbolo VIRGULILLA. */
 
-conjunto_expr ::= conjunto_expr:conj_expr COMMA:comma NUM:num
+conjunto_expr ::= conjunto_expr:conj_expre COMMA:comma NUM:num
                 {:
                     Tree conj_expr = new Tree("conjunto_expr");
-                    conj_expr.addChildren(conj_expr);
-                    conj_expr.addChildren(new Tree(comma.toSring()));
-                    conj_expr.addChildren(new Tree(num.toSring()));
+                    conj_expr.addChildren(conj_expre);
+                    conj_expr.addChildren(new Tree(comma.toString()));
+                    conj_expr.addChildren(new Tree(num.toString()));
                     RESULT = conj_expr;
                 :}
-                | conjunto_expr:conj_expr COMMA:comma ID:id
+                | conjunto_expr:conj_expre COMMA:comma ID:id
                 {:
                     Tree conj_expr = new Tree("conjunto_expr");
-                    conj_expr.addChildren(conj_expr);
-                    conj_expr.addChildren(new Tree(comma.toSring()));
-                    conj_expr.addChildren(new Tree(id.toSring()));
+                    conj_expr.addChildren(conj_expre);
+                    conj_expr.addChildren(new Tree(comma.toString()));
+                    conj_expr.addChildren(new Tree(id.toString()));
                     RESULT = conj_expr;
                 :}
                 | NUM:num
                 {:
                     Tree conj_expr = new Tree("conjunto_expr");
-                    conj_expr.addChildren(new Tree(num.toSring()));
+                    conj_expr.addChildren(new Tree(num.toString()));
                     RESULT = conj_expr;
                 :}
                 | ID:id
                 {:
                     Tree conj_expr = new Tree("conjunto_expr");
-                    conj_expr.addChildren(new Tree(id.toSring()));
+                    conj_expr.addChildren(new Tree(id.toString()));
                     RESULT = conj_expr;
                 :}
                 | ID:id_ini VIRGULILLA:virgulilla ID:id_end
                 {:
                     Tree conj_expr = new Tree("conjunto_expr");
 
-                    char start = (id_ini.toSring()).charAt(0);
-                    char end = (id_end.toSring()).charAt(0);
+                    char start = (id_ini.toString()).charAt(0);
+                    char end = (id_end.toString()).charAt(0);
                     for (char c = start; c <= end; c++) {
                         if (c < end){
                             conj_expr.addChildren(new Tree(","));
                         }
-                        conj_expr.addChildren(new Tree(c));
+                        String s = new StringBuilder().append("").append(c).toString();
+                        conj_expr.addChildren(new Tree(s));
                     }
 
                     RESULT = conj_expr;
@@ -284,13 +207,13 @@ conjunto_expr ::= conjunto_expr:conj_expr COMMA:comma NUM:num
                 {:
                     Tree conj_expr = new Tree("conjunto_expr");
 
-                    char start = (num_ini.toSring()).charAt(0);
-                    char end = (num_end.toSring()).charAt(0);
+                    char start = (num_ini.toString()).charAt(0);
+                    char end = (num_end.toString()).charAt(0);
                     for (char c = start; c <= end; c++) {
                         if (c < end){
                             conj_expr.addChildren(new Tree(","));
                         }
-                        conj_expr.addChildren(new Tree(c));
+                        conj_expr.addChildren(new Tree(String.valueOf(c)));
                     }
 
                     RESULT = conj_expr;
@@ -323,39 +246,14 @@ oper_def ::= ID ARROW oper_expr expre_conj;
     involucrados. */
 
 oper_expr ::= oper_expr simbol_expr
-            {:
-                RESULT = evaluarOperacion((String)val_1, (List<Object>)val_0, (List<Object>)val_2);
-            :}
-            | simbol_expr
-            {:
-                RESULT = (List<Object>)val_0;
-            :};
+            | simbol_expr;
 
 simbol_expr ::= UNION
-            {:
-                RESULT = "U";
-            :}
             | INTERSECCION
-            {:
-                RESULT = "&";
-            :}
             | COMPLEMENTO
-            {:
-                RESULT = "-";
-            :}
-            | DIFERENCIA
-            {:
-                RESULT = "~";
-            :};
+            | DIFERENCIA;
 
-expre_conj ::= expre_conj LBRACE conjunto_expr RBRACE
-            {:
-                RESULT = evaluarOperacion((String)val_1, (List<Object>)val_0, (List<Object>)val_2);
-            :}
-            | LBRACE conjunto_expr RBRACE
-            {:
-                RESULT = (List<Object>)val_1;
-            :};
+expre_conj ::= expre_conj LBRACE conjunto_expr RBRACE;
 
 /*
     'eval_list' define la lista de evaluaciones de conjuntos, que
@@ -375,7 +273,4 @@ eval_list ::= eval_list eval_part
     de conjuntos de datos con operaciones de intersección, unión,
     complemento, o diferencia entre conjuntos. */
 
-eval_part ::= EVALUAR LPAREN LBRACE conjunto_expr RBRACE COMMA ID RPAREN SEMICOLON
-            {:
-                RESULT = evaluarElementos((List<Object>)val_2, (List<Object>)val_4);
-            :};
+eval_part ::= EVALUAR LPAREN LBRACE conjunto_expr RBRACE COMMA ID RPAREN SEMICOLON;
