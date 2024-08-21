@@ -23,7 +23,12 @@ import java.util.List;
 */
 parser code {:
 
-    public List<SyntaxError>  syntaxError = new ArrayList<>();
+    // Variables para guardar los conjuntos y operaciones
+    Object val_0;
+    Object val_1;
+    Object val_2;
+    Object val_3;
+    Object val_4;
 
     /* Reporte de error encontrado. */
     public void report_error(String message, Object info) {
@@ -47,6 +52,85 @@ parser code {:
         report_error(message, info);
         //System.exit(1);
     }
+
+    // Funcion para crear el conjunto Union
+    public List<Object> createUnion(List<Object> a, List<Object> b) {
+        List<Object> result = new ArrayList<Object>();
+        for (Object o : a) {
+            if (!result.contains(o)) {
+                result.add(o);
+            }
+        }
+        for (Object o : b) {
+            if (!result.contains(o)) {
+                result.add(o);
+            }
+        }
+        return result;
+    }
+
+    // Funcion para crear el conjunto Interseccion
+    public List<Object> createInterseccion(List<Object> a, List<Object> b) {
+        List<Object> result = new ArrayList<Object>();
+        for (Object o : a) {
+            if (b.contains(o)) {
+                result.add(o);
+            }
+        }
+        return result;
+    }
+
+    // Funcion para crear el conjunto Complemento
+    public List<Object> createComplemento(List<Object> a, List<Object> b) {
+        List<Object> result = new ArrayList<Object>();
+        for (Object o : a) {
+            if (!b.contains(o)) {
+                result.add(o);
+            }
+        }
+        return result;
+    }
+
+    // Funcion para crear el conjunto Diferencia
+    public List<Object> createDiferencia(List<Object> a, List<Object> b) {
+        List<Object> result = new ArrayList<Object>();
+        for (Object o : a) {
+            if (!b.contains(o)) {
+                result.add(o);
+            }
+        }
+        return result;
+    }
+
+    // Funcion para evaluar una operacion
+    public List<Object> evaluarOperacion(String operacion, List<Object> a, List<Object> b) {
+        if (operacion == null || a == null || b == null) {
+            throw new IllegalArgumentException("Operation and sets must not be null");
+        }
+        switch (operacion) {
+            case "&":
+                return createInterseccion(a, b);
+            case "U":
+                return createUnion(a, b);
+            case "-":
+                return createDiferencia(a, b);
+            case "~":
+                return createComplemento(a, b);
+            default:
+                return new ArrayList<Object>();
+        }
+    }
+
+    // Función para evaluar si los elementos están en el conjunto resultante
+    public boolean evaluarElementos(List<Object> a, List<Object> b) {
+        for (Object o : a) {
+            if (!b.contains(o)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 :}
 
 /* ------------Declaracion de simbolos terminales y no terminales---------- */
@@ -161,12 +245,59 @@ conj_part ::= CONJ COLON expr_def SEMICOLON;
     el símbolo VIRGULILLA. */
 
 conjunto_expr ::= conjunto_expr COMMA NUM
-                    | conjunto_expr COMMA ID
-                    | NUM
-                    | ID
-                    | ID VIRGULILLA ID
-                    | NUM VIRGULILLA NUM;
-
+                {:
+                    List<Object> temp = (List<Object>)val_0;
+                    if (temp == null) {
+                        temp = new ArrayList<>();
+                    }
+                    temp.add(val_2);
+                    RESULT = temp;
+                :}
+                | conjunto_expr COMMA ID
+                {:
+                    List<Object> temp = (List<Object>)val_0;
+                    if (temp == null) {
+                        temp = new ArrayList<>();
+                    }
+                    temp.add(val_2);
+                    RESULT = temp;
+                :}
+                | NUM
+                {:
+                    List<Object> temp = new ArrayList<>();
+                    temp.add(val_0);
+                    RESULT = temp;
+                :}
+                | ID
+                {:
+                    List<Object> temp = new ArrayList<>();
+                    temp.add(val_0);
+                    RESULT = temp;
+                :}
+                | ID VIRGULILLA ID
+                {:
+                    List<Object> temp = new ArrayList<>();
+                    if (val_0 != null && val_2 != null) {
+                        char start = ((String)val_0).charAt(0);
+                        char end = ((String)val_2).charAt(0);
+                        for (char c = start; c <= end; c++) {
+                            temp.add(c);
+                        }
+                    }
+                    RESULT = temp;
+                :}
+                | NUM VIRGULILLA NUM
+                {:
+                    List<Object> temp = new ArrayList<>();
+                    if (val_0 != null && val_2 != null) {
+                        int start = ((Double)val_0).intValue();
+                        int end = ((Double)val_2).intValue();
+                        for (int i = start; i <= end; i++) {
+                            temp.add(i);
+                        }
+                    }
+                    RESULT = temp;
+                :};
 /* 'oper_list' define la lista de operaciones, que pueden ser
    operaciones de intersección, unión, complemento, o diferencia
    entre conjuntos. Cada operación está seguida por los conjuntos
@@ -195,15 +326,39 @@ oper_def ::= ID ARROW oper_expr expre_conj;
     involucrados. */
 
 oper_expr ::= oper_expr simbol_expr
-            | simbol_expr;
+            {:
+                RESULT = evaluarOperacion((String)val_1, (List<Object>)val_0, (List<Object>)val_2);
+            :}
+            | simbol_expr
+            {:
+                RESULT = (List<Object>)val_0;
+            :};
 
 simbol_expr ::= UNION
+            {:
+                RESULT = "U";
+            :}
             | INTERSECCION
+            {:
+                RESULT = "&";
+            :}
             | COMPLEMENTO
-            | DIFERENCIA;
+            {:
+                RESULT = "-";
+            :}
+            | DIFERENCIA
+            {:
+                RESULT = "~";
+            :};
 
 expre_conj ::= expre_conj LBRACE conjunto_expr RBRACE
-            | LBRACE conjunto_expr RBRACE;
+            {:
+                RESULT = evaluarOperacion((String)val_1, (List<Object>)val_0, (List<Object>)val_2);
+            :}
+            | LBRACE conjunto_expr RBRACE
+            {:
+                RESULT = (List<Object>)val_1;
+            :};
 
 /*
     'eval_list' define la lista de evaluaciones de conjuntos, que
@@ -223,4 +378,7 @@ eval_list ::= eval_list eval_part
     de conjuntos de datos con operaciones de intersección, unión,
     complemento, o diferencia entre conjuntos. */
 
-eval_part ::= EVALUAR LPAREN LBRACE conjunto_expr RBRACE COMMA ID RPAREN SEMICOLON;
+eval_part ::= EVALUAR LPAREN LBRACE conjunto_expr RBRACE COMMA ID RPAREN SEMICOLON
+            {:
+                RESULT = evaluarElementos((List<Object>)val_2, (List<Object>)val_4);
+            :};
