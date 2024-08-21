@@ -23,15 +23,8 @@ import java.util.List;
 */
 parser code {:
 
-    // Variables para guardar los conjuntos y operaciones
-    Object val_0;
-    Object val_1;
-    Object val_2;
-    Object val_3;
-    Object val_4;
-
     /* Reporte de error encontrado. */
-    public void report_error(String message, Object info) {
+    public void report_error(String message, Tree info) {
         StringBuilder m = new StringBuilder("Errores en la entrada");
         if (info instanceof java_cup.runtime.Symbol) {
             java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
@@ -48,20 +41,20 @@ parser code {:
     /* Cuando se encuentra un error de donde el sistema no puede
         recuperarse, se lanza un error fatal. Se despliega el mensaje
         de error y se finaliza la ejecucion. */
-    public void report_fatal_error(String message, Object info) {
+    public void report_fatal_error(String message, Tree info) {
         report_error(message, info);
         //System.exit(1);
     }
 
     // Funcion para crear el conjunto Union
-    public List<Object> createUnion(List<Object> a, List<Object> b) {
-        List<Object> result = new ArrayList<Object>();
-        for (Object o : a) {
+    public List<Tree> createUnion(List<Tree> a, List<Tree> b) {
+        List<Tree> result = new ArrayList<Tree>();
+        for (Tree o : a) {
             if (!result.contains(o)) {
                 result.add(o);
             }
         }
-        for (Object o : b) {
+        for (Tree o : b) {
             if (!result.contains(o)) {
                 result.add(o);
             }
@@ -70,9 +63,9 @@ parser code {:
     }
 
     // Funcion para crear el conjunto Interseccion
-    public List<Object> createInterseccion(List<Object> a, List<Object> b) {
-        List<Object> result = new ArrayList<Object>();
-        for (Object o : a) {
+    public List<Tree> createInterseccion(List<Tree> a, List<Tree> b) {
+        List<Tree> result = new ArrayList<Tree>();
+        for (Tree o : a) {
             if (b.contains(o)) {
                 result.add(o);
             }
@@ -81,9 +74,9 @@ parser code {:
     }
 
     // Funcion para crear el conjunto Complemento
-    public List<Object> createComplemento(List<Object> a, List<Object> b) {
-        List<Object> result = new ArrayList<Object>();
-        for (Object o : a) {
+    public List<Tree> createComplemento(List<Tree> a, List<Tree> b) {
+        List<Tree> result = new ArrayList<Tree>();
+        for (Tree o : a) {
             if (!b.contains(o)) {
                 result.add(o);
             }
@@ -92,9 +85,9 @@ parser code {:
     }
 
     // Funcion para crear el conjunto Diferencia
-    public List<Object> createDiferencia(List<Object> a, List<Object> b) {
-        List<Object> result = new ArrayList<Object>();
-        for (Object o : a) {
+    public List<Tree> createDiferencia(List<Tree> a, List<Tree> b) {
+        List<Tree> result = new ArrayList<Tree>();
+        for (Tree o : a) {
             if (!b.contains(o)) {
                 result.add(o);
             }
@@ -103,7 +96,7 @@ parser code {:
     }
 
     // Funcion para evaluar una operacion
-    public List<Object> evaluarOperacion(String operacion, List<Object> a, List<Object> b) {
+    public List<Tree> evaluarOperacion(String operacion, List<Tree> a, List<Tree> b) {
         if (operacion == null || a == null || b == null) {
             throw new IllegalArgumentException("Operation and sets must not be null");
         }
@@ -117,13 +110,13 @@ parser code {:
             case "~":
                 return createComplemento(a, b);
             default:
-                return new ArrayList<Object>();
+                return new ArrayList<Tree>();
         }
     }
 
     // Función para evaluar si los elementos están en el conjunto resultante
-    public boolean evaluarElementos(List<Object> a, List<Object> b) {
-        for (Object o : a) {
+    public boolean evaluarElementos(List<Tree> a, List<Tree> b) {
+        for (Tree o : a) {
             if (!b.contains(o)) {
                 return false;
             }
@@ -161,7 +154,7 @@ terminal Double NUM;
    que no tienen tipo, pudiendo ser entero o String.
 */
 
-non terminal Object     block, conj_list, conj_part, expr_def, conjunto_expr,
+non terminal Tree       block, conj_list, conj_part, expr_def, conjunto_expr,
                         oper_list, oper_part, oper_def, oper_expr, eval_list,
                         eval_part, expre_conj, simbol_expr;
 
@@ -244,59 +237,63 @@ conj_part ::= CONJ COLON expr_def SEMICOLON;
     ser números, identificadores, o un rango de valores definido por
     el símbolo VIRGULILLA. */
 
-conjunto_expr ::= conjunto_expr COMMA NUM
+conjunto_expr ::= conjunto_expr:conj_expr COMMA:comma NUM:num
                 {:
-                    List<Object> temp = (List<Object>)val_0;
-                    if (temp == null) {
-                        temp = new ArrayList<>();
-                    }
-                    temp.add(val_2);
-                    RESULT = temp;
+                    Tree conj_expr = new Tree("conjunto_expr");
+                    conj_expr.addChildren(conj_expr);
+                    conj_expr.addChildren(new Tree(comma.toSring()));
+                    conj_expr.addChildren(new Tree(num.toSring()));
+                    RESULT = conj_expr;
                 :}
-                | conjunto_expr COMMA ID
+                | conjunto_expr:conj_expr COMMA:comma ID:id
                 {:
-                    List<Object> temp = (List<Object>)val_0;
-                    if (temp == null) {
-                        temp = new ArrayList<>();
-                    }
-                    temp.add(val_2);
-                    RESULT = temp;
+                    Tree conj_expr = new Tree("conjunto_expr");
+                    conj_expr.addChildren(conj_expr);
+                    conj_expr.addChildren(new Tree(comma.toSring()));
+                    conj_expr.addChildren(new Tree(id.toSring()));
+                    RESULT = conj_expr;
                 :}
-                | NUM
+                | NUM:num
                 {:
-                    List<Object> temp = new ArrayList<>();
-                    temp.add(val_0);
-                    RESULT = temp;
+                    Tree conj_expr = new Tree("conjunto_expr");
+                    conj_expr.addChildren(new Tree(num.toSring()));
+                    RESULT = conj_expr;
                 :}
-                | ID
+                | ID:id
                 {:
-                    List<Object> temp = new ArrayList<>();
-                    temp.add(val_0);
-                    RESULT = temp;
+                    Tree conj_expr = new Tree("conjunto_expr");
+                    conj_expr.addChildren(new Tree(id.toSring()));
+                    RESULT = conj_expr;
                 :}
-                | ID VIRGULILLA ID
+                | ID:id_ini VIRGULILLA:virgulilla ID:id_end
                 {:
-                    List<Object> temp = new ArrayList<>();
-                    if (val_0 != null && val_2 != null) {
-                        char start = ((String)val_0).charAt(0);
-                        char end = ((String)val_2).charAt(0);
-                        for (char c = start; c <= end; c++) {
-                            temp.add(c);
+                    Tree conj_expr = new Tree("conjunto_expr");
+
+                    char start = (id_ini.toSring()).charAt(0);
+                    char end = (id_end.toSring()).charAt(0);
+                    for (char c = start; c <= end; c++) {
+                        if (c < end){
+                            conj_expr.addChildren(new Tree(","));
                         }
+                        conj_expr.addChildren(new Tree(c));
                     }
-                    RESULT = temp;
+
+                    RESULT = conj_expr;
                 :}
-                | NUM VIRGULILLA NUM
+                | NUM:num_ini VIRGULILLA:virgulilla NUM:num_end
                 {:
-                    List<Object> temp = new ArrayList<>();
-                    if (val_0 != null && val_2 != null) {
-                        int start = ((Double)val_0).intValue();
-                        int end = ((Double)val_2).intValue();
-                        for (int i = start; i <= end; i++) {
-                            temp.add(i);
+                    Tree conj_expr = new Tree("conjunto_expr");
+
+                    char start = (num_ini.toSring()).charAt(0);
+                    char end = (num_end.toSring()).charAt(0);
+                    for (char c = start; c <= end; c++) {
+                        if (c < end){
+                            conj_expr.addChildren(new Tree(","));
                         }
+                        conj_expr.addChildren(new Tree(c));
                     }
-                    RESULT = temp;
+
+                    RESULT = conj_expr;
                 :};
 /* 'oper_list' define la lista de operaciones, que pueden ser
    operaciones de intersección, unión, complemento, o diferencia
