@@ -15,4 +15,11 @@ public class Tree {
     public void addChildren(Tree child){
         this.children.add(child);
     }
+
+    public void printTree(Tree tree){
+        for(Tree child : tree.children){
+            printTree(child);
+        }
+        System.out.println(tree.root);
+    }
 }

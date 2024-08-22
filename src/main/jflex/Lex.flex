@@ -162,51 +162,37 @@ num = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
 */
 
 /* Reglas de Operaciones */
-<YYINITIAL> CONJ    { addToken("CONJ", yytext()); return symbol(sym.CONJ); }
-<YYINITIAL> OPERA   { addToken("OPERA", yytext()); return symbol(sym.OPERA); }
-<YYINITIAL> EVALUAR { addToken("EVALUAR", yytext()); return symbol(sym.EVALUAR); }
+<YYINITIAL> CONJ    { addToken("CONJ", yytext()); return symbol(sym.CONJ, yytext()); }
+<YYINITIAL> OPERA   { addToken("OPERA", yytext()); return symbol(sym.OPERA, yytext()); }
+<YYINITIAL> EVALUAR { addToken("EVALUAR", yytext()); return symbol(sym.EVALUAR, yytext()); }
 
 /* Reglas de opereaciones Conjuntos */
-<YYINITIAL>  U      { addToken("U", yytext()); return symbol(sym.UNION); }
-<YYINITIAL>  &      { addToken("&", yytext()); return symbol(sym.INTERSECCION); }
-<YYINITIAL> \^      { addToken("^", yytext()); return symbol(sym.COMPLEMENTO); }
-<YYINITIAL>  -      { addToken("-", yytext()); return symbol(sym.DIFERENCIA); }
+<YYINITIAL>  U      { addToken("U", yytext()); return symbol(sym.UNION, yytext()); }
+<YYINITIAL>  &      { addToken("&", yytext()); return symbol(sym.INTERSECCION, yytext()); }
+<YYINITIAL> \^      { addToken("^", yytext()); return symbol(sym.COMPLEMENTO, yytext()); }
+<YYINITIAL>  -      { addToken("-", yytext()); return symbol(sym.DIFERENCIA, yytext()); }
+
+/* Operadores */
+<YYINITIAL> "{"     { addToken("{", yytext()); return symbol(sym.LBRACE, yytext()); }
+<YYINITIAL> "}"     { addToken("}", yytext()); return symbol(sym.RBRACE, yytext()); }
+<YYINITIAL> "("     { addToken("(", yytext()); return symbol(sym.LPAREN, yytext()); }
+<YYINITIAL> ")"     { addToken(")", yytext()); return symbol(sym.RPAREN, yytext()); }
+<YYINITIAL> "->"    { addToken("->", yytext()); return symbol(sym.ARROW, yytext()); }
+<YYINITIAL> ";"     { addToken(";", yytext()); return symbol(sym.SEMICOLON, yytext()); }
+<YYINITIAL> ":"     { addToken(":", yytext()); return symbol(sym.COLON, yytext()); }
+<YYINITIAL> "~"     { addToken("~", yytext()); return symbol(sym.VIRGULILLA, yytext()); }
+<YYINITIAL> ","     { addToken(",", yytext()); return symbol(sym.COMMA, yytext()); }
+
+/* Reglas de Caracteres */
+<YYINITIAL> {id}    { addToken("ID", yytext()); return symbol(sym.ID, yytext()); }
+<YYINITIAL> {num}   { addToken("NUM", yytext()); return symbol(sym.NUM, Double.parseDouble(yytext())); }
 
 <YYINITIAL>{
-    /* Reglas de Caracteres */
-    {id}        { addToken("ID", yytext()); return symbol(sym.ID, yytext()); }
-    {num}       { addToken("NUM", yytext()); return symbol(sym.NUM, Double.parseDouble(yytext())); }
-
-    /* Operadores */
-    "{"         { addToken("{", yytext()); return symbol(sym.LBRACE); }
-    "}"         { addToken("}", yytext()); return symbol(sym.RBRACE); }
-    "("         { addToken("(", yytext()); return symbol(sym.LPAREN); }
-    ")"         { addToken(")", yytext()); return symbol(sym.RPAREN); }
-    "->"        { addToken("->", yytext()); return symbol(sym.ARROW); }
-    ";"         { addToken(";", yytext()); return symbol(sym.SEMICOLON); }
-    ":"         { addToken(":", yytext()); return symbol(sym.COLON); }
-    "~"         { addToken("~", yytext()); return symbol(sym.VIRGULILLA); }
-    ","         { addToken(",", yytext()); return symbol(sym.COMMA); }
-
     /* Reglas de Comentarios */
     {Comment}    { /* ignora comentarios de una linea */ }
 
     /* Reglas de espcios */
     {ws}        { /* ignore whitespace */ }
-}
-
-/* Reglas para cadenas de caracteres */
-<STRING> {
-    \"                             { yybegin(YYINITIAL);
-                                   return symbol(sym.STRING_LITERAL,
-                                   string.toString()); }
-    [^\n\r\"\\]+                   { string.append( yytext() ); }
-    \\t                            { string.append('\t'); }
-    \\n                            { string.append('\n'); }
-
-    \\r                            { string.append('\r'); }
-    \\\"                           { string.append('\"'); }
-    \\                             { string.append('\\'); }
 }
 
 /*

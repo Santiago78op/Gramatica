@@ -76,9 +76,7 @@ terminal Double NUM;
    que no tienen tipo, pudiendo ser entero o String.
 */
 
-non terminal Tree       block, conj_list, conj_part, expr_def, conjunto_expr,
-                        oper_list, oper_part, oper_def, oper_expr, eval_list,
-                        eval_part, expre_conj, simbol_expr;
+non terminal Tree       B, C, C_LIST, E, EXPR;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -98,7 +96,7 @@ precedence left DIFERENCIA, COMPLEMENTO;
 
 // Inicia la gramática con el símbolo de inicio.
 /* Símbolo de inicio */
-start with block;
+start with B;
 
 /* ------------------- Sección de la gramática ------------------------ */
 
@@ -122,155 +120,66 @@ start with block;
 */
 
 /* Bloque de definiciones */
+B ::= CONJ:conj EXPR:expr SEMICOLON:simicolon
+        {:
+            Tree b = new Tree("B");
+            b.addChildren(new Tree(conj.toString()));
+            b.addChildren(expr);
+            b.addChildren(new Tree(simicolon.toString()));
+            RESULT = b;
+        :};
 
-/* block es el incio de nuestra gramatica. Puede derivar a
-   otra operacion 'conj_list' seguida de 'oper_list' y
-   finalziando con 'eval_list'.
-*/
-
-block ::= LBRACE
-                conj_list
-                oper_list
-                eval_list
-          RBRACE;
-
-/* 'conj_list'  puede derivar a otra 'conj_list' seguida de un
-   'conj_part' o puede derivar directamente a un 'conj_part'. */
-
-conj_list ::= conj_list conj_part
-               |
-               conj_part;
-
-/* La parte 'conj_part' es una combinación de la palabra reservada
-   CONJ + COLON seguida del por la definición de un conjunto y
-   terminada por el terminal SEMICOLON. El cuerpo de 'expr_def'
-   define el nombre del conjunto (ID) y su expresión (conjunto_expr). */
-
-conj_part ::= CONJ COLON expr_def SEMICOLON;
-
-/* 'expr_def' define un conjunto mediante la asignación de un
-   identificador (ID) a una expresión de conjunto (conjunto_expr).
-   La expresión puede ser una secuencia de números o identificadores
-   separados por comas, o un rango definido con el símbolo VIRGULILLA. */
-
- expr_def ::= ID ARROW conjunto_expr;
-
- /* 'conjunto_expr' define los elementos del conjunto, que pueden
-    ser números, identificadores, o un rango de valores definido por
-    el símbolo VIRGULILLA. */
-
-conjunto_expr ::= conjunto_expr:conj_expre COMMA:comma NUM:num
-                {:
-                    Tree conj_expr = new Tree("conjunto_expr");
-                    conj_expr.addChildren(conj_expre);
-                    conj_expr.addChildren(new Tree(comma.toString()));
-                    conj_expr.addChildren(new Tree(num.toString()));
-                    RESULT = conj_expr;
-                :}
-                | conjunto_expr:conj_expre COMMA:comma ID:id
-                {:
-                    Tree conj_expr = new Tree("conjunto_expr");
-                    conj_expr.addChildren(conj_expre);
-                    conj_expr.addChildren(new Tree(comma.toString()));
-                    conj_expr.addChildren(new Tree(id.toString()));
-                    RESULT = conj_expr;
-                :}
-                | NUM:num
-                {:
-                    Tree conj_expr = new Tree("conjunto_expr");
-                    conj_expr.addChildren(new Tree(num.toString()));
-                    RESULT = conj_expr;
-                :}
-                | ID:id
-                {:
-                    Tree conj_expr = new Tree("conjunto_expr");
-                    conj_expr.addChildren(new Tree(id.toString()));
-                    RESULT = conj_expr;
-                :}
-                | ID:id_ini VIRGULILLA:virgulilla ID:id_end
-                {:
-                    Tree conj_expr = new Tree("conjunto_expr");
-
-                    char start = (id_ini.toString()).charAt(0);
-                    char end = (id_end.toString()).charAt(0);
-                    for (char c = start; c <= end; c++) {
-                        if (c < end){
-                            conj_expr.addChildren(new Tree(","));
-                        }
-                        String s = new StringBuilder().append("").append(c).toString();
-                        conj_expr.addChildren(new Tree(s));
-                    }
-
-                    RESULT = conj_expr;
-                :}
-                | NUM:num_ini VIRGULILLA:virgulilla NUM:num_end
-                {:
-                    Tree conj_expr = new Tree("conjunto_expr");
-
-                    char start = (num_ini.toString()).charAt(0);
-                    char end = (num_end.toString()).charAt(0);
-                    for (char c = start; c <= end; c++) {
-                        if (c < end){
-                            conj_expr.addChildren(new Tree(","));
-                        }
-                        conj_expr.addChildren(new Tree(String.valueOf(c)));
-                    }
-
-                    RESULT = conj_expr;
-                :};
-/* 'oper_list' define la lista de operaciones, que pueden ser
-   operaciones de intersección, unión, complemento, o diferencia
-   entre conjuntos. Cada operación está seguida por los conjuntos
-   involucrados y terminada por SEMICOLON. */
-
-oper_list ::= oper_list oper_part
-            |
-            oper_part;
-
-/*
-    'oper_part' define una operación mediante la asignación de un
-    identificador (ID) a una expresión de operación (oper_expr).
-    La expresión puede ser una operación de unión, intersección,
-    complemento, o diferencia entre conjuntos. */
-oper_part ::= OPERA COLON oper_def SEMICOLON;
-
-/* 'oper_def' define una operación mediante la asignación de un
-    identificador (ID) a una expresión de operación (oper_expr).
-    La expresión puede ser una operación de unión, intersección,
-    complemento, o diferencia entre conjuntos. */
-oper_def ::= ID ARROW oper_expr expre_conj;
-
-/* 'oper_expr' define las operaciones entre conjuntos, que pueden
-    ser operaciones de unión, intersección, complemento, o diferencia
-    entre conjuntos. Cada operación está seguida por los conjuntos
-    involucrados. */
-
-oper_expr ::= oper_expr simbol_expr
-            | simbol_expr;
-
-simbol_expr ::= UNION
-            | INTERSECCION
-            | COMPLEMENTO
-            | DIFERENCIA;
-
-expre_conj ::= expre_conj LBRACE conjunto_expr RBRACE;
-
-/*
-    'eval_list' define la lista de evaluaciones de conjuntos, que
-    pueden ser evaluaciones de conjuntos de datos con operaciones
-    de intersección, unión, complemento, o diferencia entre conjuntos.
-    Cada evaluación está seguida por los conjuntos de datos y la
-    operación involucrada y terminada por SEMICOLON. */
-
-eval_list ::= eval_list eval_part
-            |
-            eval_part;
-
-/*
-    'eval_part' define una evaluación de conjuntos mediante la
-    asignación de un identificador (ID) a una expresión de
-    evaluación (eval_expr). La expresión puede ser una evaluación
-    de conjuntos de datos con operaciones de intersección, unión,
-    complemento, o diferencia entre conjuntos. */
-
-eval_part ::= EVALUAR LPAREN LBRACE conjunto_expr RBRACE COMMA ID RPAREN SEMICOLON;
+EXPR ::= EXPR:expr1 COMMA:comma NUM:num
+        {:
+            Tree expr = new Tree("EXPR");
+            expr.addChildren(expr1);
+            expr.addChildren(new Tree(comma.toString()));
+            expr.addChildren(new Tree(num.toString()));
+            RESULT = expr;
+        :}
+        | EXPR:c1 COMMA:comma ID:id
+        {:
+            Tree expr = new Tree("EXPR");
+            expr.addChildren(c1);
+            expr.addChildren(new Tree(comma.toString()));
+            expr.addChildren(new Tree(id.toString()));
+            RESULT = expr;
+        :}
+        | NUM:num
+        {:
+            Tree expr = new Tree("EXPR");
+            expr.addChildren(new Tree(num.toString()));
+            RESULT = expr;
+        :}
+        | ID:id
+        {:
+            Tree expr = new Tree("EXPR");
+            expr.addChildren(new Tree(id.toString()));
+            RESULT = expr;
+        :}
+        | ID:id_ini VIRGULILLA ID:id_end
+        {:
+            Tree expr = new Tree("EXPR");
+            char start = (id_ini.toString()).charAt(0);
+            char end = (id_end.toString()).charAt(0);
+            for (char c = start; c <= end; c++) {
+                if (c < end){
+                    expr.addChildren(new Tree(","));
+                }
+                expr.addChildren(new Tree(String.valueOf(c)));
+            }
+            RESULT = expr;
+        :}
+        | NUM:num_ini VIRGULILLA NUM:num_end
+        {:
+            Tree expr = new Tree("EXPR");
+            char start = (num_ini.toString()).charAt(0);
+            char end = (num_end.toString()).charAt(0);
+            for (char c = start; c <= end; c++) {
+                if (c < end){
+                    expr.addChildren(new Tree(","));
+                }
+                expr.addChildren(new Tree(String.valueOf(c)));
+            }
+            RESULT = expr;
+        :};
