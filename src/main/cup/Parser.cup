@@ -23,6 +23,8 @@ import java.util.List;
 */
 parser code {:
 
+    public List<SyntaxError>    sintaxErrors = new ArrayList();
+
     /* Reporte de error encontrado. */
     public void report_error(String message, Object info) {
         StringBuilder m = new StringBuilder("Errores en la entrada");
@@ -123,26 +125,42 @@ start with B;
 B ::= CONJ:conj EXPR:expr SEMICOLON:simicolon
         {:
             Tree b = new Tree("B");
+
             b.addChildren(new Tree(conj.toString()));
             b.addChildren(expr);
             b.addChildren(new Tree(simicolon.toString()));
+
             RESULT = b;
         :};
 
 EXPR ::= EXPR:expr1 COMMA:comma NUM:num
         {:
             Tree expr = new Tree("EXPR");
+
+            if (comma == null || num == null){
+                comma = ",";
+                num   = 0.0;
+            }
+
             expr.addChildren(expr1);
             expr.addChildren(new Tree(comma.toString()));
             expr.addChildren(new Tree(num.toString()));
+
             RESULT = expr;
         :}
         | EXPR:c1 COMMA:comma ID:id
         {:
             Tree expr = new Tree("EXPR");
+
+            if (comma == null || id == null){
+                comma = ",";
+                id    = " ";
+            }
+
             expr.addChildren(c1);
             expr.addChildren(new Tree(comma.toString()));
             expr.addChildren(new Tree(id.toString()));
+
             RESULT = expr;
         :}
         | NUM:num

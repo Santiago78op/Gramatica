@@ -99,7 +99,7 @@ import java.util.List;
 %}
 
 %eofval{
-    return symbol(sym.EOF);
+    return symbol(sym.EOF, yytext());
 %eofval}
 
 /*

@@ -104,6 +104,8 @@ public class parser extends java_cup.runtime.lr_parser {
 
 
 
+    public List<SyntaxError>    sintaxErrors = new ArrayList();
+
     /* Reporte de error encontrado. */
     public void report_error(String message, Object info) {
         StringBuilder m = new StringBuilder("Errores en la entrada");
@@ -182,9 +184,11 @@ class CUP$parser$actions {
 		Object simicolon = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
             Tree b = new Tree("B");
+
             b.addChildren(new Tree(conj.toString()));
             b.addChildren(expr);
             b.addChildren(new Tree(simicolon.toString()));
+
             RESULT = b;
         
               CUP$parser$result = parser.getSymbolFactory().newSymbol("B",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -206,9 +210,16 @@ class CUP$parser$actions {
 		Double num = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
             Tree expr = new Tree("EXPR");
+
+            if (comma == null || num == null){
+                comma = ",";
+                num   = 0.0;
+            }
+
             expr.addChildren(expr1);
             expr.addChildren(new Tree(comma.toString()));
             expr.addChildren(new Tree(num.toString()));
+
             RESULT = expr;
         
               CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -230,9 +241,16 @@ class CUP$parser$actions {
 		String id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
             Tree expr = new Tree("EXPR");
+
+            if (comma == null || id == null){
+                comma = ",";
+                id    = " ";
+            }
+
             expr.addChildren(c1);
             expr.addChildren(new Tree(comma.toString()));
             expr.addChildren(new Tree(id.toString()));
+
             RESULT = expr;
         
               CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
