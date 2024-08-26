@@ -1,25 +1,20 @@
 package com.julian;
 
-import java.util.ArrayList;
+public class Tree<T> {
 
-public class Tree {
+    private TreeNode<T> root;
 
-    private String root;
-    private ArrayList<Tree> children;
-
-    public Tree(String root) {
-        this.root = root;
-        this.children = new ArrayList<>();
+    public Tree(T rootData) {
+        root = new TreeNode<>(rootData);
     }
 
-    public void addChildren(Tree child){
-        this.children.add(child);
+    public TreeNode<T> getRoot() {
+        return root;
     }
 
-    public void printTree(Tree tree){
-        for(Tree child : tree.children){
-            printTree(child);
-        }
-        System.out.println(tree.root);
+    public void addChild(TreeNode<T> parent, T childData) {
+        TreeNode<T> childNode = new TreeNode<>(childData);
+        parent.addChild(childNode);
     }
+
 }

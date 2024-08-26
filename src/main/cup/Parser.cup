@@ -23,29 +23,92 @@ import java.util.List;
 */
 parser code {:
 
-    public List<SyntaxError>    sintaxErrors = new ArrayList();
+    public List<SyntaxError> syntaxErrors = new ArrayList<>();
 
-    /* Reporte de error encontrado. */
+    // Variables de estado para rastrear el contexto
+    private boolean expectingConj = false;
+    private boolean expectingOpera = false;
+    private boolean expectingEvaluar = false;
+
+    @Override
     public void report_error(String message, Object info) {
-        StringBuilder m = new StringBuilder("Errores en la entrada");
+        String tipo = "Syntax Error";
+        int line = -1;
+        int column = -1;
+        String incomingToken = "unknown";
+        String expectedTokens = "";
+
         if (info instanceof java_cup.runtime.Symbol) {
-            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            java_cup.runtime.Symbol s = (java_cup.runtime.Symbol) info;
             if (s.left >= 0) {
-                m.append(" in line "+(s.left+1));
-                if (s.right >= 0)
-                    m.append(", column "+(s.right+1));
+                line = s.left + 1;
             }
+            if (s.right >= 0) {
+                column = s.right + 1;
+            }
+            incomingToken = s.value != null ? s.value.toString() : "unknown";
         }
-        m.append(" : "+message);
-        System.err.println(m);
+
+        expectedTokens = expected_token(info);
+
+        String errorMessage = "Se encontró '" + incomingToken + "' y se esperaba " + expectedTokens + ".";
+        SyntaxError error = new SyntaxError(tipo, errorMessage, line, column);
+        syntaxErrors.add(error);
+
+        System.err.println("Error: " + errorMessage + " at line " + line + ", column " + column);
     }
 
-    /* Cuando se encuentra un error de donde el sistema no puede
-        recuperarse, se lanza un error fatal. Se despliega el mensaje
-        de error y se finaliza la ejecucion. */
+    @Override
     public void report_fatal_error(String message, Object info) {
         report_error(message, info);
-        //System.exit(1);
+        throw new RuntimeException("Fatal error: " + message);
+    }
+
+    private String expected_token(Object info) {
+        if (info instanceof java_cup.runtime.Symbol) {
+            java_cup.runtime.Symbol s = (java_cup.runtime.Symbol) info;
+
+            // Si se encuentra un COLON, determinar qué token debería haber venido antes
+            if (s.sym == sym.COLON) {
+                if (expectingConj) {
+                    return "\"CONJ\"";
+                } else if (expectingOpera) {
+                    return "\"OPERA\"";
+                } else if (expectingEvaluar) {
+                    return "\"EVALUAR\"";
+                } else {
+                    return "\"CONJ\", \"OPERA\", \"EVALUAR\""; // Caso por defecto si no se puede determinar el contexto
+                }
+            }
+
+            // Otros casos según el contexto
+            else if (s.sym == sym.CONJ) {
+                return "\"LBRACE\"";
+            } else if (s.sym == sym.SEMICOLON) {
+                return "\"ARROW\", \"ID\"";
+            } else if (s.sym == sym.ARROW) {
+                return "\"ID\", \"NUM\", \"VIRGULILLA\"";
+            } else if (s.sym == sym.ID) {
+                return "\":\"";
+            } else if (s.sym == sym.RBRACE || s.sym == sym.LBRACE) {
+                return "\"LBRACE\"";  // Para casos donde se esperaba '{'
+            } else {
+                return "\"ID\", \"NUM\", \"{\", \"}\", \";\"";  // Otros tokens genéricos
+            }
+        }
+
+        return "\"ID\", \"NUM\", \"{\", \"}\", \";\""; // Valor por defecto si no se puede determinar
+    }
+
+    @Override
+    public Symbol parse() {
+        try {
+            return super.parse();
+        } catch (Exception e) {
+            System.err.println("Error: Couldn't repair and continue parse");
+            e.printStackTrace();
+            return null;
+        }
     }
 
 :}
@@ -62,7 +125,7 @@ parser code {:
 // Terminales que no tienen un valor son listados primero.
 terminal CONJ, OPERA, EVALUAR, LBRACE, RBRACE, LPAREN, RPAREN,
          ARROW, SEMICOLON, COLON, VIRGULILLA, COMMA, UNION,
-         INTERSECCION, COMPLEMENTO, DIFERENCIA, STRING_LITERAL;
+         INTERSECCION, COMPLEMENTO, DIFERENCIA;
 
 // Terminales que tienen un valor como los enteros son listados
 // en la segunda o demas lineas.
@@ -78,7 +141,9 @@ terminal Double NUM;
    que no tienen tipo, pudiendo ser entero o String.
 */
 
-non terminal Tree       B, C, C_LIST, E, EXPR;
+non terminal TreeNode<String> BLOCK, CONJ_LIST, CONJ_PART, EXPR_DEF, CONJUNTO_EXPR,
+                              OPER_LIST, OPER_PART, OPER_DEF, OPER_EXPR, EVAL_LIST,
+                              EVAL_PART, EXPRE_CONJ, SIMBOL_EXPR;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -98,7 +163,7 @@ precedence left DIFERENCIA, COMPLEMENTO;
 
 // Inicia la gramática con el símbolo de inicio.
 /* Símbolo de inicio */
-start with B;
+start with BLOCK;
 
 /* ------------------- Sección de la gramática ------------------------ */
 
@@ -122,82 +187,374 @@ start with B;
 */
 
 /* Bloque de definiciones */
-B ::= CONJ:conj EXPR:expr SEMICOLON:simicolon
-        {:
-            Tree b = new Tree("B");
 
-            b.addChildren(new Tree(conj.toString()));
-            b.addChildren(expr);
-            b.addChildren(new Tree(simicolon.toString()));
+/* block es el incio de nuestra gramatica. Puede derivar a
+   otra operacion 'conj_list' seguida de 'oper_list' y
+   finalziando con 'eval_list'.
+*/
 
-            RESULT = b;
-        :};
+BLOCK ::= LBRACE:lbrace
+                    CONJ_LIST:conj_list
+                    OPER_LIST:oper_list
+                    EVAL_LIST:eval_list
+             RBRACE:rbrace
+          {:
 
-EXPR ::= EXPR:expr1 COMMA:comma NUM:num
-        {:
-            Tree expr = new Tree("EXPR");
-
-            if (comma == null || num == null){
-                comma = ",";
-                num   = 0.0;
-            }
-
-            expr.addChildren(expr1);
-            expr.addChildren(new Tree(comma.toString()));
-            expr.addChildren(new Tree(num.toString()));
-
-            RESULT = expr;
-        :}
-        | EXPR:c1 COMMA:comma ID:id
-        {:
-            Tree expr = new Tree("EXPR");
-
-            if (comma == null || id == null){
-                comma = ",";
-                id    = " ";
-            }
-
-            expr.addChildren(c1);
-            expr.addChildren(new Tree(comma.toString()));
-            expr.addChildren(new Tree(id.toString()));
-
-            RESULT = expr;
-        :}
-        | NUM:num
-        {:
-            Tree expr = new Tree("EXPR");
-            expr.addChildren(new Tree(num.toString()));
-            RESULT = expr;
-        :}
-        | ID:id
-        {:
-            Tree expr = new Tree("EXPR");
-            expr.addChildren(new Tree(id.toString()));
-            RESULT = expr;
-        :}
-        | ID:id_ini VIRGULILLA ID:id_end
-        {:
-            Tree expr = new Tree("EXPR");
-            char start = (id_ini.toString()).charAt(0);
-            char end = (id_end.toString()).charAt(0);
-            for (char c = start; c <= end; c++) {
-                if (c < end){
-                    expr.addChildren(new Tree(","));
+                if (lbrace != null) {
+                    expectingConj = true;
+                    expectingOpera = false;
+                    expectingEvaluar = false;
+                }else if( rbrace != null){
+                    expectingConj = false;
+                    expectingOpera = false;
+                    expectingEvaluar = false;
                 }
-                expr.addChildren(new Tree(String.valueOf(c)));
-            }
-            RESULT = expr;
-        :}
-        | NUM:num_ini VIRGULILLA NUM:num_end
-        {:
-            Tree expr = new Tree("EXPR");
-            char start = (num_ini.toString()).charAt(0);
-            char end = (num_end.toString()).charAt(0);
-            for (char c = start; c <= end; c++) {
-                if (c < end){
-                    expr.addChildren(new Tree(","));
+
+                TreeNode<String> blockNode = new TreeNode<>("BLOCK");
+
+                blockNode.addChild(new TreeNode<>(lbrace.toString()));
+                blockNode.addChild(conj_list);
+                blockNode.addChild(oper_list);
+                blockNode.addChild(eval_list);
+                blockNode.addChild(new TreeNode<>(rbrace.toString()));
+
+                RESULT = blockNode;
+          :};
+
+/* 'conj_list'  puede derivar a otra 'conj_list' seguida de un
+   'conj_part' o puede derivar directamente a un 'conj_part'. */
+
+CONJ_LIST ::= CONJ_LIST:conj_list CONJ_PART:conj_part
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("CONJ_LIST");
+
+                parentNode.addChild(conj_list);
+                parentNode.addChild(conj_part);
+
+                RESULT = parentNode;
+            :}
+            | CONJ_PART:conj_part
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("CONJ_LIST");
+
+                parentNode.addChild(conj_part);
+
+                RESULT = parentNode;
+            :};
+
+/* La parte 'conj_part' es una combinación de la palabra reservada
+   CONJ + COLON seguida del por la definición de un conjunto y
+   terminada por el terminal SEMICOLON. El cuerpo de 'expr_def'
+   define el nombre del conjunto (ID) y su expresión (conjunto_expr). */
+
+CONJ_PART ::= CONJ:conj COLON:colon EXPR_DEF:expr_def SEMICOLON:semicolon
+            {:
+                if (colon != null) {
+                    expectingConj = false;
+                    expectingOpera = true;
+                    expectingEvaluar = false;
                 }
-                expr.addChildren(new Tree(String.valueOf(c)));
-            }
-            RESULT = expr;
-        :};
+
+                TreeNode<String> parentNode = new TreeNode<>("CONJ_PART");
+
+                parentNode.addChild(new TreeNode<>(conj.toString()));
+                parentNode.addChild(new TreeNode<>(colon.toString()));
+                parentNode.addChild(expr_def);
+                parentNode.addChild(new TreeNode<>(semicolon.toString()));
+
+                RESULT = parentNode;
+            :};
+
+/* 'expr_def' define un conjunto mediante la asignación de un
+   identificador (ID) a una expresión de conjunto (conjunto_expr).
+   La expresión puede ser una secuencia de números o identificadores
+   separados por comas, o un rango definido con el símbolo VIRGULILLA. */
+
+ EXPR_DEF ::= ID:id ARROW:arrow CONJUNTO_EXPR:conjunto_expr
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("EXPR_DEF");
+
+                parentNode.addChild(new TreeNode<>(id.toString()));
+                parentNode.addChild(new TreeNode<>(arrow.toString()));
+                parentNode.addChild(conjunto_expr);
+
+                RESULT = parentNode;
+            :};
+
+ /* 'conjunto_expr' define los elementos del conjunto, que pueden
+    ser números, identificadores, o un rango de valores definido por
+    el símbolo VIRGULILLA. */
+
+CONJUNTO_EXPR ::= CONJUNTO_EXPR:conjunto_expr COMMA:comma NUM:num
+                {:
+                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
+
+                    parentNode.addChild(conjunto_expr);
+                    parentNode.addChild(new TreeNode<>(comma.toString()));
+                    parentNode.addChild(new TreeNode<>(num.toString()));
+
+                    RESULT = parentNode;
+                :}
+                | CONJUNTO_EXPR:conjunto_expr COMMA:comma ID:id
+                {:
+                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
+
+                    parentNode.addChild(conjunto_expr);
+                    parentNode.addChild(new TreeNode<>(comma.toString()));
+                    parentNode.addChild(new TreeNode<>(id.toString()));
+
+                    RESULT = parentNode;    
+                :}
+                | NUM:num
+                {:
+                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
+
+                    parentNode.addChild(new TreeNode<>(num.toString()));
+
+                    RESULT = parentNode;
+                :}
+                | ID:id
+                {:
+                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
+
+                    parentNode.addChild(new TreeNode<>(id.toString()));
+
+                    RESULT = parentNode;
+                :}
+                | ID:id1 VIRGULILLA:virgulilla ID:id2
+                {:
+                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
+
+                    char start = id1.toString().charAt(0);
+                    char end = id2.toString().charAt(0);
+                    StringBuilder range = new StringBuilder();
+                    for (char c = start; c <= end; c++) {
+                        range.append(c);
+                        if (c != end) {
+                            range.append(",");
+                        }
+                    }
+
+                    parentNode.addChild(new TreeNode<>(range.toString()));
+
+                    RESULT = parentNode;
+
+                :}
+                | NUM:num1 VIRGULILLA:virgulilla NUM:num2
+                {:
+                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
+
+                    char start = num1.toString().charAt(0);
+                    char end = num2.toString().charAt(0);
+                    StringBuilder range = new StringBuilder();
+                    for (char c = start; c <= end; c++) {
+                        range.append(c);
+                        if (c != end) {
+                            range.append(",");
+                        }
+                    }
+
+                    parentNode.addChild(new TreeNode<>(range.toString()));
+
+                    RESULT = parentNode;
+                :};
+                
+/* 'oper_list' define la lista de operaciones, que pueden ser
+   operaciones de intersección, unión, complemento, o diferencia
+   entre conjuntos. Cada operación está seguida por los conjuntos
+   involucrados y terminada por SEMICOLON. */
+
+OPER_LIST ::= OPER_LIST:oper_list OPER_PART:oper_part
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("OPER_LIST");
+
+                parentNode.addChild(oper_list);
+                parentNode.addChild(oper_part);
+
+                RESULT = parentNode;
+            :}
+            | OPER_PART:oper_part
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("OPER_LIST");
+
+                parentNode.addChild(oper_part);
+
+                RESULT = parentNode;
+            :};
+
+/*
+    'oper_part' define una operación mediante la asignación de un
+    identificador (ID) a una expresión de operación (oper_expr).
+    La expresión puede ser una operación de unión, intersección,
+    complemento, o diferencia entre conjuntos. */
+OPER_PART ::= OPERA:opera COLON:colon OPER_DEF:oper_def SEMICOLON:semicolon
+            {:
+
+                if (opera != null) {
+                    expectingConj = false;
+                    expectingOpera = false;
+                    expectingEvaluar = true;
+                }
+
+                TreeNode<String> parentNode = new TreeNode<>("OPER_PART");
+
+                parentNode.addChild(new TreeNode<>(opera.toString()));
+                parentNode.addChild(new TreeNode<>(colon.toString()));
+                parentNode.addChild(oper_def);
+                parentNode.addChild(new TreeNode<>(semicolon.toString()));
+
+                RESULT = parentNode;
+            :};
+
+/* 'oper_def' define una operación mediante la asignación de un
+    identificador (ID) a una expresión de operación (oper_expr).
+    La expresión puede ser una operación de unión, intersección,
+    complemento, o diferencia entre conjuntos. */
+OPER_DEF ::= ID:id ARROW:arrow OPER_EXPR:oper_expr EXPRE_CONJ:expre_conj
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("OPER_DEF");
+
+                parentNode.addChild(new TreeNode<>(id.toString()));
+                parentNode.addChild(new TreeNode<>(arrow.toString()));
+                parentNode.addChild(oper_expr);
+                parentNode.addChild(expre_conj);
+
+                RESULT = parentNode;
+            :};
+
+/* 'oper_expr' define las operaciones entre conjuntos, que pueden
+    ser operaciones de unión, intersección, complemento, o diferencia
+    entre conjuntos. Cada operación está seguida por los conjuntos
+    involucrados. */
+
+OPER_EXPR ::= OPER_EXPR:oper_expr SIMBOL_EXPR:simbol_expr
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("OPER_EXPR");
+
+                parentNode.addChild(oper_expr);
+                parentNode.addChild(simbol_expr);
+
+                RESULT = parentNode;    
+            :}
+            | SIMBOL_EXPR:simbol_expr
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("OPER_EXPR");
+
+                parentNode.addChild(simbol_expr);
+
+                RESULT = parentNode;
+            :};
+
+SIMBOL_EXPR ::= UNION:union
+            {:
+                TreeNode<String> simbol_expr = new TreeNode<>("SIMBOL_EXPR");
+                
+                simbol_expr.addChild(new TreeNode<>(union.toString()));
+                
+                RESULT = simbol_expr;
+            :}
+            | INTERSECCION:interseccion
+            {:
+                TreeNode<String> simbol_expr = new TreeNode<>("SIMBOL_EXPR");
+                
+                simbol_expr.addChild(new TreeNode<>(interseccion.toString()));
+                
+                RESULT = simbol_expr;
+            :}
+            | COMPLEMENTO:complemento
+            {:
+                TreeNode<String> simbol_expr = new TreeNode<>("SIMBOL_EXPR");
+                
+                simbol_expr.addChild(new TreeNode<>(complemento.toString()));
+                
+                RESULT = simbol_expr;   
+            :}
+            | DIFERENCIA:diferencia
+            {:
+                TreeNode<String> simbol_expr = new TreeNode<>("SIMBOL_EXPR");
+                
+                simbol_expr.addChild(new TreeNode<>(diferencia.toString()));
+                
+                RESULT = simbol_expr;   
+            :};
+
+EXPRE_CONJ ::= EXPRE_CONJ:expre_conj LBRACE:lbrace CONJUNTO_EXPR:conjunto_expr RBRACE:rbrace
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("EXPRE_CONJ");
+
+                parentNode.addChild(expre_conj);
+                parentNode.addChild(new TreeNode<>(lbrace.toString()));
+                parentNode.addChild(conjunto_expr);
+                parentNode.addChild(new TreeNode<>(rbrace.toString()));
+
+                RESULT = parentNode;
+            :}
+            | LBRACE:lbrace CONJUNTO_EXPR:conjunto_expr RBRACE:rbrace
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("EXPRE_CONJ");
+
+                parentNode.addChild(new TreeNode<>(lbrace.toString()));
+                parentNode.addChild(conjunto_expr);
+                parentNode.addChild(new TreeNode<>(rbrace.toString()));
+
+                RESULT = parentNode;
+            :};
+
+/*
+    'eval_list' define la lista de evaluaciones de conjuntos, que
+    pueden ser evaluaciones de conjuntos de datos con operaciones
+    de intersección, unión, complemento, o diferencia entre conjuntos.
+    Cada evaluación está seguida por los conjuntos de datos y la
+    operación involucrada y terminada por SEMICOLON. */
+
+EVAL_LIST ::= EVAL_LIST:eval_list EVAL_PART:eval_part
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("EVAL_LIST");
+
+                parentNode.addChild(eval_list);
+                parentNode.addChild(eval_part);
+
+                RESULT = parentNode;
+            :}
+            | EVAL_PART:eval_part
+            {:
+                TreeNode<String> parentNode = new TreeNode<>("EVAL_LIST");
+
+                parentNode.addChild(eval_part);
+
+                RESULT = parentNode;    
+            :};
+
+/*
+    'eval_part' define una evaluación de conjuntos mediante la
+    asignación de un identificador (ID) a una expresión de
+    evaluación (eval_expr). La expresión puede ser una evaluación
+    de conjuntos de datos con operaciones de intersección, unión,
+    complemento, o diferencia entre conjuntos. */
+
+EVAL_PART ::= EVALUAR:evaluar 
+                LPAREN:lparen
+                    LBRACE:lbrace CONJUNTO_EXPR:conjunto_expr RBRACE:rbrace COMMA:comma ID:id
+                RPAREN:rparen SEMICOLON:semicolon
+                {:
+
+                    if (evaluar != null) {
+                        expectingConj = false;
+                        expectingOpera = false;
+                        expectingEvaluar = false;
+                    }
+
+                    TreeNode<String> evalPart = new TreeNode<>("EVAL_PART");
+
+                    evalPart.addChild(new TreeNode<>(evaluar.toString()));
+                    evalPart.addChild(new TreeNode<>(lparen.toString()));
+                    evalPart.addChild(new TreeNode<>(lbrace.toString()));
+                    evalPart.addChild(conjunto_expr);
+                    evalPart.addChild(new TreeNode<>(rbrace.toString()));
+                    evalPart.addChild(new TreeNode<>(comma.toString()));
+                    evalPart.addChild(new TreeNode<>(id.toString()));
+                    evalPart.addChild(new TreeNode<>(rparen.toString()));
+                    evalPart.addChild(new TreeNode<>(semicolon.toString()));
+
+                    RESULT = evalPart;
+                :};

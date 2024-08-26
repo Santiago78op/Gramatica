@@ -68,8 +68,8 @@ import java.util.List;
 
     StringBuffer string = new StringBuffer();
 
-    public List<Token>       tokens = new ArrayList<>();
-    public List<LexError> lexErrors = new ArrayList<>();
+    public List<Token> tokens = new ArrayList<>();
+    public List<LexError> lexErrors  = new ArrayList<>();
 
     /*
         Generamos un java_cup.Symbol para guardar el tipo de token
@@ -92,14 +92,14 @@ import java.util.List;
     }
 
     private void addLexicalError(String message) {
-       String description = "El caracter " + message + " no pertenece al lenguaje.";
-       lexErrors.add(new LexError("Lexico", description, yyline, yycolumn));
-     }
+        String description = "El caracter " + message + " no pertenece al lenguaje.";
+        lexErrors.add(new LexError("Lexico", description, yyline, yycolumn));
+    }
 
 %}
 
 %eofval{
-    return symbol(sym.EOF, yytext());
+    return symbol(sym.EOF);
 %eofval}
 
 /*
@@ -172,22 +172,26 @@ num = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
 <YYINITIAL> \^      { addToken("^", yytext()); return symbol(sym.COMPLEMENTO, yytext()); }
 <YYINITIAL>  -      { addToken("-", yytext()); return symbol(sym.DIFERENCIA, yytext()); }
 
-/* Operadores */
-<YYINITIAL> "{"     { addToken("{", yytext()); return symbol(sym.LBRACE, yytext()); }
-<YYINITIAL> "}"     { addToken("}", yytext()); return symbol(sym.RBRACE, yytext()); }
-<YYINITIAL> "("     { addToken("(", yytext()); return symbol(sym.LPAREN, yytext()); }
-<YYINITIAL> ")"     { addToken(")", yytext()); return symbol(sym.RPAREN, yytext()); }
-<YYINITIAL> "->"    { addToken("->", yytext()); return symbol(sym.ARROW, yytext()); }
-<YYINITIAL> ";"     { addToken(";", yytext()); return symbol(sym.SEMICOLON, yytext()); }
-<YYINITIAL> ":"     { addToken(":", yytext()); return symbol(sym.COLON, yytext()); }
-<YYINITIAL> "~"     { addToken("~", yytext()); return symbol(sym.VIRGULILLA, yytext()); }
-<YYINITIAL> ","     { addToken(",", yytext()); return symbol(sym.COMMA, yytext()); }
-
-/* Reglas de Caracteres */
-<YYINITIAL> {id}    { addToken("ID", yytext()); return symbol(sym.ID, yytext()); }
-<YYINITIAL> {num}   { addToken("NUM", yytext()); return symbol(sym.NUM, Double.parseDouble(yytext())); }
+<YYINITIAL>  {
+            /* Operadores */
+            "{"     { addToken("{", yytext()); return symbol(sym.LBRACE, yytext()); }
+            "}"     { addToken("}", yytext()); return symbol(sym.RBRACE, yytext()); }
+            "("     { addToken("(", yytext()); return symbol(sym.LPAREN, yytext()); }
+            ")"     { addToken(")", yytext()); return symbol(sym.RPAREN, yytext()); }
+            "->"    { addToken("->", yytext()); return symbol(sym.ARROW, yytext()); }
+            ";"     { addToken(";", yytext()); return symbol(sym.SEMICOLON, yytext()); }
+            ":"     { addToken(":", yytext()); return symbol(sym.COLON, yytext()); }
+            "~"     { addToken("~", yytext()); return symbol(sym.VIRGULILLA, yytext()); }
+            ","     { addToken(",", yytext()); return symbol(sym.COMMA, yytext()); }
+}
 
 <YYINITIAL>{
+            /* Reglas de Caracteres */
+            {id}    { addToken("ID", yytext()); return symbol(sym.ID, yytext()); }
+            {num}   { addToken("NUM", yytext()); return symbol(sym.NUM, Double.parseDouble(yytext())); }
+}
+
+<YYINITIAL>  {
     /* Reglas de Comentarios */
     {Comment}    { /* ignora comentarios de una linea */ }
 

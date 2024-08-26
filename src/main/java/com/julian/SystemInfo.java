@@ -11,11 +11,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.List;
 import java.util.Optional;
 
 public class  SystemInfo {
 
     private File currentFile;
+
     private String reporteToken;
 
     @FXML
@@ -199,14 +201,21 @@ public class  SystemInfo {
         try {
                 Lexer lexer = new Lexer(new StringReader(text));
                 parser parser = new parser(lexer);
-                Tree root = (Tree)parser.parse().value;
-                root.printTree(root);
+                parser.parse();
+
+                /*
+                TreeNode root = (TreeNode)parser.parse().value;
+                root.printTree(root, "");
+                */
 
                 reporteToken = Reports.reportToken(lexer.tokens);
                 Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Tokens.html");
 
                 reporteToken = Reports.reportLexErrors(lexer.lexErrors);
                 Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Lex_Error.html");
+
+                reporteToken = Reports.reportSyntaxErrors(parser.syntaxErrors);
+                Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Syntax_Error.html");
 
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while analyzing the content.");

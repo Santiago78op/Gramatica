@@ -55,4 +55,5 @@ public class LexError {
                 ", column=" + column +
                 '}';
     }
+
 }
