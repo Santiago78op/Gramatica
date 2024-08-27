@@ -25,31 +25,13 @@ parser code {:
 
     public List<SyntaxError> syntaxErrors = new ArrayList<>();
 
-    // Variables de estado para rastrear el contexto
-    private boolean expectingLbrace     = false;
-    private boolean expectingRbrace     = false;
-    private boolean expectingConj       = false;
-    private boolean expectingColon      = false;
-    private boolean expectingId         = false;
-    private boolean expectingArrow      = false;
-    private boolean expectingNum        = false;
-    private boolean expectingComma      = false;
-    private boolean expectingSemicolon  = false;
-    private boolean expectingVirgulilla = false;
-    private boolean expectingOpera      = false;
-    private boolean expectingWordres    = false;
-    private boolean expectingEvaluar    = false;
-    private boolean expectingLparen     = false;
-    private boolean expectingRparen     = false;
-
     @Override
     public void report_fatal_error(String message, Object info) {
-       String tipo = "Fatal Syntax Error";
-       int line = -1;
-       int column = -1;
-       String incomingToken = "unknown";
-       String expectedTokens = "";
-       if (info instanceof java_cup.runtime.Symbol) {
+
+        int line = -1;
+        int column = -1;
+
+        if (info instanceof java_cup.runtime.Symbol) {
            java_cup.runtime.Symbol s = (java_cup.runtime.Symbol) info;
            if (s.left >= 0) {
                line = s.left + 1;
@@ -58,41 +40,35 @@ parser code {:
                column = s.right + 1;
            }
            incomingToken = s.value != null ? s.value.toString() : "unknown";
-       }
-       expectedTokens = expected_token(info);
-       String errorMessage = "Se encontró '" + incomingToken + "' y se esperaba " + expectedTokens + ".";
-       SyntaxError error = new SyntaxError(tipo, errorMessage, line, column);
-       syntaxErrors.add(error);
+        }
+
+        String expectedTokens = getExpectedTokensForCurrentState();
+        String incomingToken  = info instanceof  Symbol ? ((java_cup.runtime.Symbol) info).value.toString() : "unknow";
+        String errorMessage   = "Se encontró '" + incomingToken + "' y se esperaba " + expectedTokens + ".";
+        SyntaxError error     = new SyntaxError("Sintactico", errorMessage, line, column);
+
+        if (!syntaxErrors.contains(error)){
+            syntaxErrors.add(error);
+        }
+
        System.err.println("Fatal Error: " + errorMessage + " at line " + line + ", column " + column);
        throw new RuntimeException("Fatal error: " + message);
     }
 
-    private String expected_token(Object info) {
-        if (info instanceof java_cup.runtime.Symbol) {
-            java_cup.runtime.Symbol s = (java_cup.runtime.Symbol) info;
+    public String getExpectedTokensForCurrentState() {
+        StringBuilder expectedTokens = new StringBuilder();
 
-            if (s.sym == sym.CONJ) {
-                return "\"LBRACE\"";
-            } else if(s.sym == sym.COLON){
-                if (expectingConj) {
-                    return "\"CONJ\"";
-                }else if(expectingOpera) {
-                    return "\"OPERA\"";
+        int currentState = ((Symbol) stack.peek()).parse_state;
+        for (int token = 0; token < action_table[currentState].length; token++){
+            short action = action_table[currentState][token];
+            if(action > 0) {
+                if (expectedTokens.length() > 0) {
+                    expectedTokens.append(",");
                 }
-            } else if(s.sym == sym.ID){
-                if (expectingColon){
-                    return "\"COLON\"";
-                }
-            }
-
-            if(s.sym == sym.NUM || s.sym == sym.ID){
-               if (expectingColon){
-                   return "\"ARROW\"";
-               }
+                expectedTokens.append(sym.terminalNames[token]);
             }
         }
-
-        return "\"ID\", \"NUM\", \"{\", \"}\", \";\""; // Valor por defecto si no se puede determinar
+        return expectedTokens.toString();
     }
 
     @Override
@@ -233,12 +209,6 @@ CONJ_LIST ::= CONJ_LIST:conj_list CONJ_PART:conj_part
 
 CONJ_PART ::= CONJ:conj COLON:colon EXPR_DEF:expr_def SEMICOLON:semicolon
             {:
-                if ( colon != null) {
-                    expectingConj    = true;
-                    expectingOpera   = false;
-                    expectingEvaluar = false;
-                }
-
                 TreeNode<String> parentNode = new TreeNode<>("CONJ_PART");
 
                 parentNode.addChild(new TreeNode<>(conj.toString()));
@@ -256,15 +226,6 @@ CONJ_PART ::= CONJ:conj COLON:colon EXPR_DEF:expr_def SEMICOLON:semicolon
 
  EXPR_DEF ::= ID:id ARROW:arrow CONJUNTO_EXPR:conjunto_expr
             {:
-                if ( id != null){
-                    expectingColon   = true;
-                }
-
-                if ( arrow != null){
-                    expectingArrow   = true;
-                }
-
-
                 TreeNode<String> parentNode = new TreeNode<>("EXPR_DEF");
 
                 parentNode.addChild(new TreeNode<>(id.toString()));
@@ -382,7 +343,6 @@ OPER_LIST ::= OPER_LIST:oper_list OPER_PART:oper_part
     complemento, o diferencia entre conjuntos. */
 OPER_PART ::= OPERA:opera COLON:colon OPER_DEF:oper_def SEMICOLON:semicolon
             {:
-
                 TreeNode<String> parentNode = new TreeNode<>("OPER_PART");
 
                 parentNode.addChild(new TreeNode<>(opera.toString()));
