@@ -99,7 +99,7 @@ import java.util.List;
 %}
 
 %eofval{
-    return symbol(sym.EOF);
+    return symbol(sym.EOF, yytext());
 %eofval}
 
 /*
@@ -162,28 +162,26 @@ num = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
 */
 
 /* Reglas de Operaciones */
-<YYINITIAL> CONJ    { addToken("CONJ", yytext()); return symbol(sym.CONJ, yytext()); }
-<YYINITIAL> OPERA   { addToken("OPERA", yytext()); return symbol(sym.OPERA, yytext()); }
-<YYINITIAL> EVALUAR { addToken("EVALUAR", yytext()); return symbol(sym.EVALUAR, yytext()); }
+<YYINITIAL> CONJ          { addToken("CONJ", yytext()); return symbol(sym.CONJ, yytext()); }
+<YYINITIAL> OPERA        { addToken("OPERA", yytext()); return symbol(sym.OPERA, yytext()); }
+<YYINITIAL> EVALUAR    { addToken("EVALUAR", yytext()); return symbol(sym.EVALUAR, yytext()); }
 
 /* Reglas de opereaciones Conjuntos */
-<YYINITIAL>  U      { addToken("U", yytext()); return symbol(sym.UNION, yytext()); }
-<YYINITIAL>  &      { addToken("&", yytext()); return symbol(sym.INTERSECCION, yytext()); }
-<YYINITIAL> \^      { addToken("^", yytext()); return symbol(sym.COMPLEMENTO, yytext()); }
-<YYINITIAL>  -      { addToken("-", yytext()); return symbol(sym.DIFERENCIA, yytext()); }
+<YYINITIAL>  U               { addToken("U", yytext()); return symbol(sym.UNION, yytext()); }
+<YYINITIAL>  &               { addToken("&", yytext()); return symbol(sym.INTERSECCION, yytext()); }
+<YYINITIAL> \^               { addToken("^", yytext()); return symbol(sym.COMPLEMENTO, yytext()); }
+<YYINITIAL>  -               { addToken("-", yytext()); return symbol(sym.DIFERENCIA, yytext()); }
 
-<YYINITIAL>  {
-            /* Operadores */
-            "{"     { addToken("{", yytext()); return symbol(sym.LBRACE, yytext()); }
-            "}"     { addToken("}", yytext()); return symbol(sym.RBRACE, yytext()); }
-            "("     { addToken("(", yytext()); return symbol(sym.LPAREN, yytext()); }
-            ")"     { addToken(")", yytext()); return symbol(sym.RPAREN, yytext()); }
-            "->"    { addToken("->", yytext()); return symbol(sym.ARROW, yytext()); }
-            ";"     { addToken(";", yytext()); return symbol(sym.SEMICOLON, yytext()); }
-            ":"     { addToken(":", yytext()); return symbol(sym.COLON, yytext()); }
-            "~"     { addToken("~", yytext()); return symbol(sym.VIRGULILLA, yytext()); }
-            ","     { addToken(",", yytext()); return symbol(sym.COMMA, yytext()); }
-}
+/* Operadores */
+<YYINITIAL>    "{"     { addToken("{", yytext()); return symbol(sym.LBRACE, yytext()); }
+<YYINITIAL>    "}"     { addToken("}", yytext()); return symbol(sym.RBRACE, yytext()); }
+<YYINITIAL>    "("     { addToken("(", yytext()); return symbol(sym.LPAREN, yytext()); }
+<YYINITIAL>    ")"     { addToken(")", yytext()); return symbol(sym.RPAREN, yytext()); }
+<YYINITIAL>   "->"    { addToken("->", yytext()); return symbol(sym.ARROW, yytext()); }
+<YYINITIAL>    ";"     { addToken(";", yytext()); return symbol(sym.SEMICOLON, yytext()); }
+<YYINITIAL>    ":"     { addToken(":", yytext()); return symbol(sym.COLON, yytext()); }
+<YYINITIAL>   "~"     { addToken("~", yytext()); return symbol(sym.VIRGULILLA, yytext()); }
+<YYINITIAL>    ","     { addToken(",", yytext()); return symbol(sym.COMMA, yytext()); }
 
 <YYINITIAL>{
             /* Reglas de Caracteres */

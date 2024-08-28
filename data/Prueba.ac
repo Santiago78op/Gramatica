@@ -1,4 +1,12 @@
-
+{
     #Definición de conjuntos
-    CONJ  1;
+    CONJ : conjuntoA -> 1,2,3,a,b ;
+    CONJ : conjuntoB -> 1~23;
 
+    #Definición de operaciones
+    OPERA : operacion1 -> & {conjuntoA} {conjuntoB};
+ 
+    #Evaluamos conjuntos de datos
+    EVALUAR ( {a, b, c} , operacion1 );
+
+}

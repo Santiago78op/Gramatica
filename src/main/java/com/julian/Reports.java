@@ -145,7 +145,7 @@ public class Reports {
                                 meta().withCharset("UTF-8"),
                                 meta().withName("viewport").withContent("width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"),
                                 link().withRel("stylesheet").withHref("https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"),
-                                title("Error Lexico")
+                                title("Error Sintactico")
                         ),
                         body(
                                 header(

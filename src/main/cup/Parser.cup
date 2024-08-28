@@ -25,80 +25,58 @@ parser code {:
 
     public List<SyntaxError> syntaxErrors = new ArrayList<>();
 
-    // Variables de estado para rastrear el contexto
-    private boolean expectingConj = false;
-    private boolean expectingOpera = false;
-    private boolean expectingEvaluar = false;
-
     @Override
     public void report_error(String message, Object info) {
-        String tipo = "Syntax Error";
+
         int line = -1;
         int column = -1;
-        String incomingToken = "unknown";
-        String expectedTokens = "";
 
         if (info instanceof java_cup.runtime.Symbol) {
-            java_cup.runtime.Symbol s = (java_cup.runtime.Symbol) info;
-            if (s.left >= 0) {
-                line = s.left + 1;
-            }
-            if (s.right >= 0) {
-                column = s.right + 1;
-            }
-            incomingToken = s.value != null ? s.value.toString() : "unknown";
+           java_cup.runtime.Symbol s = (java_cup.runtime.Symbol) info;
+           if (s.left >= 0) {
+               line = s.left + 1;
+           }
+           if (s.right >= 0) {
+               column = s.right + 1;
+           }
         }
 
-        expectedTokens = expected_token(info);
-
+        String expectedTokens = getExpectedTokensForCurrentState();
+        String incomingToken = info instanceof Symbol ? ((Symbol) info).value.toString() : "unknown";
         String errorMessage = "Se encontró '" + incomingToken + "' y se esperaba " + expectedTokens + ".";
-        SyntaxError error = new SyntaxError(tipo, errorMessage, line, column);
-        syntaxErrors.add(error);
 
-        System.err.println("Error: " + errorMessage + " at line " + line + ", column " + column);
+        SyntaxError error = new SyntaxError("Syntax Error", errorMessage,  line, column);
+        if (!syntaxErrors.contains(error)) {
+            syntaxErrors.add(error);
+        }
+
+        System.err.println("Error: " + errorMessage);
     }
 
-    @Override
-    public void report_fatal_error(String message, Object info) {
-        report_error(message, info);
-        throw new RuntimeException("Fatal error: " + message);
-    }
+    private String getExpectedTokensForCurrentState() {
+        StringBuilder expectedTokens = new StringBuilder();
 
-    private String expected_token(Object info) {
-        if (info instanceof java_cup.runtime.Symbol) {
-            java_cup.runtime.Symbol s = (java_cup.runtime.Symbol) info;
+        // Obtener el símbolo en la cima de la pila para determinar el estado actual.
+        Symbol topSymbol = (Symbol) stack.peek();
+        int currentState = topSymbol.parse_state;  // Estado actual
 
-            // Si se encuentra un COLON, determinar qué token debería haber venido antes
-            if (s.sym == sym.COLON) {
-                if (expectingConj) {
-                    return "\"CONJ\"";
-                } else if (expectingOpera) {
-                    return "\"OPERA\"";
-                } else if (expectingEvaluar) {
-                    return "\"EVALUAR\"";
-                } else {
-                    return "\"CONJ\", \"OPERA\", \"EVALUAR\""; // Caso por defecto si no se puede determinar el contexto
+        // Obtener la tabla de acciones
+        short[][] actionTable = action_table();
+
+        // Revisa las acciones posibles en la tabla de parsing para el estado actual
+        for (int token = 0; token < actionTable[currentState].length; token++) {
+            short action = actionTable[currentState][token];
+            if (action > 0) {  // Acción válida (Shift o Reduce)
+                if (expectedTokens.length() > 0) {
+                    expectedTokens.append(", ");
                 }
-            }
-
-            // Otros casos según el contexto
-            else if (s.sym == sym.CONJ) {
-                return "\"LBRACE\"";
-            } else if (s.sym == sym.SEMICOLON) {
-                return "\"ARROW\", \"ID\"";
-            } else if (s.sym == sym.ARROW) {
-                return "\"ID\", \"NUM\", \"VIRGULILLA\"";
-            } else if (s.sym == sym.ID) {
-                return "\":\"";
-            } else if (s.sym == sym.RBRACE || s.sym == sym.LBRACE) {
-                return "\"LBRACE\"";  // Para casos donde se esperaba '{'
-            } else {
-                return "\"ID\", \"NUM\", \"{\", \"}\", \";\"";  // Otros tokens genéricos
+                expectedTokens.append(sym.terminalNames[token]);  // Nombre del token
             }
         }
 
-        return "\"ID\", \"NUM\", \"{\", \"}\", \";\""; // Valor por defecto si no se puede determinar
+        return expectedTokens.toString();
     }
+
 
     @Override
     public Symbol parse() {
@@ -106,7 +84,7 @@ parser code {:
             return super.parse();
         } catch (Exception e) {
             System.err.println("Error: Couldn't repair and continue parse");
-            e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
@@ -122,15 +100,15 @@ parser code {:
    lineas.
 */
 
-// Terminales que no tienen un valor son listados primero.
-terminal CONJ, OPERA, EVALUAR, LBRACE, RBRACE, LPAREN, RPAREN,
-         ARROW, SEMICOLON, COLON, VIRGULILLA, COMMA, UNION,
-         INTERSECCION, COMPLEMENTO, DIFERENCIA;
-
 // Terminales que tienen un valor como los enteros son listados
 // en la segunda o demas lineas.
 terminal String ID;
 terminal Double NUM;
+
+// Terminales que no tienen un valor son listados primero.
+terminal CONJ, OPERA, EVALUAR, LBRACE, RBRACE, LPAREN, RPAREN,
+         ARROW, SEMICOLON, COLON, VIRGULILLA, COMMA, UNION,
+         INTERSECCION, COMPLEMENTO, DIFERENCIA;
 
 /* ------------- Sección de no terminales ----------- */
 
@@ -199,17 +177,6 @@ BLOCK ::= LBRACE:lbrace
                     EVAL_LIST:eval_list
              RBRACE:rbrace
           {:
-
-                if (lbrace != null) {
-                    expectingConj = true;
-                    expectingOpera = false;
-                    expectingEvaluar = false;
-                }else if( rbrace != null){
-                    expectingConj = false;
-                    expectingOpera = false;
-                    expectingEvaluar = false;
-                }
-
                 TreeNode<String> blockNode = new TreeNode<>("BLOCK");
 
                 blockNode.addChild(new TreeNode<>(lbrace.toString()));
@@ -249,12 +216,6 @@ CONJ_LIST ::= CONJ_LIST:conj_list CONJ_PART:conj_part
 
 CONJ_PART ::= CONJ:conj COLON:colon EXPR_DEF:expr_def SEMICOLON:semicolon
             {:
-                if (colon != null) {
-                    expectingConj = false;
-                    expectingOpera = true;
-                    expectingEvaluar = false;
-                }
-
                 TreeNode<String> parentNode = new TreeNode<>("CONJ_PART");
 
                 parentNode.addChild(new TreeNode<>(conj.toString()));
@@ -303,7 +264,7 @@ CONJUNTO_EXPR ::= CONJUNTO_EXPR:conjunto_expr COMMA:comma NUM:num
                     parentNode.addChild(new TreeNode<>(comma.toString()));
                     parentNode.addChild(new TreeNode<>(id.toString()));
 
-                    RESULT = parentNode;    
+                    RESULT = parentNode;
                 :}
                 | NUM:num
                 {:
@@ -358,7 +319,7 @@ CONJUNTO_EXPR ::= CONJUNTO_EXPR:conjunto_expr COMMA:comma NUM:num
 
                     RESULT = parentNode;
                 :};
-                
+
 /* 'oper_list' define la lista de operaciones, que pueden ser
    operaciones de intersección, unión, complemento, o diferencia
    entre conjuntos. Cada operación está seguida por los conjuntos
@@ -389,13 +350,6 @@ OPER_LIST ::= OPER_LIST:oper_list OPER_PART:oper_part
     complemento, o diferencia entre conjuntos. */
 OPER_PART ::= OPERA:opera COLON:colon OPER_DEF:oper_def SEMICOLON:semicolon
             {:
-
-                if (opera != null) {
-                    expectingConj = false;
-                    expectingOpera = false;
-                    expectingEvaluar = true;
-                }
-
                 TreeNode<String> parentNode = new TreeNode<>("OPER_PART");
 
                 parentNode.addChild(new TreeNode<>(opera.toString()));
@@ -434,7 +388,7 @@ OPER_EXPR ::= OPER_EXPR:oper_expr SIMBOL_EXPR:simbol_expr
                 parentNode.addChild(oper_expr);
                 parentNode.addChild(simbol_expr);
 
-                RESULT = parentNode;    
+                RESULT = parentNode;
             :}
             | SIMBOL_EXPR:simbol_expr
             {:
@@ -448,34 +402,34 @@ OPER_EXPR ::= OPER_EXPR:oper_expr SIMBOL_EXPR:simbol_expr
 SIMBOL_EXPR ::= UNION:union
             {:
                 TreeNode<String> simbol_expr = new TreeNode<>("SIMBOL_EXPR");
-                
+
                 simbol_expr.addChild(new TreeNode<>(union.toString()));
-                
+
                 RESULT = simbol_expr;
             :}
             | INTERSECCION:interseccion
             {:
                 TreeNode<String> simbol_expr = new TreeNode<>("SIMBOL_EXPR");
-                
+
                 simbol_expr.addChild(new TreeNode<>(interseccion.toString()));
-                
+
                 RESULT = simbol_expr;
             :}
             | COMPLEMENTO:complemento
             {:
                 TreeNode<String> simbol_expr = new TreeNode<>("SIMBOL_EXPR");
-                
+
                 simbol_expr.addChild(new TreeNode<>(complemento.toString()));
-                
-                RESULT = simbol_expr;   
+
+                RESULT = simbol_expr;
             :}
             | DIFERENCIA:diferencia
             {:
                 TreeNode<String> simbol_expr = new TreeNode<>("SIMBOL_EXPR");
-                
+
                 simbol_expr.addChild(new TreeNode<>(diferencia.toString()));
-                
-                RESULT = simbol_expr;   
+
+                RESULT = simbol_expr;
             :};
 
 EXPRE_CONJ ::= EXPRE_CONJ:expre_conj LBRACE:lbrace CONJUNTO_EXPR:conjunto_expr RBRACE:rbrace
@@ -522,7 +476,7 @@ EVAL_LIST ::= EVAL_LIST:eval_list EVAL_PART:eval_part
 
                 parentNode.addChild(eval_part);
 
-                RESULT = parentNode;    
+                RESULT = parentNode;
             :};
 
 /*
@@ -532,18 +486,11 @@ EVAL_LIST ::= EVAL_LIST:eval_list EVAL_PART:eval_part
     de conjuntos de datos con operaciones de intersección, unión,
     complemento, o diferencia entre conjuntos. */
 
-EVAL_PART ::= EVALUAR:evaluar 
+EVAL_PART ::= EVALUAR:evaluar
                 LPAREN:lparen
                     LBRACE:lbrace CONJUNTO_EXPR:conjunto_expr RBRACE:rbrace COMMA:comma ID:id
                 RPAREN:rparen SEMICOLON:semicolon
                 {:
-
-                    if (evaluar != null) {
-                        expectingConj = false;
-                        expectingOpera = false;
-                        expectingEvaluar = false;
-                    }
-
                     TreeNode<String> evalPart = new TreeNode<>("EVAL_PART");
 
                     evalPart.addChild(new TreeNode<>(evaluar.toString()));
