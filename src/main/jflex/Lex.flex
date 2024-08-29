@@ -129,11 +129,14 @@ digit = [0-9]
     Definimos un identificador como una letra seguida de cero o mas
     letras o digitos.
 */
-id = {letter}({letter}|{digit})*
+guion = _
+id = {letter}({letter}|{digit}|{guion})*
 /*
     Definimos un numero como uno o mas digitos.
 */
 num = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
+
+charts = \^[!-~]+\$
 
 %% // fin de opciones.
 
@@ -180,6 +183,7 @@ num = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
             /* Reglas de Caracteres */
             {id}       { addToken("ID", yytext());  return symbol(sym.ID, yytext()); }
             {num}      { addToken("NUM", yytext()); return symbol(sym.NUM, Double.parseDouble(yytext())); }
+            {charts}   { addToken("CHART", yytext());  return symbol(sym.CHART, yytext()); }
 }
 
 <YYINITIAL>  {

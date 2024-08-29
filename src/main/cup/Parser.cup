@@ -118,7 +118,7 @@ parser code {:
 
 // Terminales que tienen un valor como los enteros son listados
 // en la segunda o demas lineas.
-terminal String ID;
+terminal String ID, CHART;
 terminal Double NUM;
 
 // Terminales que no tienen un valor son listados primero.
@@ -323,6 +323,24 @@ CONJUNTO_EXPR ::= CONJUNTO_EXPR:conjunto_expr COMMA:comma NUM:num
 
                     char start = num1.toString().charAt(0);
                     char end = num2.toString().charAt(0);
+                    StringBuilder range = new StringBuilder();
+                    for (char c = start; c <= end; c++) {
+                        range.append(c);
+                        if (c != end) {
+                            range.append(",");
+                        }
+                    }
+
+                    parentNode.addChild(new TreeNode<>(range.toString()));
+
+                    RESULT = parentNode;
+                :}
+                | CHART:char1 VIRGULILLA:virgulilla CHART:char2
+                {:
+                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
+
+                    char start = char1.toString().charAt(0);
+                    char end = char2.toString().charAt(0);
                     StringBuilder range = new StringBuilder();
                     for (char c = start; c <= end; c++) {
                         range.append(c);
