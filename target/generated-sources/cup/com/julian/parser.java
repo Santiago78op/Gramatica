@@ -158,52 +158,68 @@ public class parser extends java_cup.runtime.lr_parser {
 
     public List<SyntaxError> syntaxErrors = new ArrayList<>();
 
+    public int getCurrentParserState(){
+        return ((Symbol) stack.peek()).parse_state;
+    }
+
     @Override
     public void report_error(String message, Object info) {
+        // Obtine el estado actual del parser
+        int currentState = getCurrentParserState();
 
+        // Inicialisamos las lineas y columnas
         int line = -1;
         int column = -1;
 
-        if (info instanceof java_cup.runtime.Symbol) {
-           java_cup.runtime.Symbol s = (java_cup.runtime.Symbol) info;
+        String incomingToken = "unknown";
+
+        if (info instanceof Symbol) {
+           Symbol s = (Symbol) info;
            if (s.left >= 0) {
                line = s.left + 1;
            }
            if (s.right >= 0) {
                column = s.right + 1;
            }
+           incomingToken = s.value.toString();
         }
 
-        String expectedTokens = getExpectedTokensForCurrentState();
-        String incomingToken = info instanceof Symbol ? ((Symbol) info).value.toString() : "unknown";
-        String errorMessage = "Se encontró '" + incomingToken + "' y se esperaba " + expectedTokens + ".";
+        // Obtener los tokens esperados
+        String expectedTokens = getExpectedTokensForCurrentState(currentState);
 
-        SyntaxError error = new SyntaxError("Syntax Error", errorMessage,  line, column);
+        String errorMessage = "Se encontró '" + incomingToken + "' en el estado " + currentState + " y se esperaba " + expectedTokens + ".";
+        SyntaxError error = new SyntaxError("Syntax Error", errorMessage, line, column);
         if (!syntaxErrors.contains(error)) {
-            syntaxErrors.add(error);
+           syntaxErrors.add(error);
         }
-
         System.err.println("Error: " + errorMessage);
     }
 
-    private String getExpectedTokensForCurrentState() {
+    private String getExpectedTokensForCurrentState(int currentState) {
         StringBuilder expectedTokens = new StringBuilder();
-
-        // Obtener el símbolo en la cima de la pila para determinar el estado actual.
-        Symbol topSymbol = (Symbol) stack.peek();
-        int currentState = topSymbol.parse_state;  // Estado actual
 
         // Obtener la tabla de acciones
         short[][] actionTable = action_table();
 
-        // Revisa las acciones posibles en la tabla de parsing para el estado actual
-        for (int token = 0; token < actionTable[currentState].length; token++) {
-            short action = actionTable[currentState][token];
-            if (action > 0) {  // Acción válida (Shift o Reduce)
-                if (expectedTokens.length() > 0) {
-                    expectedTokens.append(", ");
+        int lenthTokens = actionTable.length;
+        // Verifica si el elemento actual está dentro del rango de la tabla
+        if (currentState >= 0 && currentState <= lenthTokens) {
+            short[] actionsForCurrentStates = actionTable[currentState];
+
+            int curr = actionsForCurrentStates.length;
+            // Itera sobre los posibles tokens terminales
+            for (int i = 0; i < curr; i++){
+                int actionLenth = actionsForCurrentStates[i];
+                if (actionLenth > 0) {
+                    int expectedLength = expectedTokens.length();
+                    if (expectedLength > 0) {
+                        expectedTokens.append(", ");
+                    }
+                    if (actionLenth < 21) {
+                        expectedTokens.append(sym.terminalNames[actionLenth]);
+                    }
+
                 }
-                expectedTokens.append(sym.terminalNames[token]);  // Nombre del token
             }
         }
 
@@ -220,7 +236,7 @@ public class parser extends java_cup.runtime.lr_parser {
             // e.printStackTrace();
             return null;
         }
-    }
+}
 
 
 

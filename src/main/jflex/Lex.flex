@@ -38,6 +38,12 @@ import java.util.List;
 %unicode
 
 /*
+    Activamos la compatibilidad con Java CUP para analizadores
+    sintacticos(parser).
+*/
+%cup
+
+/*
     Activar el contador de lineas, variable yyline.
     Activar el contador de columna, variable yycolumn.
 */
@@ -50,13 +56,6 @@ import java.util.List;
 %init{
     yycolumn = 1;
 %init}
-
-/*
-    Activamos la compatibilidad con Java CUP para analizadores
-    sintacticos(parser).
-*/
-
-%cup
 
 /*
     Declaraciones
@@ -98,10 +97,6 @@ import java.util.List;
 
 %}
 
-%eofval{
-    return symbol(sym.EOF, yytext());
-%eofval}
-
 /*
     Macro declaraciones
 
@@ -140,8 +135,6 @@ id = {letter}({letter}|{digit})*
 */
 num = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
 
-%state STRING
-
 %% // fin de opciones.
 
 /* ------------------- Reglas Lexicas ------------------- */
@@ -161,32 +154,32 @@ num = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
     ignoran estados intermedios.
 */
 
+/* Operadores */
+<YYINITIAL>"{"     { addToken("{", yytext());  return  symbol(sym.LBRACE, yytext()); }
+<YYINITIAL>"}"     { addToken("}", yytext());  return  symbol(sym.RBRACE, yytext()); }
+<YYINITIAL>"("     { addToken("(", yytext());  return  symbol(sym.LPAREN, yytext()); }
+<YYINITIAL>")"     { addToken(")", yytext());  return  symbol(sym.RPAREN, yytext()); }
+<YYINITIAL>"->"    { addToken("->", yytext()); return  symbol(sym.ARROW, yytext()); }
+<YYINITIAL>";"     { addToken(";", yytext());  return  symbol(sym.SEMICOLON, yytext()); }
+<YYINITIAL>":"     { addToken(":", yytext());  return  symbol(sym.COLON, yytext()); }
+<YYINITIAL>"~"     { addToken("~", yytext());  return  symbol(sym.VIRGULILLA, yytext()); }
+<YYINITIAL>","     { addToken(",", yytext());  return  symbol(sym.COMMA, yytext()); }
+
 /* Reglas de Operaciones */
-<YYINITIAL> CONJ          { addToken("CONJ", yytext()); return symbol(sym.CONJ, yytext()); }
-<YYINITIAL> OPERA        { addToken("OPERA", yytext()); return symbol(sym.OPERA, yytext()); }
-<YYINITIAL> EVALUAR    { addToken("EVALUAR", yytext()); return symbol(sym.EVALUAR, yytext()); }
+<YYINITIAL> CONJ       { addToken("CONJ", yytext());    return  symbol(sym.CONJ, yytext()); }
+<YYINITIAL> OPERA      { addToken("OPERA", yytext());   return  symbol(sym.OPERA, yytext()); }
+<YYINITIAL> EVALUAR    { addToken("EVALUAR", yytext()); return  symbol(sym.EVALUAR, yytext()); }
 
 /* Reglas de opereaciones Conjuntos */
-<YYINITIAL>  U               { addToken("U", yytext()); return symbol(sym.UNION, yytext()); }
-<YYINITIAL>  &               { addToken("&", yytext()); return symbol(sym.INTERSECCION, yytext()); }
-<YYINITIAL> \^               { addToken("^", yytext()); return symbol(sym.COMPLEMENTO, yytext()); }
-<YYINITIAL>  -               { addToken("-", yytext()); return symbol(sym.DIFERENCIA, yytext()); }
-
-/* Operadores */
-<YYINITIAL>    "{"     { addToken("{", yytext()); return symbol(sym.LBRACE, yytext()); }
-<YYINITIAL>    "}"     { addToken("}", yytext()); return symbol(sym.RBRACE, yytext()); }
-<YYINITIAL>    "("     { addToken("(", yytext()); return symbol(sym.LPAREN, yytext()); }
-<YYINITIAL>    ")"     { addToken(")", yytext()); return symbol(sym.RPAREN, yytext()); }
-<YYINITIAL>   "->"    { addToken("->", yytext()); return symbol(sym.ARROW, yytext()); }
-<YYINITIAL>    ";"     { addToken(";", yytext()); return symbol(sym.SEMICOLON, yytext()); }
-<YYINITIAL>    ":"     { addToken(":", yytext()); return symbol(sym.COLON, yytext()); }
-<YYINITIAL>   "~"     { addToken("~", yytext()); return symbol(sym.VIRGULILLA, yytext()); }
-<YYINITIAL>    ","     { addToken(",", yytext()); return symbol(sym.COMMA, yytext()); }
+<YYINITIAL>  U         { addToken("U", yytext()); return  symbol(sym.UNION, yytext()); }
+<YYINITIAL>  &         { addToken("&", yytext()); return  symbol(sym.INTERSECCION, yytext()); }
+<YYINITIAL> \^         { addToken("^", yytext()); return  symbol(sym.COMPLEMENTO, yytext()); }
+<YYINITIAL>  -         { addToken("-", yytext()); return  symbol(sym.DIFERENCIA, yytext()); }
 
 <YYINITIAL>{
             /* Reglas de Caracteres */
-            {id}    { addToken("ID", yytext()); return symbol(sym.ID, yytext()); }
-            {num}   { addToken("NUM", yytext()); return symbol(sym.NUM, Double.parseDouble(yytext())); }
+            {id}       { addToken("ID", yytext());  return symbol(sym.ID, yytext()); }
+            {num}      { addToken("NUM", yytext()); return symbol(sym.NUM, Double.parseDouble(yytext())); }
 }
 
 <YYINITIAL>  {
@@ -197,8 +190,11 @@ num = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
     {ws}        { /* ignore whitespace */ }
 }
 
+// Fin de archivo
+<YYINITIAL> <<EOF>> {return  symbol(sym.EOF);}
+
 /*
     Si el token contenido en la entrada no coincide con ninguna regla
     entonces se marca un token ilegal
 */
-[^] { addLexicalError("Illegal character: " + yytext()); }
+<YYINITIAL>. { addLexicalError("Illegal character: " + yytext()); return  symbol(sym.error, yytext());}
