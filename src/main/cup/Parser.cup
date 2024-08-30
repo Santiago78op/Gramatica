@@ -118,13 +118,15 @@ parser code {:
 
 // Terminales que tienen un valor como los enteros son listados
 // en la segunda o demas lineas.
-terminal String ID, CHART;
+terminal String ID;
 terminal Double NUM;
 
 // Terminales que no tienen un valor son listados primero.
-terminal CONJ, OPERA, EVALUAR, LBRACE, RBRACE, LPAREN, RPAREN,
-         ARROW, SEMICOLON, COLON, VIRGULILLA, COMMA, UNION,
-         INTERSECCION, COMPLEMENTO, DIFERENCIA;
+terminal ARROW, XCLAM, TWOQUOTE, HASH, DOLLAR, PERCENT, ONEQUOTE, LPAREN, RPAREN,
+         ASTERISK, PLUS, COMMA, MINUS, DOT, SLASH, COLON, SEMICOLON, LESSTHAN,
+         EQUALS, GRATHTHAN, QUESTION, AT, LBRACKET, BACKSLASH, RBRACKET, UNDERSCOR,
+         BACKTICK, LBRACE, OR, RBRACE, VIRGULILLA, UNION, INTERSECCION, COMPLEMENTO, DIFERENCIA,
+         CONJ, OPERA, EVALUAR;
 
 /* ------------- Sección de no terminales ----------- */
 
@@ -137,7 +139,7 @@ terminal CONJ, OPERA, EVALUAR, LBRACE, RBRACE, LPAREN, RPAREN,
 
 non terminal TreeNode<String> BLOCK, CONJ_LIST, CONJ_PART, EXPR_DEF, CONJUNTO_EXPR,
                               OPER_LIST, OPER_PART, OPER_DEF, OPER_EXPR, EVAL_LIST,
-                              EVAL_PART, EXPRE_CONJ, SIMBOL_EXPR;
+                              EVAL_PART, EXPRE_CONJ, SIMBOL_EXPR, EXPR;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -247,112 +249,52 @@ CONJ_PART ::= CONJ:conj COLON:colon EXPR_DEF:expr_def SEMICOLON:semicolon
    La expresión puede ser una secuencia de números o identificadores
    separados por comas, o un rango definido con el símbolo VIRGULILLA. */
 
- EXPR_DEF ::= ID:id ARROW:arrow CONJUNTO_EXPR:conjunto_expr
-            {:
-                TreeNode<String> parentNode = new TreeNode<>("EXPR_DEF");
-
-                parentNode.addChild(new TreeNode<>(id.toString()));
-                parentNode.addChild(new TreeNode<>(arrow.toString()));
-                parentNode.addChild(conjunto_expr);
-
-                RESULT = parentNode;
-            :};
+EXPR_DEF ::= ID:id ARROW:arrow CONJUNTO_EXPR:conjunto_expr
+            |ID:id ARROW:arrow CONJUNTO_EXPR:conjunto_expr1 VIRGULILLA:virgulilla CONJUNTO_EXPR:conjunto_expr2;
 
  /* 'conjunto_expr' define los elementos del conjunto, que pueden
     ser números, identificadores, o un rango de valores definido por
     el símbolo VIRGULILLA. */
 
-CONJUNTO_EXPR ::= CONJUNTO_EXPR:conjunto_expr COMMA:comma NUM:num
-                {:
-                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
+CONJUNTO_EXPR ::= CONJUNTO_EXPR:conjunto_expr COMMA:comma EXPR:expr
+              | EXPR:expr;
 
-                    parentNode.addChild(conjunto_expr);
-                    parentNode.addChild(new TreeNode<>(comma.toString()));
-                    parentNode.addChild(new TreeNode<>(num.toString()));
-
-                    RESULT = parentNode;
-                :}
-                | CONJUNTO_EXPR:conjunto_expr COMMA:comma ID:id
-                {:
-                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
-
-                    parentNode.addChild(conjunto_expr);
-                    parentNode.addChild(new TreeNode<>(comma.toString()));
-                    parentNode.addChild(new TreeNode<>(id.toString()));
-
-                    RESULT = parentNode;
-                :}
-                | NUM:num
-                {:
-                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
-
-                    parentNode.addChild(new TreeNode<>(num.toString()));
-
-                    RESULT = parentNode;
-                :}
-                | ID:id
-                {:
-                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
-
-                    parentNode.addChild(new TreeNode<>(id.toString()));
-
-                    RESULT = parentNode;
-                :}
-                | ID:id1 VIRGULILLA:virgulilla ID:id2
-                {:
-                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
-
-                    char start = id1.toString().charAt(0);
-                    char end = id2.toString().charAt(0);
-                    StringBuilder range = new StringBuilder();
-                    for (char c = start; c <= end; c++) {
-                        range.append(c);
-                        if (c != end) {
-                            range.append(",");
-                        }
-                    }
-
-                    parentNode.addChild(new TreeNode<>(range.toString()));
-
-                    RESULT = parentNode;
-
-                :}
-                | NUM:num1 VIRGULILLA:virgulilla NUM:num2
-                {:
-                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
-
-                    char start = num1.toString().charAt(0);
-                    char end = num2.toString().charAt(0);
-                    StringBuilder range = new StringBuilder();
-                    for (char c = start; c <= end; c++) {
-                        range.append(c);
-                        if (c != end) {
-                            range.append(",");
-                        }
-                    }
-
-                    parentNode.addChild(new TreeNode<>(range.toString()));
-
-                    RESULT = parentNode;
-                :}
-                | CHART:char1 VIRGULILLA:virgulilla CHART:char2
-                {:
-                    TreeNode<String> parentNode = new TreeNode<>("CONJUNTO_EXPR");
-
-                    char start = char1.toString().charAt(0);
-                    char end = char2.toString().charAt(0);
-                    StringBuilder range = new StringBuilder();
-                    for (char c = start; c <= end; c++) {
-                        range.append(c);
-                        if (c != end) {
-                            range.append(",");
-                        }
-                    }
-
-                    parentNode.addChild(new TreeNode<>(range.toString()));
-
-                    RESULT = parentNode;
-                :};
+EXPR ::= XCLAM:exclam
+        | TWOQUOTE:twoquote
+        | HASH:hash
+        | DOLLAR:dolar
+        | PERCENT:percent
+        | ONEQUOTE:onequote
+        | LPAREN:lparen
+        | RPAREN:rparen
+        | ASTERISK:asterisk
+        | PLUS:plus
+        | COMMA:comma
+        | MINUS:minus
+        | DOT:dot
+        | SLASH:slash
+        | COLON:colon
+        | SEMICOLON:semicolon
+        | LESSTHAN:lessthan
+        | EQUALS:equal
+        | GRATHTHAN:graththan
+        | QUESTION:question
+        | AT:at
+        | LBRACKET:lbracket
+        | BACKSLASH:backslash
+        | RBRACKET:rbracket
+        | UNDERSCOR:underscor
+        | BACKTICK:backtick
+        | LBRACE:lbrace
+        | OR:or
+        | RBRACE:rbrace
+        | VIRGULILLA:virgulilla
+        | UNION:union
+        | INTERSECCION:interseccion
+        | COMPLEMENTO:complemento
+        | DIFERENCIA:diferencia
+        | ID:id
+        | NUM:num;
 
 /* 'oper_list' define la lista de operaciones, que pueden ser
    operaciones de intersección, unión, complemento, o diferencia

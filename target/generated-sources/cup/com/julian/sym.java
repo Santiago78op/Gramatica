@@ -8,49 +8,91 @@ package com.julian;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int DIFERENCIA = 20;
-  public static final int SEMICOLON = 13;
-  public static final int RBRACE = 9;
-  public static final int RPAREN = 11;
-  public static final int CHART = 3;
-  public static final int INTERSECCION = 18;
-  public static final int OPERA = 6;
-  public static final int LPAREN = 10;
-  public static final int COLON = 14;
-  public static final int LBRACE = 8;
+  public static final int TWOQUOTE = 6;
+  public static final int EVALUAR = 41;
+  public static final int DIFERENCIA = 38;
+  public static final int LBRACKET = 26;
+  public static final int ASTERISK = 13;
+  public static final int EQUALS = 22;
+  public static final int SLASH = 18;
+  public static final int CONJ = 39;
+  public static final int BACKSLASH = 27;
+  public static final int HASH = 7;
+  public static final int LPAREN = 11;
+  public static final int MINUS = 16;
+  public static final int RPAREN = 12;
+  public static final int VIRGULILLA = 34;
+  public static final int SEMICOLON = 20;
+  public static final int UNDERSCOR = 29;
+  public static final int LESSTHAN = 21;
+  public static final int OR = 32;
+  public static final int COMMA = 15;
+  public static final int NUM = 3;
+  public static final int ONEQUOTE = 10;
+  public static final int PLUS = 14;
+  public static final int DOT = 17;
   public static final int ID = 2;
-  public static final int NUM = 4;
-  public static final int COMMA = 16;
   public static final int EOF = 0;
-  public static final int CONJ = 5;
-  public static final int UNION = 17;
+  public static final int COMPLEMENTO = 37;
+  public static final int RBRACKET = 28;
   public static final int error = 1;
-  public static final int ARROW = 12;
-  public static final int COMPLEMENTO = 19;
-  public static final int VIRGULILLA = 15;
-  public static final int EVALUAR = 7;
+  public static final int PERCENT = 9;
+  public static final int GRATHTHAN = 23;
+  public static final int INTERSECCION = 36;
+  public static final int XCLAM = 5;
+  public static final int ARROW = 4;
+  public static final int COLON = 19;
+  public static final int UNION = 35;
+  public static final int LBRACE = 31;
+  public static final int BACKTICK = 30;
+  public static final int DOLLAR = 8;
+  public static final int OPERA = 40;
+  public static final int RBRACE = 33;
+  public static final int QUESTION = 24;
+  public static final int AT = 25;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "ID",
-  "CHART",
   "NUM",
-  "CONJ",
-  "OPERA",
-  "EVALUAR",
-  "LBRACE",
-  "RBRACE",
+  "ARROW",
+  "XCLAM",
+  "TWOQUOTE",
+  "HASH",
+  "DOLLAR",
+  "PERCENT",
+  "ONEQUOTE",
   "LPAREN",
   "RPAREN",
-  "ARROW",
-  "SEMICOLON",
-  "COLON",
-  "VIRGULILLA",
+  "ASTERISK",
+  "PLUS",
   "COMMA",
+  "MINUS",
+  "DOT",
+  "SLASH",
+  "COLON",
+  "SEMICOLON",
+  "LESSTHAN",
+  "EQUALS",
+  "GRATHTHAN",
+  "QUESTION",
+  "AT",
+  "LBRACKET",
+  "BACKSLASH",
+  "RBRACKET",
+  "UNDERSCOR",
+  "BACKTICK",
+  "LBRACE",
+  "OR",
+  "RBRACE",
+  "VIRGULILLA",
   "UNION",
   "INTERSECCION",
   "COMPLEMENTO",
-  "DIFERENCIA"
+  "DIFERENCIA",
+  "CONJ",
+  "OPERA",
+  "EVALUAR"
   };
 }
 

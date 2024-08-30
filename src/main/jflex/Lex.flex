@@ -136,8 +136,6 @@ id = {letter}({letter}|{digit}|{guion})*
 */
 num = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
 
-charts = \^[!-~]+\$
-
 %% // fin de opciones.
 
 /* ------------------- Reglas Lexicas ------------------- */
@@ -158,32 +156,56 @@ charts = \^[!-~]+\$
 */
 
 /* Operadores */
-<YYINITIAL>"{"     { addToken("{", yytext());  return  symbol(sym.LBRACE, yytext()); }
-<YYINITIAL>"}"     { addToken("}", yytext());  return  symbol(sym.RBRACE, yytext()); }
-<YYINITIAL>"("     { addToken("(", yytext());  return  symbol(sym.LPAREN, yytext()); }
-<YYINITIAL>")"     { addToken(")", yytext());  return  symbol(sym.RPAREN, yytext()); }
-<YYINITIAL>"->"    { addToken("->", yytext()); return  symbol(sym.ARROW, yytext()); }
-<YYINITIAL>";"     { addToken(";", yytext());  return  symbol(sym.SEMICOLON, yytext()); }
-<YYINITIAL>":"     { addToken(":", yytext());  return  symbol(sym.COLON, yytext()); }
-<YYINITIAL>"~"     { addToken("~", yytext());  return  symbol(sym.VIRGULILLA, yytext()); }
-<YYINITIAL>","     { addToken(",", yytext());  return  symbol(sym.COMMA, yytext()); }
+<YYINITIAL> {
+    /* Caracteres aceptados por el Lenguaje */
+    "->"    { addToken("->", yytext());  return  symbol(sym.ARROW,      yytext()); }
+    "!"     { addToken("!",  yytext());  return  symbol(sym.XCLAM,      yytext()); }
+    "\""    { addToken("\"", yytext());  return  symbol(sym.TWOQUOTE,   yytext()); }
+    "#"     { addToken("#",  yytext());  return  symbol(sym.HASH,       yytext()); }
+    "$"     { addToken("$",  yytext());  return  symbol(sym.DOLLAR,     yytext()); }
+    "%"     { addToken("%",  yytext());  return  symbol(sym.PERCENT,    yytext()); }
+    "'"     { addToken("'",  yytext());  return  symbol(sym.ONEQUOTE,   yytext()); }
+    "("     { addToken("(",  yytext());  return  symbol(sym.LPAREN,     yytext()); }
+    ")"     { addToken(")",  yytext());  return  symbol(sym.RPAREN,     yytext()); }
+    "*"     { addToken("*",  yytext());  return  symbol(sym.ASTERISK,   yytext()); }
+    "+"     { addToken("+",  yytext());  return  symbol(sym.PLUS,       yytext()); }
+    ","     { addToken(",",  yytext());  return  symbol(sym.COMMA,      yytext()); }
+    "-"     { addToken("-",  yytext());  return  symbol(sym.MINUS,      yytext()); }
+    "."     { addToken(".",  yytext());  return  symbol(sym.DOT,        yytext()); }
+    "/"     { addToken("/",  yytext());  return  symbol(sym.SLASH,      yytext()); }
+    ":"     { addToken(":",  yytext());  return  symbol(sym.COLON,      yytext()); }
+    ";"     { addToken(";",  yytext());  return  symbol(sym.SEMICOLON,  yytext()); }
+    "<"     { addToken("<",  yytext());  return  symbol(sym.LESSTHAN,   yytext()); }
+    "="     { addToken("=",  yytext());  return  symbol(sym.EQUALS,     yytext()); }
+    ">"     { addToken(">",  yytext());  return  symbol(sym.GRATHTHAN,  yytext()); }
+    "?"     { addToken("?",  yytext());  return  symbol(sym.QUESTION,   yytext()); }
+    "@"     { addToken("@",  yytext());  return  symbol(sym.AT,         yytext()); }
+    "["     { addToken("[",  yytext());  return  symbol(sym.LBRACKET,   yytext()); }
+    "\\"    { addToken("\\", yytext());  return  symbol(sym.BACKSLASH,  yytext()); }
+    "]"     { addToken("]",  yytext());  return  symbol(sym.RBRACKET,   yytext()); }
+    "_"     { addToken("_",  yytext());  return  symbol(sym.UNDERSCOR,  yytext()); }
+    "`"     { addToken("`",  yytext());  return  symbol(sym.BACKTICK,   yytext()); }
+    "{"     { addToken("{",  yytext());  return  symbol(sym.LBRACE,     yytext()); }
+    "|"     { addToken("|",  yytext());  return  symbol(sym.OR,         yytext()); }
+    "}"     { addToken("}",  yytext());  return  symbol(sym.RBRACE,     yytext()); }
+    "~"     { addToken("~",  yytext());  return  symbol(sym.VIRGULILLA, yytext()); }
+
+    /* Reglas de opereaciones Conjuntos */
+    "U"     { addToken("U",  yytext());  return  symbol(sym.UNION,        yytext()); }
+    "&"     { addToken("&",  yytext());  return  symbol(sym.INTERSECCION, yytext()); }
+    "^"     { addToken("^",  yytext());  return  symbol(sym.COMPLEMENTO,  yytext()); }
+    "-"     { addToken("-",  yytext());  return  symbol(sym.DIFERENCIA,   yytext()); }
+}
 
 /* Reglas de Operaciones */
-<YYINITIAL> CONJ       { addToken("CONJ", yytext());    return  symbol(sym.CONJ, yytext()); }
-<YYINITIAL> OPERA      { addToken("OPERA", yytext());   return  symbol(sym.OPERA, yytext()); }
-<YYINITIAL> EVALUAR    { addToken("EVALUAR", yytext()); return  symbol(sym.EVALUAR, yytext()); }
-
-/* Reglas de opereaciones Conjuntos */
-<YYINITIAL>  U         { addToken("U", yytext()); return  symbol(sym.UNION, yytext()); }
-<YYINITIAL>  &         { addToken("&", yytext()); return  symbol(sym.INTERSECCION, yytext()); }
-<YYINITIAL> \^         { addToken("^", yytext()); return  symbol(sym.COMPLEMENTO, yytext()); }
-<YYINITIAL>  -         { addToken("-", yytext()); return  symbol(sym.DIFERENCIA, yytext()); }
+<YYINITIAL> CONJ       { addToken("CONJ",    yytext());  return  symbol(sym.CONJ,    yytext()); }
+<YYINITIAL> OPERA      { addToken("OPERA",   yytext());  return  symbol(sym.OPERA,   yytext()); }
+<YYINITIAL> EVALUAR    { addToken("EVALUAR", yytext());  return  symbol(sym.EVALUAR, yytext()); }
 
 <YYINITIAL>{
             /* Reglas de Caracteres */
-            {id}       { addToken("ID", yytext());  return symbol(sym.ID, yytext()); }
+            {id}       { addToken("ID",  yytext()); return symbol(sym.ID,  yytext()); }
             {num}      { addToken("NUM", yytext()); return symbol(sym.NUM, Double.parseDouble(yytext())); }
-            {charts}   { addToken("CHART", yytext());  return symbol(sym.CHART, yytext()); }
 }
 
 <YYINITIAL>  {
