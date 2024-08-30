@@ -119,14 +119,13 @@ parser code {:
 // Terminales que tienen un valor como los enteros son listados
 // en la segunda o demas lineas.
 terminal String ID;
-terminal Double NUM;
+terminal Int NUM;
+terminal Double DECIMAL;
 
 // Terminales que no tienen un valor son listados primero.
-terminal ARROW, XCLAM, TWOQUOTE, HASH, DOLLAR, PERCENT, ONEQUOTE, LPAREN, RPAREN,
-         ASTERISK, PLUS, COMMA, MINUS, DOT, SLASH, COLON, SEMICOLON, LESSTHAN,
-         EQUALS, GRATHTHAN, QUESTION, AT, LBRACKET, BACKSLASH, RBRACKET, UNDERSCOR,
-         BACKTICK, LBRACE, OR, RBRACE, VIRGULILLA, UNION, INTERSECCION, COMPLEMENTO, DIFERENCIA,
-         CONJ, OPERA, EVALUAR;
+terminal UNION, INTERSECCION, COMPLEMENTO, DIFERENCIA, ARROW, COMMA,
+         LPAREN, RPAREN, COLON, SEMICOLON, LBRACE, RBRACE, VIRGULILLA,
+         CONJ, OPERA, EVALUAR, CHART;
 
 /* ------------- Sección de no terminales ----------- */
 
@@ -139,7 +138,7 @@ terminal ARROW, XCLAM, TWOQUOTE, HASH, DOLLAR, PERCENT, ONEQUOTE, LPAREN, RPAREN
 
 non terminal TreeNode<String> BLOCK, CONJ_LIST, CONJ_PART, EXPR_DEF, CONJUNTO_EXPR,
                               OPER_LIST, OPER_PART, OPER_DEF, OPER_EXPR, EVAL_LIST,
-                              EVAL_PART, EXPRE_CONJ, SIMBOL_EXPR, EXPR;
+                              EVAL_PART, EXPRE_CONJ, SIMBOL_EXPR, EXPR, CONJ_EXPR;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -249,8 +248,7 @@ CONJ_PART ::= CONJ:conj COLON:colon EXPR_DEF:expr_def SEMICOLON:semicolon
    La expresión puede ser una secuencia de números o identificadores
    separados por comas, o un rango definido con el símbolo VIRGULILLA. */
 
-EXPR_DEF ::= ID:id ARROW:arrow CONJUNTO_EXPR:conjunto_expr
-            |ID:id ARROW:arrow CONJUNTO_EXPR:conjunto_expr1 VIRGULILLA:virgulilla CONJUNTO_EXPR:conjunto_expr2;
+EXPR_DEF ::= ID:id ARROW:arrow CONJUNTO_EXPR:conjunto_expr;
 
  /* 'conjunto_expr' define los elementos del conjunto, que pueden
     ser números, identificadores, o un rango de valores definido por
@@ -259,42 +257,16 @@ EXPR_DEF ::= ID:id ARROW:arrow CONJUNTO_EXPR:conjunto_expr
 CONJUNTO_EXPR ::= CONJUNTO_EXPR:conjunto_expr COMMA:comma EXPR:expr
               | EXPR:expr;
 
-EXPR ::= XCLAM:exclam
-        | TWOQUOTE:twoquote
-        | HASH:hash
-        | DOLLAR:dolar
-        | PERCENT:percent
-        | ONEQUOTE:onequote
-        | LPAREN:lparen
-        | RPAREN:rparen
-        | ASTERISK:asterisk
-        | PLUS:plus
-        | COMMA:comma
-        | MINUS:minus
-        | DOT:dot
-        | SLASH:slash
-        | COLON:colon
-        | SEMICOLON:semicolon
-        | LESSTHAN:lessthan
-        | EQUALS:equal
-        | GRATHTHAN:graththan
-        | QUESTION:question
-        | AT:at
-        | LBRACKET:lbracket
-        | BACKSLASH:backslash
-        | RBRACKET:rbracket
-        | UNDERSCOR:underscor
-        | BACKTICK:backtick
-        | LBRACE:lbrace
-        | OR:or
-        | RBRACE:rbrace
-        | VIRGULILLA:virgulilla
-        | UNION:union
-        | INTERSECCION:interseccion
-        | COMPLEMENTO:complemento
-        | DIFERENCIA:diferencia
-        | ID:id
-        | NUM:num;
+EXPR ::=  ID      VIRGULILLA ID
+        | NUM     VIRGULILLA NUM
+        | DECIMAL VIRGULILLA DECIMAL
+        | CHART   VIRGULILLA NUM
+        | NUM     VIRGULILLA CHART
+        | CHART   VIRGULILLA CHART
+        | ID
+        | NUM
+        | DECIMAL
+        | CHART;
 
 /* 'oper_list' define la lista de operaciones, que pueden ser
    operaciones de intersección, unión, complemento, o diferencia
@@ -340,17 +312,18 @@ OPER_PART ::= OPERA:opera COLON:colon OPER_DEF:oper_def SEMICOLON:semicolon
     identificador (ID) a una expresión de operación (oper_expr).
     La expresión puede ser una operación de unión, intersección,
     complemento, o diferencia entre conjuntos. */
-OPER_DEF ::= ID:id ARROW:arrow OPER_EXPR:oper_expr EXPRE_CONJ:expre_conj
+OPER_DEF ::= ID:id ARROW:arrow CONJ_EXPR:conj_expr
             {:
                 TreeNode<String> parentNode = new TreeNode<>("OPER_DEF");
 
                 parentNode.addChild(new TreeNode<>(id.toString()));
                 parentNode.addChild(new TreeNode<>(arrow.toString()));
-                parentNode.addChild(oper_expr);
-                parentNode.addChild(expre_conj);
 
                 RESULT = parentNode;
             :};
+
+CONJ_EXPR ::= CONJ_EXPR OPER_EXPR:oper_expr EXPRE_CONJ:expre_conj
+            | OPER_EXPR:oper_expr EXPRE_CONJ:expre_conj;
 
 /* 'oper_expr' define las operaciones entre conjuntos, que pueden
     ser operaciones de unión, intersección, complemento, o diferencia
