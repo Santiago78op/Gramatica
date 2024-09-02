@@ -1,6 +1,6 @@
 package com.julian;
 
-
+import java_cup.runtime.Symbol;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class  SystemInfo {
 
@@ -201,12 +202,36 @@ public class  SystemInfo {
         try {
                 Lexer lexer = new Lexer(new StringReader(text));
                 parser parser = new parser(lexer);
-                parser.parse();
 
                 /*
-                TreeNode root = (TreeNode)parser.parse().value;
-                root.printTree(root, "");
+                // Realiza el análisis sintáctico
+                Symbol parseResult = parser.parse();
+
+                // Verifica si el valor devuelto es una instancia de TreeNode<String>
+                if (parseResult.value instanceof TreeNode) {
+                    @SuppressWarnings("unchecked") // Suprime la advertencia de conversión
+                    TreeNode<String> root = (TreeNode<String>) parseResult.value;
+
+                    // Imprime el árbol de sintaxis en la consola
+                    root.printTree("");
+
+                    // Evaluar el árbol de operaciones y obtener el resultado
+                    Set<String> resultadoOperaciones = root.evaluate();
+
+                    // Imprimir el resultado de las operaciones en la consola
+                    System.out.println("Resultado de las operaciones entre conjuntos: " + resultadoOperaciones);
+                } else {
+                    System.out.println("El valor devuelto no es un TreeNode<String>.");
+                }
                 */
+
+                // Parsear el archivo y obtener el árbol de análisis sintáctico
+                TreeNode<String> root = (TreeNode<String>) parser.parse().value;
+                root.printTree("");
+
+                // Recorrer el árbol de operaciones y evaluar cada nodo
+                root.evaluateOperations();
+
 
                 reporteToken = Reports.reportToken(lexer.tokens);
                 Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Tokens.html");
