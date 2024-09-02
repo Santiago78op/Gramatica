@@ -201,12 +201,17 @@ public class  SystemInfo {
         try {
                 Lexer lexer = new Lexer(new StringReader(text));
                 parser parser = new parser(lexer);
-                parser.parse();
-
                 /*
                 TreeNode root = (TreeNode)parser.parse().value;
                 root.printTree(root, "");
                 */
+
+                // Parsear el archivo y obtener el árbol de análisis sintáctico
+                TreeNode<String> root = (TreeNode<String>) parser.parse().value;
+                //root.printTree("");
+
+                // Recorrer el árbol de operaciones y evaluar cada nodo
+                root.obtenerConjuntosDefinidos();
 
                 reporteToken = Reports.reportToken(lexer.tokens);
                 Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Tokens.html");
