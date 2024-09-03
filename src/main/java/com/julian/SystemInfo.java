@@ -211,8 +211,10 @@ public class  SystemInfo {
                 //root.printTree("");
 
                 // Recorrer el árbol de operaciones y evaluar cada nodo
-                root.obtenerConjuntosDefinidos();
+                //root.obtenerConjuntosDefinidos();
+                root.evaluateOperations();
 
+/*
                 reporteToken = Reports.reportToken(lexer.tokens);
                 Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Tokens.html");
 
@@ -221,7 +223,7 @@ public class  SystemInfo {
 
                 reporteToken = Reports.reportSyntaxErrors(parser.syntaxErrors);
                 Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Syntax_Error.html");
-
+*/
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while analyzing the content.");
             e.printStackTrace();
