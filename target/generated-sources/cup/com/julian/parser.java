@@ -90,18 +90,17 @@ public class parser extends java_cup.runtime.lr_parser {
     "\001\002\000\014\007\uffe5\010\uffe5\011\uffe5\012\uffe5\021" +
     "\uffe5\001\002\000\014\007\uffe9\010\uffe9\011\uffe9\012\uffe9" +
     "\021\uffe9\001\002\000\016\007\uffea\010\uffea\011\uffea\012" +
-    "\uffea\020\uffea\021\076\001\002\000\012\004\027\005\026" +
-    "\006\033\027\032\001\002\000\006\014\041\022\075\001" +
-    "\002\000\016\007\uffe2\010\uffe2\011\uffe2\012\uffe2\020\uffe2" +
-    "\021\uffe2\001\002\000\012\004\027\005\026\006\033\027" +
-    "\032\001\002\000\006\014\041\022\100\001\002\000\016" +
-    "\007\uffe3\010\uffe3\011\uffe3\012\uffe3\020\uffe3\021\uffe3\001" +
-    "\002\000\014\007\065\010\063\011\070\012\066\021\073" +
-    "\001\002\000\016\007\uffeb\010\uffeb\011\uffeb\012\uffeb\020" +
-    "\uffeb\021\076\001\002\000\004\004\104\001\002\000\004" +
-    "\013\107\001\002\000\004\020\106\001\002\000\006\024" +
-    "\ufffd\025\ufffd\001\002\000\012\004\027\005\026\006\033" +
-    "\027\032\001\002\000\006\014\041\020\ufffc\001\002" });
+    "\uffea\020\uffea\021\076\001\002\000\004\004\074\001\002" +
+    "\000\004\022\075\001\002\000\016\007\uffe2\010\uffe2\011" +
+    "\uffe2\012\uffe2\020\uffe2\021\uffe2\001\002\000\004\004\077" +
+    "\001\002\000\004\022\100\001\002\000\016\007\uffe3\010" +
+    "\uffe3\011\uffe3\012\uffe3\020\uffe3\021\uffe3\001\002\000\014" +
+    "\007\065\010\063\011\070\012\066\021\073\001\002\000" +
+    "\016\007\uffeb\010\uffeb\011\uffeb\012\uffeb\020\uffeb\021\076" +
+    "\001\002\000\004\004\104\001\002\000\004\013\107\001" +
+    "\002\000\004\020\106\001\002\000\006\024\ufffd\025\ufffd" +
+    "\001\002\000\012\004\027\005\026\006\033\027\032\001" +
+    "\002\000\006\014\041\020\ufffc\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -129,13 +128,12 @@ public class parser extends java_cup.runtime.lr_parser {
     "\063\001\001\000\002\001\001\000\002\001\001\000\006" +
     "\012\100\016\061\001\001\000\002\001\001\000\002\001" +
     "\001\000\006\015\071\016\070\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\006\006\073\017" +
-    "\027\001\001\000\002\001\001\000\002\001\001\000\006" +
-    "\006\076\017\027\001\001\000\002\001\001\000\002\001" +
-    "\001\000\006\015\101\016\070\001\001\000\002\001\001" +
-    "\000\004\005\104\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\006\006\107\017\027\001\001" +
-    "\000\002\001\001" });
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\006\015\101\016\070\001" +
+    "\001\000\002\001\001\000\004\005\104\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\006\006" +
+    "\107\017\027\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -814,8 +812,9 @@ class CUP$parser$actions {
 		int simbol_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		TreeNode<String> simbol_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    TreeNode<String> operExprNode = new TreeNode<>(simbol_expr.getData());
+    TreeNode<String> operExprNode = new TreeNode<>("OPER_EXPR");
     operExprNode.addChild(oper_expr);
+    operExprNode.addChild(simbol_expr);
     RESULT = operExprNode;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("OPER_EXPR",8, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -830,7 +829,8 @@ class CUP$parser$actions {
 		int simbol_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		TreeNode<String> simbol_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    TreeNode<String> operExprNode = new TreeNode<>(simbol_expr.getData());
+    TreeNode<String> operExprNode = new TreeNode<>("OPER_EXPR");
+    operExprNode.addChild(simbol_expr);
     RESULT = operExprNode;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("OPER_EXPR",8, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -845,7 +845,8 @@ class CUP$parser$actions {
 		int unionright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object union = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    TreeNode<String> simbolExprNode = new TreeNode<>("U");
+    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
+    simbolExprNode.addChild(new TreeNode<>(union.toString()));
     RESULT = simbolExprNode;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("SIMBOL_EXPR",12, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -860,7 +861,8 @@ class CUP$parser$actions {
 		int interseccionright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object interseccion = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    TreeNode<String> simbolExprNode = new TreeNode<>("&");
+    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
+    simbolExprNode.addChild(new TreeNode<>(interseccion.toString()));
     RESULT = simbolExprNode;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("SIMBOL_EXPR",12, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -875,7 +877,8 @@ class CUP$parser$actions {
 		int complementoright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object complemento = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    TreeNode<String> simbolExprNode = new TreeNode<>("^");
+    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
+    simbolExprNode.addChild(new TreeNode<>(complemento.toString()));
     RESULT = simbolExprNode;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("SIMBOL_EXPR",12, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -890,7 +893,8 @@ class CUP$parser$actions {
 		int diferenciaright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object diferencia = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    TreeNode<String> simbolExprNode = new TreeNode<>("-");
+    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
+    simbolExprNode.addChild(new TreeNode<>(diferencia.toString()));
     RESULT = simbolExprNode;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("SIMBOL_EXPR",12, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -898,7 +902,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 30: // EXPRE_CONJ ::= EXPRE_CONJ LBRACE CONJUNTO_EXPR RBRACE 
+          case 30: // EXPRE_CONJ ::= EXPRE_CONJ LBRACE ID RBRACE 
             {
               TreeNode<String> RESULT =null;
 		int expre_conjleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
@@ -907,9 +911,9 @@ class CUP$parser$actions {
 		int lbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
 		int lbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object lbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int conjunto_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int conjunto_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> conjunto_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		String id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		int rbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int rbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object rbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
@@ -917,7 +921,7 @@ class CUP$parser$actions {
     TreeNode<String> exprConjNode = new TreeNode<>("EXPRE_CONJ");
     exprConjNode.addChild(expre_conj);
     exprConjNode.addChild(new TreeNode<>(lbrace.toString()));
-    exprConjNode.addChild(conjunto_expr);
+    exprConjNode.addChild(new TreeNode<>(id.toString()));
     exprConjNode.addChild(new TreeNode<>(rbrace.toString()));
     RESULT = exprConjNode;
 
@@ -926,22 +930,22 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 31: // EXPRE_CONJ ::= LBRACE CONJUNTO_EXPR RBRACE 
+          case 31: // EXPRE_CONJ ::= LBRACE ID RBRACE 
             {
               TreeNode<String> RESULT =null;
 		int lbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
 		int lbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object lbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int conjunto_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int conjunto_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> conjunto_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		String id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		int rbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int rbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object rbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     TreeNode<String> exprConjNode = new TreeNode<>("EXPRE_CONJ");
     exprConjNode.addChild(new TreeNode<>(lbrace.toString()));
-    exprConjNode.addChild(conjunto_expr);
+    exprConjNode.addChild(new TreeNode<>(id.toString()));
     exprConjNode.addChild(new TreeNode<>(rbrace.toString()));
     RESULT = exprConjNode;
 

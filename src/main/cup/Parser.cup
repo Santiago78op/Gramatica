@@ -429,13 +429,15 @@ CONJ_EXPR ::= CONJ_EXPR:conj_expr OPER_EXPR:oper_expr EXPRE_CONJ:expre_conj
 
 OPER_EXPR ::= OPER_EXPR:oper_expr SIMBOL_EXPR:simbol_expr
 {:
-    TreeNode<String> operExprNode = new TreeNode<>(simbol_expr.getData());
+    TreeNode<String> operExprNode = new TreeNode<>("OPER_EXPR");
     operExprNode.addChild(oper_expr);
+    operExprNode.addChild(simbol_expr);
     RESULT = operExprNode;
 :}
             | SIMBOL_EXPR:simbol_expr
 {:
-    TreeNode<String> operExprNode = new TreeNode<>(simbol_expr.getData());
+    TreeNode<String> operExprNode = new TreeNode<>("OPER_EXPR");
+    operExprNode.addChild(simbol_expr);
     RESULT = operExprNode;
 :};
 
@@ -446,40 +448,44 @@ OPER_EXPR ::= OPER_EXPR:oper_expr SIMBOL_EXPR:simbol_expr
 /* Simbolos de las operaciones entre conjuntos */
 SIMBOL_EXPR ::= UNION:union
 {:
-    TreeNode<String> simbolExprNode = new TreeNode<>("U");
+    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
+    simbolExprNode.addChild(new TreeNode<>(union.toString()));
     RESULT = simbolExprNode;
 :}
             | INTERSECCION:interseccion
 {:
-    TreeNode<String> simbolExprNode = new TreeNode<>("&");
+    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
+    simbolExprNode.addChild(new TreeNode<>(interseccion.toString()));
     RESULT = simbolExprNode;
 :}
             | COMPLEMENTO:complemento
 {:
-    TreeNode<String> simbolExprNode = new TreeNode<>("^");
+    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
+    simbolExprNode.addChild(new TreeNode<>(complemento.toString()));
     RESULT = simbolExprNode;
 :}
             | DIFERENCIA:diferencia
 {:
-    TreeNode<String> simbolExprNode = new TreeNode<>("-");
+    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
+    simbolExprNode.addChild(new TreeNode<>(diferencia.toString()));
     RESULT = simbolExprNode;
 :};
 
 EXPRE_CONJ ::= EXPRE_CONJ:expre_conj LBRACE:lbrace
-                          CONJUNTO_EXPR:conjunto_expr RBRACE:rbrace
+                          ID:id RBRACE:rbrace
 {:
     TreeNode<String> exprConjNode = new TreeNode<>("EXPRE_CONJ");
     exprConjNode.addChild(expre_conj);
     exprConjNode.addChild(new TreeNode<>(lbrace.toString()));
-    exprConjNode.addChild(conjunto_expr);
+    exprConjNode.addChild(new TreeNode<>(id.toString()));
     exprConjNode.addChild(new TreeNode<>(rbrace.toString()));
     RESULT = exprConjNode;
 :}
-            | LBRACE:lbrace CONJUNTO_EXPR:conjunto_expr RBRACE:rbrace
+            | LBRACE:lbrace ID:id RBRACE:rbrace
 {:
     TreeNode<String> exprConjNode = new TreeNode<>("EXPRE_CONJ");
     exprConjNode.addChild(new TreeNode<>(lbrace.toString()));
-    exprConjNode.addChild(conjunto_expr);
+    exprConjNode.addChild(new TreeNode<>(id.toString()));
     exprConjNode.addChild(new TreeNode<>(rbrace.toString()));
     RESULT = exprConjNode;
 :};

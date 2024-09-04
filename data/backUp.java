@@ -8,17 +8,11 @@ public class TreeNode<T> {
 
     // Variable para almacenar los conjuntos definidos
     Map<String, Set<String>> conjuntosDefinidos;
-    // Variable para almacenar las operaciones definidas
-    Map<String, Set<String>> operacionesDefinidas;
-    // Variable para almacenar las operaciones definidas
-    Map<String, Set<String>> conjuntosOperacionesId;
 
     TreeNode(T data) {
         this.data = data;
         this.children = new ArrayList<>();
         this.conjuntosDefinidos = new HashMap<>();
-        this.operacionesDefinidas = new HashMap<>();
-        this.conjuntosOperacionesId = new HashMap<>();
     }
 
     void addChild(TreeNode<T> child) {
@@ -42,11 +36,39 @@ public class TreeNode<T> {
 
     // Método principal para evaluar las operaciones y las evaluaciones de conjuntos
     public void evaluateOperations() {
-        // Obtener los conjuntos definidos antes de realizar las operaciones
+        // Obtener los conjuntos definidos antes de evaluar las operaciones
         this.conjuntosDefinidos = obtenerConjuntosDefinidos();
 
-        // Obtener las operaciones definidas antes de evaluar las operaciones
-        this.operacionesDefinidas = operacionesDefinidas();
+        if (data.toString().equals("BLOCK")) {
+            // Recorrer los nodos hijos de BLOCK para encontrar OPER_LIST y EVAL_LIST
+            for (TreeNode<T> child : children) {
+                if (child.getData().toString().equals("OPER_LIST")) {
+                    // Evaluar las operaciones definidas en OPER_LIST
+                    for (TreeNode<T> operPartNode : child.getChildren()) {
+                        if (operPartNode.getData().toString().equals("OPER_PART")) {
+                            // Encontrar el nodo OPER_DEF dentro de OPER_PART
+                            TreeNode<T> operDefNode = operPartNode.getChildren().get(2); // El tercer hijo es OPER_DEF
+                            if (operDefNode.getData().toString().equals("OPER_DEF")) {
+                                // Obtener el nombre de la operación
+                                String operationName = operDefNode.getChildren().get(0).getData().toString(); // Primer hijo es ID
+                                System.out.println("Evaluando operación: " + operationName);
+
+                                // Evaluar la expresión de la operación
+                                Set<String> resultadoOperacion = evaluarOperacion(operDefNode);
+                                System.out.println("Resultado de la operación '" + operationName + "': " + resultadoOperacion);
+                            }
+                        }
+                    }
+                }
+                if (child.getData().toString().equals("EVAL_LIST")) {
+                    // Evaluar las evaluaciones de conjuntos
+                    for (TreeNode<T> evalChild : child.getChildren()) {
+                        Set<String> evalResult = evaluateEvaluation(evalChild);
+                        System.out.println("Resultado de la evaluación '" + evalChild.getChildren().get(0).getData() + "': " + evalResult);
+                    }
+                }
+            }
+        }
     }
 
     // Método para evaluar una operación a partir de su nodo OPER_DEF
@@ -200,83 +222,6 @@ public class TreeNode<T> {
         } catch (NumberFormatException e) {
             return false;
         }
-    }
-
-    /*
-     * Metodo recursivo para recorrer el arbol y obtener las
-     * operaciones definidas con ID y BODY
-     * */
-    // Método para recorrer el árbol y obtener las operaciones definidas
-    public Map<String, Set<String>> operacionesDefinidas() {
-        Map<String, Set<String>> operaciones = new HashMap<>();
-        // Llamar al método recursivo para procesar el nodo raíz
-        obtenerOperacionRecursivo(this, operaciones);
-        return operaciones;
-    }
-
-    // Método recursivo para procesar nodos y extraer operaciones definidas
-    private void obtenerOperacionRecursivo(TreeNode<T> node, Map<String, Set<String>> operaciones) {
-        if (node == null) return;
-
-        // Verificar si el nodo actual es de tipo OPER_DEF
-        if (node.getData().equals("OPER_DEF")) {
-            // Obtener los hijos de OPER_DEF
-            List<TreeNode<T>> children = node.getChildren();
-            if (children.size() >= 3) {
-                String operacionId = children.get(0).getData().toString(); // Nombre de la operacion (ID)
-                TreeNode<T> operDefNode = children.get(2); // Nodo CONJ_EXPR
-
-                TreeNode<T> operExprNode = operDefNode.getChildren().getFirst();
-                // Procesar el nodo CONJ_EXPR para obtener la definición del conjunto
-                Set<String> conjuntoOperaciones = procesarOperDef(operExprNode);
-
-                System.out.println("OperacionId: " + operacionId + " Operaciones: " + conjuntoOperaciones);
-                //operaciones.put(operacionId, conjuntoOperaciones);
-            }
-        }
-
-        // Recorrer recursivamente los nodos hijos
-        for (TreeNode<T> child : node.getChildren()) {
-            obtenerOperacionRecursivo(child, operaciones);
-        }
-    }
-
-    // Método para procesar el nodo CONJUNTO_EXPR de forma recursiva y devolver un conjunto de elementos
-    private Set<String> procesarOperDef(TreeNode<T> operDefNode) {
-        Set<String> conjuntoOperaciones = new HashSet<>();
-        if (operDefNode == null || !operDefNode
-                .getData().equals("OPER_EXPR")) {
-            return conjuntoOperaciones;
-        }
-
-        // Recorrer recursivamente los hijos de CONJUNTO_EXPR para obtener los elementos del conjunto
-        for (TreeNode<T> child : operDefNode.getChildren()) {
-            if (child.getData().equals("OPER_EXPR")) {
-                // Si es otro nodo CONJUNTO_EXPR, procesarlo recursivamente
-                conjuntoOperaciones.addAll(procesarOperDef(child));
-            } else if (child.getData().equals("SIMBOL_EXPR")) {
-                // Si es un nodo EXPR, procesar la expresión y añadir los elementos al conjunto
-                conjuntoOperaciones.addAll(procesarSimbolExpr(child));
-            }
-        }
-        return conjuntoOperaciones;
-    }
-
-    // Método para procesar un nodo EXPR y convertirlo en un conjunto de elementos
-    private Set<String> procesarSimbolExpr(TreeNode<T> exprNode) {
-        Set<String> exprElementos = new HashSet<>();
-        if (exprNode == null || !exprNode.getData().equals("SIMBOL_EXPR")) {
-            return exprElementos;
-        }
-        // Recorrer los hijos de EXPR para construir su representación
-        StringBuilder exprValores = new StringBuilder();
-        for (TreeNode<T> child : exprNode.getChildren()) {
-            exprValores.append(child.getData().toString());
-        }
-        // Procesar el rango o los elementos individuales
-        String exprStr = exprValores.toString();
-        exprElementos.addAll(parseSet(exprStr));
-        return exprElementos;
     }
 
     /*
