@@ -377,29 +377,17 @@ OPER_LIST ::= OPER_LIST:oper_list OPER_PART:oper_part
     La expresión puede ser una operación de unión, intersección,
     complemento, o diferencia entre conjuntos. */
 
-OPER_PART ::= OPERA:opera COLON:colon OPER_DEF:oper_def
+OPER_PART ::= OPERA:opera COLON:colon ID:id ARROW:arrow CONJ_EXPR:conj_expr
                         SEMICOLON:semicolon
 {:
     TreeNode<String> operPartNode = new TreeNode<>("OPER_PART");
     operPartNode.addChild(new TreeNode<>(opera.toString()));
     operPartNode.addChild(new TreeNode<>(colon.toString()));
-    operPartNode.addChild(oper_def);
+    operPartNode.addChild(new TreeNode<>(id.toString()));
+    operPartNode.addChild(new TreeNode<>(arrow.toString()));
+    operPartNode.addChild(conj_expr);
     operPartNode.addChild(new TreeNode<>(semicolon.toString()));
     RESULT = operPartNode;
-:};
-
-/* 'oper_def' define una operación mediante la asignación de un
-    identificador (ID) a una expresión de operación (oper_expr).
-    La expresión puede ser una operación de unión, intersección,
-    complemento, o diferencia entre conjuntos. */
-
-OPER_DEF ::= ID:id ARROW:arrow CONJ_EXPR:conj_expr
-{:
-    TreeNode<String> operDefNode = new TreeNode<>("OPER_DEF");
-    operDefNode.addChild(new TreeNode<>(id.toString()));
-    operDefNode.addChild(new TreeNode<>(arrow.toString()));
-    operDefNode.addChild(conj_expr);
-    RESULT = operDefNode;
 :};
 
 /* 'conj_expr' define una expresión de operación, que puede ser
