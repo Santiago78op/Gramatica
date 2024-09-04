@@ -60,22 +60,31 @@ public class TreeNode<T> {
         // Verifica si el nodo actual es de tipo "CONJ_EXPR"
         if (conjExprNode.getData().equals("CONJ_EXPR")) {
             Set<String> result = new HashSet<>();
-            String operator = "";  // Inicializamos el operador como vacío
-            // Iteramos sobre los hijos del nodo "CONJ_EXPR"
+            String currentOperator = "";  // Operador actual
+
             for (TreeNode<T> child : conjExprNode.getChildren()) {
                 // Verifica si el hijo es un nodo de operador (OPER_EXPR)
                 if (child.getData().equals("OPER_EXPR")) {
-                    operator = child.getChildren().get(0).getData().toString();  // Obtiene el operador
+                    currentOperator = obtenerOperadorDeExpr(child);  // Obtiene el operador
                 }
                 // Verifica si el hijo es un nodo de conjuntos (EXPRE_CONJ)
                 else if (child.getData().equals("EXPRE_CONJ")) {
                     Set<String> currentSet = obtenerConjuntoDeExprConj(child);  // Obtiene el conjunto
                     // Si ya tenemos un operador, aplicamos la operación
-                    if (!operator.isEmpty()) {
-                        result = aplicarOperacion(operator, result, currentSet);
+                    if (!currentOperator.isEmpty()) {
+                        result = aplicarOperacion(currentOperator, result, currentSet);
                     } else {
                         // Si es el primer conjunto, lo asignamos al resultado inicial
                         result = currentSet;
+                    }
+                } 
+                // Caso donde el nodo hijo es otro CONJ_EXPR
+                else if (child.getData().equals("CONJ_EXPR")) {
+                    Set<String> evaluatedSet = evaluarConjExpr(child);
+                    if (!currentOperator.isEmpty()) {
+                        result = aplicarOperacion(currentOperator, result, evaluatedSet);
+                    } else {
+                        result = evaluatedSet;
                     }
                 }
             }
@@ -87,6 +96,16 @@ public class TreeNode<T> {
         }
         return new HashSet<>();
     }
+
+    // Método para obtener el operador de un nodo OPER_EXPR
+    private String obtenerOperadorDeExpr(TreeNode<T> operExprNode) {
+        // Asumimos que el operador siempre será el primer hijo de OPER_EXPR
+        if (operExprNode.getChildren().size() > 0) {
+            return operExprNode.getChildren().get(0).getData().toString();
+        }
+        return "";
+    }
+
     // Método para aplicar la operación al conjunto
     private Set<String> aplicarOperacion(String operator, Set<String> set1, Set<String> set2) {
         switch (operator) {
@@ -202,10 +221,6 @@ public class TreeNode<T> {
         }
     }
 
-    /*
-     * Metodo recursivo para recorrer el arbol y obtener las
-     * operaciones definidas con ID y BODY
-     * */
     // Método para recorrer el árbol y obtener las operaciones definidas
     public Map<String, Set<String>> operacionesDefinidas() {
         Map<String, Set<String>> operaciones = new HashMap<>();
@@ -226,12 +241,11 @@ public class TreeNode<T> {
                 String operacionId = children.get(0).getData().toString(); // Nombre de la operacion (ID)
                 TreeNode<T> operDefNode = children.get(2); // Nodo CONJ_EXPR
 
-                TreeNode<T> operExprNode = operDefNode.getChildren().getFirst();
+                TreeNode<T> operExprNode = operDefNode.getChildren().get(0);
                 // Procesar el nodo CONJ_EXPR para obtener la definición del conjunto
                 Set<String> conjuntoOperaciones = procesarOperDef(operExprNode);
 
                 System.out.println("OperacionId: " + operacionId + " Operaciones: " + conjuntoOperaciones);
-                //operaciones.put(operacionId, conjuntoOperaciones);
             }
         }
 
@@ -244,18 +258,15 @@ public class TreeNode<T> {
     // Método para procesar el nodo CONJUNTO_EXPR de forma recursiva y devolver un conjunto de elementos
     private Set<String> procesarOperDef(TreeNode<T> operDefNode) {
         Set<String> conjuntoOperaciones = new HashSet<>();
-        if (operDefNode == null || !operDefNode
-                .getData().equals("OPER_EXPR")) {
+        if (operDefNode == null || !operDefNode.getData().equals("OPER_EXPR")) {
             return conjuntoOperaciones;
         }
 
         // Recorrer recursivamente los hijos de CONJUNTO_EXPR para obtener los elementos del conjunto
         for (TreeNode<T> child : operDefNode.getChildren()) {
             if (child.getData().equals("OPER_EXPR")) {
-                // Si es otro nodo CONJUNTO_EXPR, procesarlo recursivamente
                 conjuntoOperaciones.addAll(procesarOperDef(child));
             } else if (child.getData().equals("SIMBOL_EXPR")) {
-                // Si es un nodo EXPR, procesar la expresión y añadir los elementos al conjunto
                 conjuntoOperaciones.addAll(procesarSimbolExpr(child));
             }
         }
@@ -279,10 +290,6 @@ public class TreeNode<T> {
         return exprElementos;
     }
 
-    /*
-     * Metodo recursivo para recorrer el arbol y obtener los
-     * conjuntos definidos con ID y BODY
-     * */
     // Método para recorrer el árbol y obtener los conjuntos definidos
     public Map<String, Set<String>> obtenerConjuntosDefinidos() {
         Map<String, Set<String>> conjuntos = new HashMap<>();
@@ -324,10 +331,8 @@ public class TreeNode<T> {
         // Recorrer recursivamente los hijos de CONJUNTO_EXPR para obtener los elementos del conjunto
         for (TreeNode<T> child : conjuntoExprNode.getChildren()) {
             if (child.getData().equals("CONJUNTO_EXPR")) {
-                // Si es otro nodo CONJUNTO_EXPR, procesarlo recursivamente
                 conjuntoElementos.addAll(procesarExprDef(child));
             } else if (child.getData().equals("EXPR")) {
-                // Si es un nodo EXPR, procesar la expresión y añadir los elementos al conjunto
                 conjuntoElementos.addAll(procesarExpr(child));
             }
         }
