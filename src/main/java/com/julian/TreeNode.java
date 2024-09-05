@@ -266,48 +266,50 @@ public class TreeNode<T> {
     private Set<String> evaluarConjExpr(TreeNode<T> conjExprNode) {
         // Verifica si el nodo actual es de tipo "CONJ_EXPR"
         if (conjExprNode.getData().equals("CONJ_EXPR")) {
-            Set<String> result = new HashSet<>();
-            String operator = "";  // Inicializamos el operador como vacío
-            // Iteramos sobre los hijos del nodo "CONJ_EXPR"
-            for (TreeNode<T> child : conjExprNode.getChildren()) {
-                // Verifica si el hijo es un nodo de operador (OPER_EXPR)
-                if (child.getData().equals("OPER_EXPR")) {
-                    operator = child.getChildren().get(0).getData().toString();  // Obtiene el operador
-                }
-                // Verifica si el hijo es un nodo de conjuntos (EXPRE_CONJ)
-                else if (child.getData().equals("EXPRE_CONJ")) {
-                    Set<String> currentSet = obtenerConjuntoDeExprConj(child);  // Obtiene el conjunto
-                    // Si ya tenemos un operador, aplicamos la operación
-                    if (!operator.isEmpty()) {
-                        result = aplicarOperacion(operator, result, currentSet);
-                    } else {
-                        // Si es el primer conjunto, lo asignamos al resultado inicial
-                        result = currentSet;
-                    }
+            for (TreeNode<T> child : conjExprNode.getChildren()){
+                if (child.getData().toString().equals("CONJ_EXPR")) {
+                    evaluarConjExpr(child);
+                } else if (child.getData().toString().equals("OPER_EXPR")) {
+                    return obtnerOperExpr(child);
                 }
             }
-            return result;
         }
-        // Si no es un nodo "CONJ_EXPR", verificar si es "EXPRE_CONJ" para procesarlo
-        else if (conjExprNode.getData().equals("EXPRE_CONJ")) {
-            return obtenerConjuntoDeExprConj(conjExprNode);
-        }
+
         return new HashSet<>();
+    }
+
+    public Set<String> obtnerOperExpr(TreeNode<T> conjExprNode) {
+        Set<String> result = new HashSet<>();
+        String operator = "";  // Inicializamos el operador como vacío
+        // Iteramos sobre los hijos del nodo "CONJ_EXPR"
+        for (TreeNode<T> child : conjExprNode.getChildren()) {
+            // Verifica si el hijo es un nodo de operador (OPER_EXPR)
+            if (child.getData().equals("OPER_EXPR")) {
+                operator = child.getChildren().get(0).getData().toString();  // Obtiene el operador
+            }
+            // Verifica si el hijo es un nodo de conjuntos (EXPRE_CONJ)
+            else if (child.getData().equals("EXPRE_CONJ")) {
+                Set<String> currentSet = obtenerConjuntoDeExprConj(child);  // Obtiene el conjunto
+                // Si ya tenemos un operador, aplicamos la operación
+                if (!operator.isEmpty()) {
+                    result = aplicarOperacion(operator, result, currentSet);
+                } else {
+                    // Si es el primer conjunto, lo asignamos al resultado inicial
+                    result = currentSet;
+                }
+            }
+        }
+        return result;
     }
 
     // Método para aplicar la operación al conjunto
     private Set<String> aplicarOperacion(String operator, Set<String> set1, Set<String> set2) {
-        switch (operator) {
-            case "U":
-                return union(set1, set2);
-            case "&":
-                return intersection(set1, set2);
-            case "^":
-                return complement(set1);
-            case "-":
-                return difference(set1, set2);
-            default:
-                return new HashSet<>();
-        }
+        return switch (operator) {
+            case "U" -> union(set1, set2);
+            case "&" -> intersection(set1, set2);
+            case "^" -> complement(set1);
+            case "-" -> difference(set1, set2);
+            default -> new HashSet<>();
+        };
     }
 }

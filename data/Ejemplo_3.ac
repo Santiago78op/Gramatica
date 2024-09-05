@@ -9,7 +9,7 @@
 
      # ^((^ pares & ^ pares )  U (^ naturales & ^ naturales ) )
      # ^(^ (pares U pares )  U ^( naturales U  naturales ) )
-     # ^(^ ( pares )  U ^(   naturales ) )
+     # ^(^ ( pares )  U ^( naturales ) )
      # ^^( ( pares )  & (   naturales ) )
      #  pares   &    naturales
 
