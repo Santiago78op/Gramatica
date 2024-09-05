@@ -34,15 +34,15 @@ public class TreeNode<T> {
         }
     }
 
+
     // Método principal para evaluar las operaciones y las evaluaciones de conjuntos
     public void evaluateOperations() {
         // Obtener los conjuntos definidos antes de evaluar las operaciones
         this.conjuntosDefinidos = obtenerConjuntosDefinidos();
-
         if (data.toString().equals("BLOCK")) {
             // Recorrer los nodos hijos de BLOCK para encontrar OPER_LIST y EVAL_LIST
             for (TreeNode<T> child : children) {
-                obtnerOperaciones(child);
+                obtenerOperaciones(child);
                 if (child.getData().toString().equals("EVAL_LIST")) {
                     // Evaluar las evaluaciones de conjuntos
                     for (TreeNode<T> evalChild : child.getChildren()) {
@@ -53,66 +53,6 @@ public class TreeNode<T> {
             }
         }
     }
-
-    // Método para obtener el conjunto de un nodo EXPR_CONJ
-    private Set<String> obtenerConjuntoDeExprConj(TreeNode<T> exprConjNode) {
-        if (exprConjNode.getData().equals("EXPRE_CONJ")) {
-            // Verifica si el nodo tiene hijos y si son otros conjuntos o nombres de conjuntos
-            Set<String> conjuntoElementos = new HashSet<>();
-            for (TreeNode<T> child : exprConjNode.getChildren()) {
-                if (child.getData().equals("EXPRE_CONJ")) {
-                    conjuntoElementos.addAll(obtenerConjuntoDeExprConj(child));
-                } else {
-                    conjuntoElementos.add(child.getData().toString());
-                }
-            }
-            return conjuntoElementos;
-        }
-        return new HashSet<>();
-    }
-
-    // Método para evaluar una evaluación de conjuntos
-    private Set<String> evaluateEvaluation(TreeNode<T> evalNode) {
-        String evalType = evalNode.getData().toString();
-        if (evalType.equals("EVAL_PART")) {
-            String operationName = evalNode.getChildren().get(6).getData().toString(); // Nombre de la operación
-            Set<String> conjunto = parseSet(evalNode.getChildren().get(3).getData().toString()); // El conjunto que se evalúa
-            System.out.println("Aplicando operación '" + operationName + "' al conjunto: " + conjunto);
-            return conjunto; // Esto es solo un ejemplo, ajusta según tu lógica
-        }
-        return new HashSet<>();
-    }
-
-    // Métodos para las operaciones de conjuntos (intersección, unión, complemento, diferencia)
-    private Set<String> intersection(Set<String> set1, Set<String> set2) {
-        Set<String> result = new HashSet<>(set1);
-        result.retainAll(set2);
-        return result;
-    }
-
-    private Set<String> union(Set<String> set1, Set<String> set2) {
-        Set<String> result = new HashSet<>(set1);
-        result.addAll(set2);
-        return result;
-    }
-
-    private Set<String> complement(Set<String> set) {
-        Set<String> universe = new HashSet<>();
-        for (int i = 33; i <= 126; i++) {
-            universe.add(String.valueOf((char) i));
-        }
-        Set<String> result = new HashSet<>(universe);
-        result.removeAll(set);
-        return result;
-    }
-
-    private Set<String> difference(Set<String> set1, Set<String> set2) {
-        Set<String> result = new HashSet<>(set1);
-        result.removeAll(set2);
-        return result;
-    }
-
-
 
     /*
      * Metodo recursivo para recorrer el arbol y obtener los
@@ -186,6 +126,37 @@ public class TreeNode<T> {
         return exprElementos;
     }
 
+    // Método para obtener el conjunto de un nodo EXPR_CONJ
+    private Set<String> obtenerConjuntoDeExprConj(TreeNode<T> exprConjNode) {
+        if (exprConjNode.getData().equals("EXPRE_CONJ")) {
+            Set<String> conjuntoElementos = new HashSet<>();
+            for (TreeNode<T> child : exprConjNode.getChildren()) {
+                if (child.getData().equals("EXPRE_CONJ")) {
+                    conjuntoElementos.addAll(obtenerConjuntoDeExprConj(child));
+                } else {
+                    String conjuntoId = child.getChildren().get(1).getData().toString();
+                    conjuntoElementos.add(conjuntoId);
+                }
+            }
+            return conjuntoElementos;
+        }
+        return new HashSet<>();
+    }
+
+
+
+    // Método para evaluar una evaluación de conjuntos
+    private Set<String> evaluateEvaluation(TreeNode<T> evalNode) {
+        String evalType = evalNode.getData().toString();
+        if (evalType.equals("EVAL_PART")) {
+            String operationName = evalNode.getChildren().get(6).getData().toString();
+            Set<String> conjunto = parseSet(evalNode.getChildren().get(3).getData().toString());
+            System.out.println("Aplicando operación '" + operationName + "' al conjunto: " + conjunto);
+            return conjunto;
+        }
+        return new HashSet<>();
+    }
+
     // Método auxiliar para convertir un valor de nodo a un conjunto
     private Set<String> parseSet(String setString) {
         Set<String> result = new HashSet<>();
@@ -227,79 +198,129 @@ public class TreeNode<T> {
         }
     }
 
-    // Metodo para obtener Operaciones
-    public void obtnerOperaciones(TreeNode<T> node){
+    // Métodos para las operaciones de conjuntos (intersección, unión, complemento, diferencia)
+    private Set<String> intersection(Set<String> set1, Set<String> set2) {
+        Set<String> result = new HashSet<>(set1);
+        result.retainAll(set2);
+        return result;
+    }
+
+    private Set<String> union(Set<String> set1, Set<String> set2) {
+        Set<String> result = new HashSet<>(set1);
+        result.addAll(set2);
+        return result;
+    }
+
+    private Set<String> complement(Set<String> set) {
+        Set<String> universe = new HashSet<>();
+        for (int i = 33; i <= 126; i++) {
+            universe.add(String.valueOf((char) i));
+        }
+        Set<String> result = new HashSet<>(universe);
+        result.removeAll(set);
+        return result;
+    }
+
+    private Set<String> difference(Set<String> set1, Set<String> set2) {
+        Set<String> result = new HashSet<>(set1);
+        result.removeAll(set2);
+        return result;
+    }
+
+    // Método para aplicar las leyes de conjuntos a las expresiones
+    private void aplicarLeyesConjuntos(TreeNode<T> node) {
+        if (node == null) return;
+        if (node.getData().equals("CONJ_EXPR") || node.getData().equals("OPER_EXPR")) {
+            // Aplicar las leyes de DeMorgan, distributivas, etc.
+            aplicarLeyDeMorgan(node);
+            aplicarLeyAsociativa(node);
+            aplicarLeyDistributiva(node);
+            aplicarLeyIdempotente(node);
+            aplicarLeyAbsorcion(node);
+        }
+        for (TreeNode<T> child : node.getChildren()) {
+            aplicarLeyesConjuntos(child);
+        }
+    }
+
+    private void aplicarLeyDeMorgan(TreeNode<T> node) {
+        // Implementa la lógica para aplicar las leyes de DeMorgan
+    }
+    private void aplicarLeyAsociativa(TreeNode<T> node) {
+        // Implementa la lógica para aplicar las propiedades asociativas
+    }
+    private void aplicarLeyDistributiva(TreeNode<T> node) {
+        // Implementa la lógica para aplicar las propiedades distributivas
+    }
+    private void aplicarLeyIdempotente(TreeNode<T> node) {
+        // Implementa la lógica para aplicar las propiedades idempotentes
+    }
+    private void aplicarLeyAbsorcion(TreeNode<T> node) {
+        // Implementa la lógica para aplicar las propiedades de absorción
+    }
+
+    // Método para obtener operaciones y conjuntos definidos
+    public void obtenerOperaciones(TreeNode<T> node) {
         if (node.getData().toString().equals("OPER_LIST")) {
-            // Evaluar las operaciones definidas en OPER_LIST
             for (TreeNode<T> operPartNode : node.getChildren()) {
                 if (operPartNode.getData().toString().equals("OPER_PART")) {
-                    // Obtener el nombre de la operación
-                    String operationName = operPartNode.getChildren().get(2).getData().toString(); // Primer hijo es ID
-
-                    // Encontrar el nodo CONJ_EXPR dentro de OPER_PART
-                    TreeNode<T> operDefNode = operPartNode.getChildren().get(4); // El cuarto hijo es CONJ_EXPR
+                    String operationName = operPartNode.getChildren().get(2).getData().toString();
+                    TreeNode<T> operDefNode = operPartNode.getChildren().get(4);
                     if (operDefNode.getData().toString().equals("CONJ_EXPR")) {
-
                         System.out.println("Evaluando operación: " + operationName);
-
-                        // Evaluar la expresión de la operación
                         Set<String> resultadoOperacion = evaluarConjExpr(operDefNode);
                         System.out.println("Resultado de la operación '" + operationName + "': " + resultadoOperacion);
                     }
-
                 } else if (operPartNode.getData().toString().equals("OPER_LIST")) {
-                    obtnerOperaciones(operPartNode);
+                    obtenerOperaciones(operPartNode);
                 }
             }
         }
     }
-
-    /*
-    // Método para evaluar una operación a partir de su nodo OPER_DEF
-    private Set<String> evaluarOperacion(TreeNode<T> operDefNode) {
-        TreeNode<T> conjExprNode = operDefNode.getChildren().get(2); // El tercer hijo es CONJ_EXPR
-        return evaluarConjExpr(conjExprNode);
-    }
-    */
 
     // Método para evaluar un nodo CONJ_EXPR de manera recursiva
     private Set<String> evaluarConjExpr(TreeNode<T> conjExprNode) {
-        // Verifica si el nodo actual es de tipo "CONJ_EXPR"
         if (conjExprNode.getData().equals("CONJ_EXPR")) {
-            for (TreeNode<T> child : conjExprNode.getChildren()){
+            for (TreeNode<T> child : conjExprNode.getChildren()) {
                 if (child.getData().toString().equals("CONJ_EXPR")) {
                     evaluarConjExpr(child);
                 } else if (child.getData().toString().equals("OPER_EXPR")) {
-                    return obtnerOperExpr(child);
+                    return obtenerOperExpr(child);
                 }
             }
         }
-
         return new HashSet<>();
     }
 
-    public Set<String> obtnerOperExpr(TreeNode<T> conjExprNode) {
+    public Set<String> obtenerOperExpr(TreeNode<T> conjExprNode) {
         Set<String> result = new HashSet<>();
-        String operator = "";  // Inicializamos el operador como vacío
-        // Iteramos sobre los hijos del nodo "CONJ_EXPR"
+        String operator = "";
         for (TreeNode<T> child : conjExprNode.getChildren()) {
-            // Verifica si el hijo es un nodo de operador (OPER_EXPR)
             if (child.getData().equals("OPER_EXPR")) {
-                operator = child.getChildren().get(0).getData().toString();  // Obtiene el operador
-            }
-            // Verifica si el hijo es un nodo de conjuntos (EXPRE_CONJ)
-            else if (child.getData().equals("EXPRE_CONJ")) {
-                Set<String> currentSet = obtenerConjuntoDeExprConj(child);  // Obtiene el conjunto
-                // Si ya tenemos un operador, aplicamos la operación
+                operator = obtenerOperator(child);
+            } else if (child.getData().equals("EXPRE_CONJ")) {
+                Set<String> currentSet = obtenerConjuntoDeExprConj(child);
                 if (!operator.isEmpty()) {
                     result = aplicarOperacion(operator, result, currentSet);
                 } else {
-                    // Si es el primer conjunto, lo asignamos al resultado inicial
                     result = currentSet;
                 }
             }
         }
         return result;
+    }
+
+    public String obtenerOperator(TreeNode<T> simbolExpr) {
+        String operator = "";
+        for (TreeNode<T> child : simbolExpr.getChildren()) {
+            if (child.getData().toString().equals("OPER_EXPR")) {
+                return obtenerOperator(child);
+            } else if (child.getData().toString().equals("SIMBOL_EXPR")) {
+                String signo = child.getChildren().getFirst().getData().toString();
+                return operator + signo;
+            }
+        }
+        return operator;
     }
 
     // Método para aplicar la operación al conjunto
