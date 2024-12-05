@@ -2,7 +2,7 @@ package com.julian;
 
 public class Tree<T> {
 
-    private TreeNode<T> root;
+    private final TreeNode<T> root;
 
     public Tree(T rootData) {
         root = new TreeNode<>(rootData);

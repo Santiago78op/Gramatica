@@ -5,7 +5,7 @@
 
     OPERA: op1 -> ^ & ^  {pares} ^ {impares};   # ^(^  pares & ^impares);
 
-    OPERA: op2 -> ^ U & ^{pares} ^{pares} & ^{naturales} ^{naturales} ;
+    OPERA: op2 -> ^ U & ^{pares} ^{pares} &  ^{naturales}  ^{naturales} ;
 
      # ^((^ pares & ^ pares )  U (^ naturales & ^ naturales ) )
      # ^(^ (pares U pares )  U ^( naturales U  naturales ) )

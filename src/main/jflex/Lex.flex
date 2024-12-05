@@ -38,6 +38,18 @@ import java.util.List;
 %unicode
 
 /*
+    Ignorar mayusculas y minusculas en las expresiones
+    regulares.
+*/
+%ignorecase
+
+/*
+    El debug activa la generacion de un archivo .dbg,
+    esto para depurar el analizador lexico.
+*/
+%debug
+
+/*
     Activamos la compatibilidad con Java CUP para analizadores
     sintacticos(parser).
 */
@@ -49,10 +61,12 @@ import java.util.List;
 */
 %line
 %column
+
 /*
-    The code enclosed in and is copied verbatim into the
-    constructor of the generated class. Here, member variables
-     declared in the directive can be initialised.*/
+    El código encerrado en %init{ y %} se copia literalmente en el
+    constructor de la clase generada. Aquí, las variables miembro
+    declaradas en la directiva pueden ser inicializadas.
+*/
 %init{
     yycolumn = 1;
 %init}
@@ -65,35 +79,41 @@ import java.util.List;
 */
 %{
 
-    StringBuffer string = new StringBuffer();
+  // StringBuffer para almacenar los lexemas.
+  StringBuffer lexeme = new StringBuffer();
 
-    public List<Token> tokens = new ArrayList<>();
-    public List<LexError> lexErrors  = new ArrayList<>();
+  // Lista de tokens
+  public List<Symbol> tokens = new ArrayList<>();
+  // Lista de errores lexicos
+  public List<String> errors = new ArrayList<>();
 
-    /*
-        Generamos un java_cup.Symbol para guardar el tipo de token
-        encontrado.
-     */
-    private Symbol symbol(int type){
-        return new Symbol(type, yyline, yycolumn);
-    }
+  /*
+    Metodo symbol, parametro token: su funcion es
+    crear un objeto Symbol con los parametros token,
+    yyline y yycolumn.
+   */
+  private Symbol symbol(int type){
+    return new Symbol(type, yyline, yycolumn);
+  }
 
-    /*
-        Generamos un Symbol para el tipo de token encontrado
-        junto con su valor.
-     */
-    private Symbol symbol(int type, Object value){
-        return new Symbol(type, yyline, yycolumn, value);
-    }
+  /*
+    Metodo symbol, parametros token y value: su funcion es
+    crear un objeto Symbol con los parametros token,
+    yyline, yycolumn y value.
+   */
+  private Symbol symbol(int type, Object value){
+    return new Symbol(type, yyline, yycolumn, value);
+  }
 
-    private void addToken(String type, String value) {
-        tokens.add(new Token(type, value, yyline, yycolumn, value.length()));
-    }
+  // Metodo para agregar tokens a la lista de tokens.
+  private void addToken(String type, String value){
+      tokens.add(new Token(type, value, yyline, yycolumn, value.length()));
+  }
 
-    private void addLexicalError(String message) {
-        String description = "El caracter " + message + " no pertenece al lenguaje.";
-        lexErrors.add(new LexError("Lexico", description, yyline, yycolumn));
-    }
+  // Metodo para agregar errores lexicos.
+  private void addError(String error){
+      errors.add(new Error(error, yyline, yycolumn));
+  }
 
 %}
 
@@ -107,39 +127,69 @@ import java.util.List;
 // Definimos comentarios
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
-ws             = {LineTerminator} | [ \t\f]
+WhiteSpace     = {LineTerminator} | [ \t\f]
 
 /* comments */
-Comment = {LineComment} | {MultiLineComment}
+Comment = {TraditionalComment} | {EndOfLineComment}
 
-// Comentarios de una solo linea con #
-LineComment      = "#" {InputCharacter}* {LineTerminator}?
-MultiLineComment = "<!" {CommentContent} "!>"
-CommentContent   = ([^!] | \!+ [^>])*
+TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 
-/*
-    Letra es un caracter entre a y z o entre A y Z.
-*/
+// Comment can be the last line of the file, without line terminator.
+EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
+
+
+// Letra es un caracter entre a y z o entre A y Z.
 letter = [a-zA-Z]
-/*
-    Definimos un digito como un caracter entre 0 y 9.
-*/
+
+// Definimos un digito como un caracter entre 0 y 9.
 digit = [0-9]
+
 /*
     Definimos un identificador como una letra seguida de cero o mas
     letras o digitos.
 */
 guion = _
-id = {letter}({letter}|{digit}|{guion})*
-/*
-    Definimos un numero como uno o mas digitos.
-*/
+id = {guion}*{letter}({letter}|{digit}|{guion})*
+
+// Definimos un numero como uno o mas digitos.
 decimal = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
 
-num = {digit}+({digit})*
+num = [+-]?{digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
 
-chart = [!-~]
-charts = {chart}
+// Definimos un booleano como true o false.
+bool = (true|false)
+
+// Definimos un char como un valor que acepta un único carácter, incluyendo secuencias de escape.
+char = \'([^\'\\]|\\[btnfr\"\'\\]|\\u[0-9a-fA-F]{4})\'
+
+// Keywords
+// int -> Int, int, inT, INt, ...
+int    = \bint\b
+double = \bdouble\b
+bool   = \bbool\b
+char   = \bchar\b
+string = \bstring\b
+cast   = \bcast\b
+let    = \blet\b
+const  = \bconst\b
+as     = \bas\b
+if     = \bif\b
+else   = \belse\b
+match  = \bmatch\b
+def    = \bdefault\b
+while  = \bwhile\b
+do     = \bdo\b
+for    = \bfor\b
+break  = \bbreak\b
+consol = \bconsole\b
+log    = \blog\b
+conti  = \bcontinue\b
+ret    = \breturn\b
+
+// Estados del analizador lexico.
+%state STRING_STATE
+%state CHAR_STATE
+
 %% // fin de opciones.
 
 /* ------------------- Reglas Lexicas ------------------- */
@@ -151,59 +201,100 @@ charts = {chart}
     correspondiente.
 */
 
-/*
-    YYINITIAL es el estado inicial del analizador lexico al escanear.
-    Las expresiones regulares solo serán comparadas si se encuentra
-    en ese estado inicial. Es decir, cada vez que se encuentra una
-    coincidencia el scanner vuelve al estado inicial. Por lo cual se
-    ignoran estados intermedios.
-*/
-
-<YYINITIAL> {
-    /* Operadores */
-    "U"     { addToken("U",  yytext());  return  symbol(sym.UNION,        yytext()); }
-    "&"     { addToken("&",  yytext());  return  symbol(sym.INTERSECCION, yytext()); }
-    "^"     { addToken("^",  yytext());  return  symbol(sym.COMPLEMENTO,  yytext()); }
-    "-"     { addToken("-",  yytext());  return  symbol(sym.DIFERENCIA,   yytext()); }
-
-    /* Caracteres aceptados por el Lenguaje */
-    "->"    { addToken("->", yytext());  return  symbol(sym.ARROW,      yytext()); }
-    ","     { addToken(",",  yytext());  return  symbol(sym.COMMA,      yytext()); }
-    "("     { addToken("(",  yytext());  return  symbol(sym.LPAREN,     yytext()); }
-    ")"     { addToken(")",  yytext());  return  symbol(sym.RPAREN,     yytext()); }
-    ":"     { addToken(":",  yytext());  return  symbol(sym.COLON,      yytext()); }
-    ";"     { addToken(";",  yytext());  return  symbol(sym.SEMICOLON,  yytext()); }
-    "{"     { addToken("{",  yytext());  return  symbol(sym.LBRACE,     yytext()); }
-    "}"     { addToken("}",  yytext());  return  symbol(sym.RBRACE,     yytext()); }
-    "~"     { addToken("~",  yytext());  return  symbol(sym.VIRGULILLA, yytext()); }
-}
-
-/* Reglas de Operaciones */
-<YYINITIAL> CONJ       { addToken("CONJ",    yytext());  return  symbol(sym.CONJ,    yytext()); }
-<YYINITIAL> OPERA      { addToken("OPERA",   yytext());  return  symbol(sym.OPERA,   yytext()); }
-<YYINITIAL> EVALUAR    { addToken("EVALUAR", yytext());  return  symbol(sym.EVALUAR, yytext()); }
+/* keywords */
+<YYINITIAL> { int }    { addToken("INT",      yytext); return symbol(sym.INT); }
+<YYINITIAL> { double } { addToken("FLOAT",    yytext); return symbol(sym.DOUBLE); }
+<YYINITIAL> { bool }   { addToken("BOOL",     yytext); return symbol(sym.BOOL); }
+<YYINITIAL> { char }   { addToken("CHAR",     yytext); return symbol(sym.CHAR); }
+<YYINITIAL> { string } { addToken("STRING",   yytext); return symbol(sym.STRING); }
+<YYINITIAL> { cast }   { addToken("CAST",     yytext); return symbol(sym.CAST); }
+<YYINITIAL> { let }    { addToken("LET",      yytext); return symbol(sym.LET); }
+<YYINITIAL> { const }  { addToken("CONST",    yytext); return symbol(sym.CONST); }
+<YYINITIAL> { as }     { addToken("AS",       yytext); return symbol(sym.AS); }
+<YYINITIAL> { if }     { addToken("IF",       yytext); return symbol(sym.IF); }
+<YYINITIAL> { else }   { addToken("ELSE",     yytext); return symbol(sym.ELSE); }
+<YYINITIAL> { match }  { addToken("MATCH",    yytext); return symbol(sym.MATCH); }
+<YYINITIAL> { def }    { addToken("DEFAULT",  yytext); return symbol(sym.DEFAULT); }
+<YYINITIAL> { while }  { addToken("WHILE",    yytext); return symbol(sym.WHILE); }
+<YYINITIAL> { do }     { addToken("DO",       yytext); return symbol(sym.DO); }
+<YYINITIAL> { for }    { addToken("FOR",      yytext); return symbol(sym.FOR); }
+<YYINITIAL> { break }  { addToken("BREAK",    yytext); return symbol(sym.BREAK); }
+<YYINITIAL> { consol } { addToken("CONSOLE",  yytext); return symbol(sym.CONSOL); }
+<YYINITIAL> { log }    { addToken("LOG",      yytext); return symbol(sym.LOG); }
+<YYINITIAL> { conti }  { addToken("CONTINUE", yytext); return symbol(sym.CONTI); }
+<YYINITIAL> { ret }    { addToken("RETURN",   yytext); return symbol(sym.RET); }
 
 <YYINITIAL>{
-            /* Reglas de Caracteres */
-            {id}       { addToken("ID",   yytext()); return symbol(sym.ID,          yytext()); }
-            {num}      { addToken("NUM",  yytext()); return symbol(sym.NUM,         Integer.parseInt(yytext())); }
-            {decimal}  { addToken("DECIMAL",  yytext()); return symbol(sym.DECIMAL, Double.parseDouble(yytext())); }
-            {charts}   { addToken("CHART",yytext()); return symbol(sym.CHART,       yytext()); }
+    /* identifier, number y boolean */
+    { id }      { addToken("ID",      yytext); return symbol(sym.ID, yytext); }
+    { num }     { addToken("NUM",     yytext); return symbol(sym.NUM, yytext); }
+    { decimal } { addToken("DECIMAL", yytext); return symbol(sym.DECIMAL, yytext); }
+    { bool }    { addToken("BOOL",    yytext); return symbol(sym.BOOL, yytext); }
+
+    /* arithmetic operators */
+    "+" { addToken("ADD",  yytext); return symbol(sym.ADD); }
+    "-" { addToken("SUB",  yytext); return symbol(sym.SUB); }
+    "*" { addToken("MUL",  yytext); return symbol(sym.MUL); }
+    "/" { addToken("DIV",  yytext); return symbol(sym.DIV); }
+    "^" { addToken("POW",  yytext); return symbol(sym.POW); }
+    "$" { addToken("ROOT", yytext); return symbol(sym.ROOT); }
+    "%" { addToken("MOD",  yytext); return symbol(sym.MOD); }
+
+    /* relational operators */
+    "="    { addToken("EQ", yytext); return symbol(sym.EQ); }
+    "!="   { addToken("NE", yytext); return symbol(sym.NE); }
+    "<"    { addToken("LT", yytext); return symbol(sym.LT); }
+    "<="   { addToken("LE", yytext); return symbol(sym.LE); }
+    ">"    { addToken("GT", yytext); return symbol(sym.GT); }
+    ">="   { addToken("GE", yytext); return symbol(sym.GE); }
+
+    /* logical operators */
+    "||"   { addToken("OR",  yytext); return symbol(sym.OR); }
+    "&&"   { addToken("AND", yytext); return symbol(sym.AND); }
+    "!"    { addToken("NOT", yytext); return symbol(sym.NOT); }
+
+    /* caracteres del lenguaje */
+    "("    { addToken("LPAREN",    yytext); return symbol(sym.LPAREN); }
+    ")"    { addToken("RPAREN",    yytext); return symbol(sym.RPAREN); }
+    "{"    { addToken("LBRACE",    yytext); return symbol(sym.LBRACE); }
+    "}"    { addToken("RBRACE",    yytext); return symbol(sym.RBRACE); }
+    "["    { addToken("LBRACKET",  yytext); return symbol(sym.LBRACKET); }
+    "]"    { addToken("RBRACKET",  yytext); return symbol(sym.RBRACKET); }
+    ";"    { addToken("SEMICOLON", yytext); return symbol(sym.SEMICOLON); }
+    ":"    { addToken("COLON",     yytext); return symbol(sym.COLON); }
+    "."    { addToken("DOT",       yytext); return symbol(sym.DOT); }
+
+    // Detectar incio de un cadena
+    "\""     { yybegin(STRING_STATE); }
+
+    // Detectar inicio de un char.
+    "\'"     { yybegin(CHAR_STATE); }
+
+    // Detectar comentario
+    { Comment } { /* ignore */ }
+
+    // Detectar espacios en blanco
+    { WhiteSpace } { /* ignore */ }
 }
 
-<YYINITIAL>  {
-    /* Reglas de Comentarios */
-    {Comment}    { /* ignora comentarios de una linea */ }
-
-    /* Reglas de espcios */
-    {ws}        { /* ignore whitespace */ }
+<STRING_STATE>{
+    // Detectar fin de una cadena
+    "\""        { yybegin(YYINITIAL); addToken("STRING", lexeme.toString()); return symbol(sym.STRING, lexeme.toString()); }
+    // Caracteres validos en una cadena
+    [^\n\r\"\\] { lexeme.append(yytext()); }
+    // Secuencias de escape
+    "\\".       { lexeme.append(yytext()); yybegin(STRING_STATE); }
+    // Error en una cadena
+    [\n\r]      { addError("Error: Caracter invalido en una cadena"); }
 }
 
-// Fin de archivo
-<YYINITIAL> <<EOF>> {return  symbol(sym.EOF);}
-
-/*
-    Si el token contenido en la entrada no coincide con ninguna regla
-    entonces se marca un token ilegal
-*/
-<YYINITIAL>. { addLexicalError("Illegal character: " + yytext()); return  symbol(sym.error, yytext());}
+<CHAR_STATE>{
+    // Detectar fin de un char
+    "\'"      { yybegin(YYINITIAL); addToken("CHAR", lexeme.toString()); return symbol(sym.CHAR, lexeme.toString()); }
+    // Caracteres validos en un char
+    { char }  { lexeme.append(yytext()); }
+    // Secuencias de escape
+    "\\".     { lexeme.append(yytext()); yybegin(CHAR_STATE); }
+    // Error en un char
+    [\n\r]    { addError("Error: Caracter invalido en un char"); }
+}

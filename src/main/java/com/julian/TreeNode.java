@@ -42,6 +42,8 @@ public class TreeNode<T> {
         if (data.toString().equals("BLOCK")) {
             // Recorrer los nodos hijos de BLOCK para encontrar OPER_LIST y EVAL_LIST
             for (TreeNode<T> child : children) {
+                // Aplica leyes de conjuntos simplificando antesa de evaluar
+                aplicarLeyesConjuntos(child);
                 obtenerOperaciones(child);
                 if (child.getData().toString().equals("EVAL_LIST")) {
                     // Evaluar las evaluaciones de conjuntos
@@ -230,6 +232,8 @@ public class TreeNode<T> {
     // Método para aplicar las leyes de conjuntos a las expresiones
     private void aplicarLeyesConjuntos(TreeNode<T> node) {
         if (node == null) return;
+
+        // Verifica si el nodo representa una operación de conjuntos
         if (node.getData().equals("CONJ_EXPR") || node.getData().equals("OPER_EXPR")) {
             // Aplicar las leyes de DeMorgan, distributivas, etc.
             aplicarLeyDeMorgan(node);
@@ -245,6 +249,15 @@ public class TreeNode<T> {
 
     private void aplicarLeyDeMorgan(TreeNode<T> node) {
         // Implementa la lógica para aplicar las leyes de DeMorgan
+        // Verifica si la operación es un complemento (¬)
+        if (node.getData().equals("^")) {
+            List<TreeNode<T>> children = node.getChildren();
+            if (children.size() == 1 && children.getFirst().getData().equals("&")) {
+                // Ley de DeMorgan: ¬(A ∩ B) = ¬A ∪ ¬B
+                TreeNode<String> newUnionNode = new TreeNode<>("U");
+                TreeNode<String> notA         = new TreeNode<>("^");
+            }
+        }
     }
     private void aplicarLeyAsociativa(TreeNode<T> node) {
         // Implementa la lógica para aplicar las propiedades asociativas
