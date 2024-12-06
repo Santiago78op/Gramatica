@@ -8,51 +8,113 @@ package com.julian;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int SEMICOLON = 14;
-  public static final int DIFERENCIA = 8;
-  public static final int CHART = 21;
-  public static final int RBRACE = 16;
-  public static final int RPAREN = 12;
-  public static final int DECIMAL = 4;
-  public static final int INTERSECCION = 6;
-  public static final int OPERA = 19;
-  public static final int LPAREN = 11;
-  public static final int COLON = 13;
-  public static final int LBRACE = 15;
-  public static final int ID = 2;
-  public static final int NUM = 3;
-  public static final int COMMA = 10;
+  public static final int CAST = 8;
+  public static final int POW = 27;
+  public static final int CONST = 10;
+  public static final int CHAR = 6;
+  public static final int GE = 36;
+  public static final int LPAREN = 40;
+  public static final int CONTINUE = 20;
+  public static final int INT = 3;
+  public static final int FOR = 18;
+  public static final int MATCH = 14;
+  public static final int RPAREN = 41;
+  public static final int SEMICOLON = 44;
+  public static final int NOT = 39;
+  public static final int AND = 38;
+  public static final int LT = 33;
+  public static final int CARACTER = 52;
+  public static final int OR = 37;
+  public static final int BOOL = 5;
+  public static final int DIV = 26;
+  public static final int NUM = 48;
+  public static final int IF = 12;
+  public static final int ID = 47;
+  public static final int DOT = 46;
+  public static final int LE = 34;
+  public static final int DECIMAL = 49;
   public static final int EOF = 0;
-  public static final int CONJ = 18;
-  public static final int UNION = 5;
   public static final int error = 1;
-  public static final int ARROW = 9;
-  public static final int COMPLEMENTO = 7;
-  public static final int VIRGULILLA = 17;
-  public static final int EVALUAR = 20;
+  public static final int MUL = 25;
+  public static final int CADENA = 51;
+  public static final int ADD = 23;
+  public static final int MOD = 29;
+  public static final int BREAK = 19;
+  public static final int EQ = 31;
+  public static final int LOG = 22;
+  public static final int COLON = 45;
+  public static final int LBRACE = 42;
+  public static final int ELSE = 13;
+  public static final int WHILE = 17;
+  public static final int DEFAULT = 15;
+  public static final int LET = 9;
+  public static final int FLOAT = 4;
+  public static final int RBRACE = 43;
+  public static final int NE = 32;
+  public static final int BOOLEANO = 50;
+  public static final int USUB = 30;
+  public static final int ROOT = 28;
+  public static final int STRING = 7;
+  public static final int AS = 11;
+  public static final int GT = 35;
+  public static final int SUB = 24;
+  public static final int PRINT = 2;
+  public static final int DO = 16;
+  public static final int CONSOLE = 21;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
+  "PRINT",
+  "INT",
+  "FLOAT",
+  "BOOL",
+  "CHAR",
+  "STRING",
+  "CAST",
+  "LET",
+  "CONST",
+  "AS",
+  "IF",
+  "ELSE",
+  "MATCH",
+  "DEFAULT",
+  "DO",
+  "WHILE",
+  "FOR",
+  "BREAK",
+  "CONTINUE",
+  "CONSOLE",
+  "LOG",
+  "ADD",
+  "SUB",
+  "MUL",
+  "DIV",
+  "POW",
+  "ROOT",
+  "MOD",
+  "USUB",
+  "EQ",
+  "NE",
+  "LT",
+  "LE",
+  "GT",
+  "GE",
+  "OR",
+  "AND",
+  "NOT",
+  "LPAREN",
+  "RPAREN",
+  "LBRACE",
+  "RBRACE",
+  "SEMICOLON",
+  "COLON",
+  "DOT",
   "ID",
   "NUM",
   "DECIMAL",
-  "UNION",
-  "INTERSECCION",
-  "COMPLEMENTO",
-  "DIFERENCIA",
-  "ARROW",
-  "COMMA",
-  "LPAREN",
-  "RPAREN",
-  "COLON",
-  "SEMICOLON",
-  "LBRACE",
-  "RBRACE",
-  "VIRGULILLA",
-  "CONJ",
-  "OPERA",
-  "EVALUAR",
-  "CHART"
+  "BOOLEANO",
+  "CADENA",
+  "CARACTER"
   };
 }
 

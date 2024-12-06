@@ -1,13 +1,13 @@
 package com.julian;
 
-public class SyntaxError {
+public class SynError {
 
         private String tipo;
         private String message;
         private int line;
         private int column;
 
-        public SyntaxError(String tipo, String message, int line, int column) {
+        public SynError(String tipo, String message, int line, int column) {
             this.tipo = tipo;
             this.message = message;
             this.line = line;
@@ -48,7 +48,7 @@ public class SyntaxError {
 
         @Override
         public String toString() {
-            return "SyntaxError{" +
+            return "SynError{" +
                     "tipo='" + tipo + '\'' +
                     ", message='" + message + '\'' +
                     ", line=" + line +

@@ -68,6 +68,7 @@ import java.util.List;
     declaradas en la directiva pueden ser inicializadas.
 */
 %init{
+    yyline = 1;
     yycolumn = 1;
 %init}
 
@@ -83,9 +84,9 @@ import java.util.List;
   StringBuffer lexeme = new StringBuffer();
 
   // Lista de tokens
-  public List<Symbol> tokens = new ArrayList<>();
+  public List<Token> tokens = new ArrayList<Token>();
   // Lista de errores lexicos
-  public List<String> errors = new ArrayList<>();
+  public List<LexError> errors = new ArrayList<LexError>();
 
   /*
     Metodo symbol, parametro token: su funcion es
@@ -112,7 +113,8 @@ import java.util.List;
 
   // Metodo para agregar errores lexicos.
   private void addError(String error){
-      errors.add(new Error(error, yyline, yycolumn));
+      String description = "";
+      errors.add(new LexError(error, description, yyline, yycolumn));
   }
 
 %}
@@ -152,9 +154,9 @@ guion = _
 id = {guion}*{letter}({letter}|{digit}|{guion})*
 
 // Definimos un numero como uno o mas digitos.
-decimal = {digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
+decimal = {digit}+(\.{digit}+)?([eE]?{digit}+)?
 
-num = [+-]?{digit}+(\.{digit}+)?([eE][+-]?{digit}+)?
+num = {digit}+(\.{digit}+)?([eE]?{digit}+)?
 
 // Definimos un booleano como true o false.
 bool = (true|false)
@@ -164,27 +166,27 @@ char = \'([^\'\\]|\\[btnfr\"\'\\]|\\u[0-9a-fA-F]{4})\'
 
 // Keywords
 // int -> Int, int, inT, INt, ...
-int    = \bint\b
-double = \bdouble\b
-bool   = \bbool\b
-char   = \bchar\b
-string = \bstring\b
-cast   = \bcast\b
-let    = \blet\b
-const  = \bconst\b
-as     = \bas\b
-if     = \bif\b
-else   = \belse\b
-match  = \bmatch\b
-def    = \bdefault\b
-while  = \bwhile\b
-do     = \bdo\b
-for    = \bfor\b
-break  = \bbreak\b
-consol = \bconsole\b
-log    = \blog\b
-conti  = \bcontinue\b
-ret    = \breturn\b
+int    = "int"
+double = "double"
+bool   = "bool"
+char   = "char"
+string = "string"
+cast   = "cast"
+let    = "let"
+const  = "const"
+as     = "as"
+if     = "if"
+else   = "else"
+match  = "match"
+def    = "default"
+while  = "while"
+do     = "do"
+for    = "for"
+break  = "break"
+consol = "console"
+log    = "log"
+conti  = "continue"
+print  = "print"
 
 // Estados del analizador lexico.
 %state STRING_STATE
@@ -202,67 +204,65 @@ ret    = \breturn\b
 */
 
 /* keywords */
-<YYINITIAL> { int }    { addToken("INT",      yytext); return symbol(sym.INT); }
-<YYINITIAL> { double } { addToken("FLOAT",    yytext); return symbol(sym.DOUBLE); }
-<YYINITIAL> { bool }   { addToken("BOOL",     yytext); return symbol(sym.BOOL); }
-<YYINITIAL> { char }   { addToken("CHAR",     yytext); return symbol(sym.CHAR); }
-<YYINITIAL> { string } { addToken("STRING",   yytext); return symbol(sym.STRING); }
-<YYINITIAL> { cast }   { addToken("CAST",     yytext); return symbol(sym.CAST); }
-<YYINITIAL> { let }    { addToken("LET",      yytext); return symbol(sym.LET); }
-<YYINITIAL> { const }  { addToken("CONST",    yytext); return symbol(sym.CONST); }
-<YYINITIAL> { as }     { addToken("AS",       yytext); return symbol(sym.AS); }
-<YYINITIAL> { if }     { addToken("IF",       yytext); return symbol(sym.IF); }
-<YYINITIAL> { else }   { addToken("ELSE",     yytext); return symbol(sym.ELSE); }
-<YYINITIAL> { match }  { addToken("MATCH",    yytext); return symbol(sym.MATCH); }
-<YYINITIAL> { def }    { addToken("DEFAULT",  yytext); return symbol(sym.DEFAULT); }
-<YYINITIAL> { while }  { addToken("WHILE",    yytext); return symbol(sym.WHILE); }
-<YYINITIAL> { do }     { addToken("DO",       yytext); return symbol(sym.DO); }
-<YYINITIAL> { for }    { addToken("FOR",      yytext); return symbol(sym.FOR); }
-<YYINITIAL> { break }  { addToken("BREAK",    yytext); return symbol(sym.BREAK); }
-<YYINITIAL> { consol } { addToken("CONSOLE",  yytext); return symbol(sym.CONSOL); }
-<YYINITIAL> { log }    { addToken("LOG",      yytext); return symbol(sym.LOG); }
-<YYINITIAL> { conti }  { addToken("CONTINUE", yytext); return symbol(sym.CONTI); }
-<YYINITIAL> { ret }    { addToken("RETURN",   yytext); return symbol(sym.RET); }
+<YYINITIAL> { int }    { addToken("INT",      yytext()); return symbol(sym.INT, yytext()); }
+<YYINITIAL> { double } { addToken("FLOAT",    yytext()); return symbol(sym.FLOAT, yytext()); }
+<YYINITIAL> { bool }   { addToken("BOOL",     yytext()); return symbol(sym.BOOL, yytext()); }
+<YYINITIAL> { char }   { addToken("CHAR",     yytext()); return symbol(sym.CHAR, yytext()); }
+<YYINITIAL> { string } { addToken("STRING",   yytext()); return symbol(sym.STRING, yytext()); }
+<YYINITIAL> { cast }   { addToken("CAST",     yytext()); return symbol(sym.CAST, yytext()); }
+<YYINITIAL> { let }    { addToken("LET",      yytext()); return symbol(sym.LET, yytext()); }
+<YYINITIAL> { const }  { addToken("CONST",    yytext()); return symbol(sym.CONST, yytext()); }
+<YYINITIAL> { as }     { addToken("AS",       yytext()); return symbol(sym.AS, yytext()); }
+<YYINITIAL> { if }     { addToken("IF",       yytext()); return symbol(sym.IF, yytext()); }
+<YYINITIAL> { else }   { addToken("ELSE",     yytext()); return symbol(sym.ELSE, yytext()); }
+<YYINITIAL> { match }  { addToken("MATCH",    yytext()); return symbol(sym.MATCH, yytext()); }
+<YYINITIAL> { def }    { addToken("DEFAULT",  yytext()); return symbol(sym.DEFAULT, yytext()); }
+<YYINITIAL> { while }  { addToken("WHILE",    yytext()); return symbol(sym.WHILE, yytext()); }
+<YYINITIAL> { do }     { addToken("DO",       yytext()); return symbol(sym.DO, yytext()); }
+<YYINITIAL> { for }    { addToken("FOR",      yytext()); return symbol(sym.FOR, yytext()); }
+<YYINITIAL> { break }  { addToken("BREAK",    yytext()); return symbol(sym.BREAK, yytext()); }
+<YYINITIAL> { consol } { addToken("CONSOLE",  yytext()); return symbol(sym.CONSOLE, yytext()); }
+<YYINITIAL> { log }    { addToken("LOG",      yytext()); return symbol(sym.LOG, yytext()); }
+<YYINITIAL> { conti }  { addToken("CONTINUE", yytext()); return symbol(sym.CONTINUE, yytext()); }
+<YYINITIAL> { print }  { addToken("PRINT",    yytext()); return symbol(sym.PRINT, yytext()); }
 
 <YYINITIAL>{
     /* identifier, number y boolean */
-    { id }      { addToken("ID",      yytext); return symbol(sym.ID, yytext); }
-    { num }     { addToken("NUM",     yytext); return symbol(sym.NUM, yytext); }
-    { decimal } { addToken("DECIMAL", yytext); return symbol(sym.DECIMAL, yytext); }
-    { bool }    { addToken("BOOL",    yytext); return symbol(sym.BOOL, yytext); }
+    { id }      { addToken("ID",      yytext()); return symbol(sym.ID, yytext()); }
+    { num }     { addToken("NUM",     yytext()); return symbol(sym.NUM, Integer.parseInt(yytext())); }
+    { decimal } { addToken("DECIMAL", yytext()); return symbol(sym.DECIMAL, Double.parseDouble(yytext())); }
+    { bool }    { addToken("BOOLEANO",yytext()); return symbol(sym.BOOLEANO, yytext()); }
 
     /* arithmetic operators */
-    "+" { addToken("ADD",  yytext); return symbol(sym.ADD); }
-    "-" { addToken("SUB",  yytext); return symbol(sym.SUB); }
-    "*" { addToken("MUL",  yytext); return symbol(sym.MUL); }
-    "/" { addToken("DIV",  yytext); return symbol(sym.DIV); }
-    "^" { addToken("POW",  yytext); return symbol(sym.POW); }
-    "$" { addToken("ROOT", yytext); return symbol(sym.ROOT); }
-    "%" { addToken("MOD",  yytext); return symbol(sym.MOD); }
+    "+" { addToken("ADD",  yytext()); return symbol(sym.ADD, yytext()); }
+    "-" { addToken("SUB",  yytext()); return symbol(sym.SUB, yytext()); }
+    "*" { addToken("MUL",  yytext()); return symbol(sym.MUL, yytext()); }
+    "/" { addToken("DIV",  yytext()); return symbol(sym.DIV, yytext()); }
+    "^" { addToken("POW",  yytext()); return symbol(sym.POW, yytext()); }
+    "$" { addToken("ROOT", yytext()); return symbol(sym.ROOT, yytext()); }
+    "%" { addToken("MOD",  yytext()); return symbol(sym.MOD, yytext()); }
 
     /* relational operators */
-    "="    { addToken("EQ", yytext); return symbol(sym.EQ); }
-    "!="   { addToken("NE", yytext); return symbol(sym.NE); }
-    "<"    { addToken("LT", yytext); return symbol(sym.LT); }
-    "<="   { addToken("LE", yytext); return symbol(sym.LE); }
-    ">"    { addToken("GT", yytext); return symbol(sym.GT); }
-    ">="   { addToken("GE", yytext); return symbol(sym.GE); }
+    "="    { addToken("EQ", yytext()); return symbol(sym.EQ, yytext()); }
+    "!="   { addToken("NE", yytext()); return symbol(sym.NE, yytext()); }
+    "<"    { addToken("LT", yytext()); return symbol(sym.LT, yytext()); }
+    "<="   { addToken("LE", yytext()); return symbol(sym.LE, yytext()); }
+    ">"    { addToken("GT", yytext()); return symbol(sym.GT, yytext()); }
+    ">="   { addToken("GE", yytext()); return symbol(sym.GE, yytext()); }
 
     /* logical operators */
-    "||"   { addToken("OR",  yytext); return symbol(sym.OR); }
-    "&&"   { addToken("AND", yytext); return symbol(sym.AND); }
-    "!"    { addToken("NOT", yytext); return symbol(sym.NOT); }
+    "||"   { addToken("OR",  yytext()); return symbol(sym.OR, yytext()); }
+    "&&"   { addToken("AND", yytext()); return symbol(sym.AND, yytext()); }
+    "!"    { addToken("NOT", yytext()); return symbol(sym.NOT, yytext()); }
 
     /* caracteres del lenguaje */
-    "("    { addToken("LPAREN",    yytext); return symbol(sym.LPAREN); }
-    ")"    { addToken("RPAREN",    yytext); return symbol(sym.RPAREN); }
-    "{"    { addToken("LBRACE",    yytext); return symbol(sym.LBRACE); }
-    "}"    { addToken("RBRACE",    yytext); return symbol(sym.RBRACE); }
-    "["    { addToken("LBRACKET",  yytext); return symbol(sym.LBRACKET); }
-    "]"    { addToken("RBRACKET",  yytext); return symbol(sym.RBRACKET); }
-    ";"    { addToken("SEMICOLON", yytext); return symbol(sym.SEMICOLON); }
-    ":"    { addToken("COLON",     yytext); return symbol(sym.COLON); }
-    "."    { addToken("DOT",       yytext); return symbol(sym.DOT); }
+    "("    { addToken("LPAREN",    yytext()); return symbol(sym.LPAREN, yytext()); }
+    ")"    { addToken("RPAREN",    yytext()); return symbol(sym.RPAREN, yytext()); }
+    "{"    { addToken("LBRACE",    yytext()); return symbol(sym.LBRACE, yytext()); }
+    "}"    { addToken("RBRACE",    yytext()); return symbol(sym.RBRACE, yytext()); }
+    ";"    { addToken("SEMICOLON", yytext()); return symbol(sym.SEMICOLON, yytext()); }
+    ":"    { addToken("COLON",     yytext()); return symbol(sym.COLON, yytext()); }
+    "."    { addToken("DOT",       yytext()); return symbol(sym.DOT, yytext()); }
 
     // Detectar incio de un cadena
     "\""     { yybegin(STRING_STATE); }
@@ -279,7 +279,7 @@ ret    = \breturn\b
 
 <STRING_STATE>{
     // Detectar fin de una cadena
-    "\""        { yybegin(YYINITIAL); addToken("STRING", lexeme.toString()); return symbol(sym.STRING, lexeme.toString()); }
+    "\""        { yybegin(YYINITIAL); addToken("CADENA", lexeme.toString()); return symbol(sym.CADENA, lexeme.toString()); }
     // Caracteres validos en una cadena
     [^\n\r\"\\] { lexeme.append(yytext()); }
     // Secuencias de escape
@@ -290,7 +290,7 @@ ret    = \breturn\b
 
 <CHAR_STATE>{
     // Detectar fin de un char
-    "\'"      { yybegin(YYINITIAL); addToken("CHAR", lexeme.toString()); return symbol(sym.CHAR, lexeme.toString()); }
+    "\'"      { yybegin(YYINITIAL); addToken("CARACTER", lexeme.toString()); return symbol(sym.CARACTER, lexeme.toString()); }
     // Caracteres validos en un char
     { char }  { lexeme.append(yytext()); }
     // Secuencias de escape

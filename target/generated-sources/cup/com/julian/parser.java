@@ -33,17 +33,11 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\042\000\002\002\004\000\002\002\007\000\002\003" +
-    "\004\000\002\003\003\000\002\004\006\000\002\005\005" +
-    "\000\002\006\005\000\002\006\003\000\002\017\005\000" +
-    "\002\017\005\000\002\017\005\000\002\017\005\000\002" +
-    "\017\005\000\002\017\005\000\002\017\003\000\002\017" +
-    "\003\000\002\017\003\000\002\017\003\000\002\007\004" +
-    "\000\002\007\003\000\002\010\010\000\002\020\005\000" +
-    "\002\020\004\000\002\012\004\000\002\012\003\000\002" +
-    "\016\003\000\002\016\003\000\002\016\003\000\002\016" +
-    "\003\000\002\015\006\000\002\015\005\000\002\013\004" +
-    "\000\002\013\003\000\002\014\013" });
+    "\000\016\000\002\002\004\000\002\002\003\000\002\004" +
+    "\004\000\002\004\003\000\002\005\007\000\002\005\007" +
+    "\000\002\003\004\000\002\003\005\000\002\003\005\000" +
+    "\002\003\005\000\002\003\005\000\002\003\005\000\002" +
+    "\003\003\000\002\003\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -51,56 +45,30 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\105\000\004\021\004\001\002\000\004\024\010\001" +
-    "\002\000\004\002\006\001\002\000\004\002\001\001\002" +
-    "\000\006\024\ufffe\025\ufffe\001\002\000\004\017\102\001" +
-    "\002\000\006\024\010\025\013\001\002\000\006\024\uffff" +
-    "\025\uffff\001\002\000\004\017\055\001\002\000\006\025" +
-    "\uffee\026\uffee\001\002\000\006\025\013\026\016\001\002" +
-    "\000\004\015\024\001\002\000\006\022\uffe1\026\uffe1\001" +
-    "\002\000\006\025\uffef\026\uffef\001\002\000\006\022\023" +
-    "\026\016\001\002\000\006\022\uffe2\026\uffe2\001\002\000" +
-    "\004\002\000\001\002\000\004\021\025\001\002\000\012" +
-    "\004\027\005\026\006\033\027\032\001\002\000\012\014" +
-    "\ufff2\020\ufff2\022\ufff2\023\052\001\002\000\012\014\ufff3" +
-    "\020\ufff3\022\ufff3\023\050\001\002\000\010\014\ufffa\020" +
-    "\ufffa\022\ufffa\001\002\000\006\014\041\022\042\001\002" +
-    "\000\012\014\ufff0\020\ufff0\022\ufff0\023\036\001\002\000" +
-    "\012\014\ufff1\020\ufff1\022\ufff1\023\034\001\002\000\004" +
-    "\006\035\001\002\000\010\014\ufff7\020\ufff7\022\ufff7\001" +
-    "\002\000\006\005\037\027\040\001\002\000\010\014\ufff6" +
-    "\020\ufff6\022\ufff6\001\002\000\010\014\ufff4\020\ufff4\022" +
-    "\ufff4\001\002\000\012\004\027\005\026\006\033\027\032" +
-    "\001\002\000\004\014\043\001\002\000\004\004\044\001" +
-    "\002\000\004\016\045\001\002\000\004\020\046\001\002" +
-    "\000\006\022\uffe0\026\uffe0\001\002\000\010\014\ufffb\020" +
-    "\ufffb\022\ufffb\001\002\000\004\004\051\001\002\000\010" +
-    "\014\ufff9\020\ufff9\022\ufff9\001\002\000\006\005\053\027" +
-    "\054\001\002\000\010\014\ufff8\020\ufff8\022\ufff8\001\002" +
-    "\000\010\014\ufff5\020\ufff5\022\ufff5\001\002\000\004\004" +
-    "\056\001\002\000\004\013\057\001\002\000\012\007\063" +
-    "\010\061\011\065\012\064\001\002\000\014\007\uffe9\010" +
-    "\uffe9\011\uffe9\012\uffe9\021\uffe9\001\002\000\014\007\uffe7" +
-    "\010\uffe7\011\uffe7\012\uffe7\021\uffe7\001\002\000\014\007" +
-    "\063\010\061\011\065\012\064\020\077\001\002\000\014" +
-    "\007\uffe8\010\uffe8\011\uffe8\012\uffe8\021\uffe8\001\002\000" +
-    "\014\007\uffe5\010\uffe5\011\uffe5\012\uffe5\021\uffe5\001\002" +
-    "\000\014\007\uffe6\010\uffe6\011\uffe6\012\uffe6\021\uffe6\001" +
-    "\002\000\014\007\063\010\061\011\065\012\064\021\071" +
-    "\001\002\000\014\007\uffea\010\uffea\011\uffea\012\uffea\021" +
-    "\uffea\001\002\000\016\007\uffeb\010\uffeb\011\uffeb\012\uffeb" +
-    "\020\uffeb\021\074\001\002\000\004\004\072\001\002\000" +
-    "\004\022\073\001\002\000\016\007\uffe3\010\uffe3\011\uffe3" +
-    "\012\uffe3\020\uffe3\021\uffe3\001\002\000\004\004\075\001" +
-    "\002\000\004\022\076\001\002\000\016\007\uffe4\010\uffe4" +
-    "\011\uffe4\012\uffe4\020\uffe4\021\uffe4\001\002\000\006\025" +
-    "\uffed\026\uffed\001\002\000\014\007\063\010\061\011\065" +
-    "\012\064\021\071\001\002\000\016\007\uffec\010\uffec\011" +
-    "\uffec\012\uffec\020\uffec\021\074\001\002\000\004\004\103" +
-    "\001\002\000\004\013\106\001\002\000\004\020\105\001" +
-    "\002\000\006\024\ufffd\025\ufffd\001\002\000\012\004\027" +
-    "\005\026\006\033\027\032\001\002\000\006\014\041\020" +
-    "\ufffc\001\002" });
+    "\000\035\000\004\004\004\001\002\000\004\052\012\001" +
+    "\002\000\006\002\ufffe\004\ufffe\001\002\000\006\002\000" +
+    "\004\004\001\002\000\004\002\010\001\002\000\004\002" +
+    "\001\001\002\000\006\002\uffff\004\uffff\001\002\000\014" +
+    "\011\015\032\014\052\017\062\013\063\020\001\002\000" +
+    "\014\031\ufff5\032\ufff5\033\ufff5\034\ufff5\053\ufff5\001\002" +
+    "\000\012\032\014\052\017\062\013\063\020\001\002\000" +
+    "\004\053\035\001\002\000\014\031\025\032\022\033\024" +
+    "\034\026\053\033\001\002\000\012\032\014\052\017\062" +
+    "\013\063\020\001\002\000\014\031\ufff4\032\ufff4\033\ufff4" +
+    "\034\ufff4\053\ufff4\001\002\000\014\031\025\032\022\033" +
+    "\024\034\026\053\023\001\002\000\012\032\014\052\017" +
+    "\062\013\063\020\001\002\000\014\031\ufff6\032\ufff6\033" +
+    "\ufff6\034\ufff6\053\ufff6\001\002\000\012\032\014\052\017" +
+    "\062\013\063\020\001\002\000\012\032\014\052\017\062" +
+    "\013\063\020\001\002\000\012\032\014\052\017\062\013" +
+    "\063\020\001\002\000\014\031\025\032\022\033\ufff7\034" +
+    "\ufff7\053\ufff7\001\002\000\014\031\ufffa\032\ufffa\033\ufffa" +
+    "\034\ufffa\053\ufffa\001\002\000\014\031\025\032\022\033" +
+    "\ufff8\034\ufff8\053\ufff8\001\002\000\014\031\ufff9\032\ufff9" +
+    "\033\ufff9\034\ufff9\053\ufff9\001\002\000\004\056\034\001" +
+    "\002\000\006\002\ufffd\004\ufffd\001\002\000\004\056\036" +
+    "\001\002\000\006\002\ufffc\004\ufffc\001\002\000\014\031" +
+    "\025\032\022\033\024\034\026\053\ufffb\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -108,32 +76,17 @@ public class parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\105\000\004\002\004\001\001\000\006\003\010\004" +
-    "\006\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\010\004\011\007\014\010" +
-    "\013\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\010\010\017\013\020\014\016\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\004" +
-    "\014\021\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\006\006\030\017\027\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\035\000\010\002\006\004\005\005\004\001\001\000" +
+    "\002\001\001\000\002\001\001\000\004\005\010\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\004\017\046\001\001\000\002\001\001" +
+    "\004\003\015\001\001\000\002\001\001\000\004\003\036" +
+    "\001\001\000\002\001\001\000\002\001\001\000\004\003" +
+    "\020\001\001\000\002\001\001\000\002\001\001\000\004" +
+    "\003\031\001\001\000\002\001\001\000\004\003\030\001" +
+    "\001\000\004\003\027\001\001\000\004\003\026\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001\000\010\012\065" +
-    "\016\057\020\061\001\001\000\002\001\001\000\002\001" +
-    "\001\000\006\012\077\016\057\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\006\015\067\016" +
-    "\066\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\006\015\100\016\066\001\001\000\002\001\001\000" +
-    "\004\005\103\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\006\006\106\017\027\001\001\000" +
-    "\002\001\001" });
+    "\001\001\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -173,97 +126,31 @@ public class parser extends java_cup.runtime.lr_parser {
 
 
 
-    // Lista de errores sintacticos
-    public List<SyntaxError> syntaxErrors = new ArrayList<>();
-
-    // Obtiene el estado actual del parser
-    public int getCurrentParserState(){
-        return ((Symbol) stack.peek()).parse_state;
+    // Funcion de error posiblemente recuperable
+    public void syntax_error(Symbol cur_token) {
+        //System.out.println("Error de sintaxis en la linea: " + (s.yyline + 1) + " columna: " + (s.yycolumn + 1));
+        System.out.println("Token actual: " + cur_token.value);
+        System.out.println("Token esperado: " + cur_token.sym);
+        System.out.println("Error recuperable, se intentara recuperar.");
     }
 
-    // Reporta un error sintactico
-    @Override
-    public void report_error(String message, Object info) {
-        // Obtine el estado actual del parser
-        int currentState = getCurrentParserState();
-
-        // Inicialisamos las lineas y columnas
-        int line = -1;
-        int column = -1;
-
-        String incomingToken = "unknown";
-
-        if (info instanceof Symbol) {
-           Symbol s = (Symbol) info;
-           if (s.left >= 0) {
-               line = s.left + 1;
-           }
-           if (s.right >= 0) {
-               column = s.right + 1;
-           }
-           incomingToken = s.value.toString();
-        }
-
-        // Obtener los tokens esperados
-        String expectedTokens = getExpectedTokensForCurrentState(currentState);
-
-        String errorMessage = "Se encontró '" + incomingToken + "' en el estado " + currentState + " y se esperaba " + expectedTokens + ".";
-        SyntaxError error = new SyntaxError("Syntax Error", errorMessage, line, column);
-        if (!syntaxErrors.contains(error)) {
-           syntaxErrors.add(error);
-        }
-        System.err.println("Error: " + errorMessage);
+    // Funcion de error No recuperable
+    public void unrecovered_syntax_error(Symbol s) {
+        // System.out.println("Error de sintaxis en la linea: " + (s.yyline + 1) + " columna: " + (s.yycolumn + 1));
+        System.out.println("Token actual: " + cur_token.value);
+        System.out.println("Token esperado: " + cur_token.sym);
+        System.out.println("Error fatal, no se puede recuperar.");
     }
-
-    // Reporta un error de sintaxis
-    private String getExpectedTokensForCurrentState(int currentState) {
-        StringBuilder expectedTokens = new StringBuilder();
-
-        // Obtener la tabla de acciones
-        short[][] actionTable = action_table();
-
-        int lenthTokens = actionTable.length;
-        // Verifica si el elemento actual está dentro del rango de la tabla
-        if (currentState >= 0 && currentState <= lenthTokens) {
-            short[] actionsForCurrentStates = actionTable[currentState];
-
-            int curr = actionsForCurrentStates.length;
-            // Itera sobre los posibles tokens terminales
-            for (int i = 0; i < curr; i++){
-                int actionLenth = actionsForCurrentStates[i];
-                if (actionLenth > 0) {
-                    int expectedLength = expectedTokens.length();
-                    if (expectedLength > 0) {
-                        expectedTokens.append(", ");
-                    }
-                    if (actionLenth < 21) {
-                        expectedTokens.append(sym.terminalNames[actionLenth]);
-                    }
-
-                }
-            }
-        }
-
-        return expectedTokens.toString();
-    }
-
-    // Reporta un error de sintaxis
-    @Override
-    public Symbol parse() {
-        try {
-            return super.parse();
-        } catch (Exception e) {
-            System.err.println("Error: Couldn't repair and continue parse");
-            // e.printStackTrace();
-            return null;
-        }
-}
 
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 class CUP$parser$actions {
+
+
+    String consola = "";
+
   private final parser parser;
 
   /** Constructor */
@@ -286,12 +173,12 @@ class CUP$parser$actions {
       switch (CUP$parser$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // $START ::= BLOCK EOF 
+          case 0: // $START ::= INICIO EOF 
             {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
 		int start_valright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> start_val = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		Object start_val = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		RESULT = start_val;
               CUP$parser$result = parser.getSymbolFactory().newSymbol("$START",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -300,724 +187,161 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 1: // BLOCK ::= LBRACE CONJ_LIST OPER_LIST EVAL_LIST RBRACE 
+          case 1: // INICIO ::= INSTRUCCIONES 
             {
-              TreeNode<String> RESULT =null;
-		int lbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
-		int lbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
-		Object lbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
-		int conj_listleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
-		int conj_listright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
-		TreeNode<String> conj_list = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
-		int oper_listleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int oper_listright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		TreeNode<String> oper_list = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int eval_listleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int eval_listright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> eval_list = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int rbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int rbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object rbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> blockNode = new TreeNode<>("BLOCK");
-
-    blockNode.addChild(new TreeNode<>(lbrace.toString()));
-    blockNode.addChild(conj_list);
-    blockNode.addChild(oper_list);
-    blockNode.addChild(eval_list);
-    blockNode.addChild(new TreeNode<>(rbrace.toString()));
-
-    RESULT = blockNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("BLOCK",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Object RESULT =null;
+		 RESULT=consola; 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("INICIO",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // CONJ_LIST ::= CONJ_LIST CONJ_PART 
+          case 2: // INSTRUCCIONES ::= INSTRUCCIONES INSTRUCCION 
             {
-              TreeNode<String> RESULT =null;
-		int conj_listleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int conj_listright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> conj_list = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int conj_partleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int conj_partright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> conj_part = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> conjListNode = new TreeNode<>("CONJ_LIST");
-    conjListNode.addChild(conj_list);
-    conjListNode.addChild(conj_part);
-    RESULT = conjListNode;
+              Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("CONJ_LIST",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("INSTRUCCIONES",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 3: // CONJ_LIST ::= CONJ_PART 
+          case 3: // INSTRUCCIONES ::= INSTRUCCION 
             {
-              TreeNode<String> RESULT =null;
-		int conj_partleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int conj_partright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> conj_part = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> conjListNode = new TreeNode<>("CONJ_LIST");
-    conjListNode.addChild(conj_part);
-    RESULT = conjListNode;
+              Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("CONJ_LIST",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("INSTRUCCIONES",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 4: // CONJ_PART ::= CONJ COLON EXPR_DEF SEMICOLON 
+          case 4: // INSTRUCCION ::= PRINT LPAREN EXPRESION RPAREN SEMICOLON 
             {
-              TreeNode<String> RESULT =null;
-		int conjleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
-		int conjright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
-		Object conj = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
-		int colonleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int colonright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		Object colon = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int expr_defleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int expr_defright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> expr_def = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int semicolonleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int semicolonright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object semicolon = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> conjPartNode = new TreeNode<>("CONJ_PART");
-    conjPartNode.addChild(new TreeNode<>(conj.toString()));
-    conjPartNode.addChild(new TreeNode<>(colon.toString()));
-    conjPartNode.addChild(expr_def);
-    conjPartNode.addChild(new TreeNode<>(semicolon.toString()));
-    RESULT = conjPartNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("CONJ_PART",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Double e = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		 consola+=e+"\n"; 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("INSTRUCCION",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // EXPR_DEF ::= ID ARROW CONJUNTO_EXPR 
+          case 5: // INSTRUCCION ::= PRINT LPAREN STRING RPAREN SEMICOLON 
             {
-              TreeNode<String> RESULT =null;
-		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		String id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int arrowleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int arrowright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object arrow = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int conjunto_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int conjunto_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> conjunto_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprDedNode = new TreeNode<>("EXPR_DEF");
-    exprDedNode.addChild(new TreeNode<>(id.toString()));
-    exprDedNode.addChild(new TreeNode<>(arrow.toString()));
-    exprDedNode.addChild(conjunto_expr);
-    RESULT = exprDedNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR_DEF",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Object RESULT =null;
+		int cleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object c = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		 consola+=c+"\n"; 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("INSTRUCCION",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // CONJUNTO_EXPR ::= CONJUNTO_EXPR COMMA EXPR 
+          case 6: // EXPRESION ::= SUB EXPRESION 
             {
-              TreeNode<String> RESULT =null;
-		int conjunto_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int conjunto_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		TreeNode<String> conjunto_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int commaleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int commaright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object comma = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> conjuntoExprNode = new TreeNode<>("CONJUNTO_EXPR");
-    conjuntoExprNode.addChild(conjunto_expr);
-    conjuntoExprNode.addChild(new TreeNode<>(comma.toString()));
-    conjuntoExprNode.addChild(expr);
-    RESULT = conjuntoExprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("CONJUNTO_EXPR",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Double RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Double a = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = -a; 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRESION",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // CONJUNTO_EXPR ::= EXPR 
+          case 7: // EXPRESION ::= EXPRESION ADD EXPRESION 
             {
-              TreeNode<String> RESULT =null;
-		int exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> conjuntoExprNode = new TreeNode<>("CONJUNTO_EXPR");
-    conjuntoExprNode.addChild(expr);
-    RESULT = conjuntoExprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("CONJUNTO_EXPR",4, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Double RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Double a = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Double b = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = a + b; 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRESION",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // EXPR ::= ID VIRGULILLA ID 
+          case 8: // EXPRESION ::= EXPRESION SUB EXPRESION 
             {
-              TreeNode<String> RESULT =null;
-		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		String id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int virgulillaleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int virgulillaright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object virgulilla = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int id2left = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int id2right = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		String id2 = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprNode = new TreeNode<>("EXPR");
-    exprNode.addChild(new TreeNode<>(id.toString()));
-    exprNode.addChild(new TreeNode<>(virgulilla.toString()));
-    exprNode.addChild(new TreeNode<>(id2.toString()));
-    RESULT = exprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Double RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Double a = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Double b = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = a - b; 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRESION",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // EXPR ::= NUM VIRGULILLA NUM 
+          case 9: // EXPRESION ::= EXPRESION MUL EXPRESION 
             {
-              TreeNode<String> RESULT =null;
-		int num1left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int num1right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		int num1 = (int)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int virgulillaleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int virgulillaright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object virgulilla = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int num2left = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int num2right = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		int num2 = (int)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprNode = new TreeNode<>("EXPR");
-    exprNode.addChild(new TreeNode<>(Integer.toString(num1)));
-    exprNode.addChild(new TreeNode<>(virgulilla.toString()));
-    exprNode.addChild(new TreeNode<>(Integer.toString(num2)));
-    RESULT = exprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Double RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Double a = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Double b = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = a * b; 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRESION",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // EXPR ::= DECIMAL VIRGULILLA DECIMAL 
+          case 10: // EXPRESION ::= EXPRESION DIV EXPRESION 
             {
-              TreeNode<String> RESULT =null;
-		int decimal1left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int decimal1right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		Double decimal1 = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int virgulillaleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int virgulillaright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object virgulilla = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int decimal2left = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int decimal2right = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Double decimal2 = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprNode = new TreeNode<>("EXPR");
-    exprNode.addChild(new TreeNode<>(decimal1.toString()));
-    exprNode.addChild(new TreeNode<>(virgulilla.toString()));
-    exprNode.addChild(new TreeNode<>(decimal2.toString()));
-    RESULT = exprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Double RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Double a = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Double b = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = a / b; 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRESION",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // EXPR ::= CHART VIRGULILLA NUM 
+          case 11: // EXPRESION ::= LPAREN EXPRESION RPAREN 
             {
-              TreeNode<String> RESULT =null;
-		int chartleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int chartright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		Object chart = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int virgulillaleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int virgulillaright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object virgulilla = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int numleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int numright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		int num = (int)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprNode = new TreeNode<>("EXPR");
-    exprNode.addChild(new TreeNode<>(chart.toString()));
-    exprNode.addChild(new TreeNode<>(virgulilla.toString()));
-    exprNode.addChild(new TreeNode<>(Integer.toString(num)));
-    RESULT = exprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Double RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Double e = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		 RESULT = e; 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRESION",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // EXPR ::= NUM VIRGULILLA CHART 
+          case 12: // EXPRESION ::= NUM 
             {
-              TreeNode<String> RESULT =null;
-		int numleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int numright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		int num = (int)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int virgulillaleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int virgulillaright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object virgulilla = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int chartleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int chartright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object chart = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprNode = new TreeNode<>("EXPR");
-    exprNode.addChild(new TreeNode<>(Integer.toString(num)));
-    exprNode.addChild(new TreeNode<>(virgulilla.toString()));
-    exprNode.addChild(new TreeNode<>(chart.toString()));
-    RESULT = exprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Double RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		int e = (int)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = new Double(e); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRESION",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 13: // EXPR ::= CHART VIRGULILLA CHART 
+          case 13: // EXPRESION ::= DECIMAL 
             {
-              TreeNode<String> RESULT =null;
-		int chart1left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int chart1right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		Object chart1 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int virgulillaleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int virgulillaright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object virgulilla = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int chart2left = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int chart2right = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object chart2 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprNode = new TreeNode<>("EXPR");
-    exprNode.addChild(new TreeNode<>(chart1.toString()));
-    exprNode.addChild(new TreeNode<>(virgulilla.toString()));
-    exprNode.addChild(new TreeNode<>(chart2.toString()));
-    RESULT = exprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 14: // EXPR ::= ID 
-            {
-              TreeNode<String> RESULT =null;
-		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		String id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprNode = new TreeNode<>("EXPR");
-    exprNode.addChild(new TreeNode<>(id.toString()));
-    RESULT = exprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 15: // EXPR ::= NUM 
-            {
-              TreeNode<String> RESULT =null;
-		int numleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int numright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		int num = (int)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprNode = new TreeNode<>("EXPR");
-    exprNode.addChild(new TreeNode<>(Integer.toString(num)));
-    RESULT = exprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 16: // EXPR ::= DECIMAL 
-            {
-              TreeNode<String> RESULT =null;
-		int decimalleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int decimalright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Double decimal = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprNode = new TreeNode<>("EXPR");
-    exprNode.addChild(new TreeNode<>(decimal.toString()));
-    RESULT = exprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 17: // EXPR ::= CHART 
-            {
-              TreeNode<String> RESULT =null;
-		int chartleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int chartright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object chart = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprNode = new TreeNode<>("EXPR");
-    exprNode.addChild(new TreeNode<>(chart.toString()));
-    RESULT = exprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPR",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 18: // OPER_LIST ::= OPER_LIST OPER_PART 
-            {
-              TreeNode<String> RESULT =null;
-		int oper_listleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int oper_listright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> oper_list = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int oper_partleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int oper_partright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> oper_part = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> operListNode = new TreeNode<>("OPER_LIST");
-    operListNode.addChild(oper_list);
-    operListNode.addChild(oper_part);
-    RESULT = operListNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("OPER_LIST",5, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 19: // OPER_LIST ::= OPER_PART 
-            {
-              TreeNode<String> RESULT =null;
-		int oper_partleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int oper_partright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> oper_part = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> operListNode = new TreeNode<>("OPER_LIST");
-    operListNode.addChild(oper_part);
-    RESULT = operListNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("OPER_LIST",5, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 20: // OPER_PART ::= OPERA COLON ID ARROW CONJ_EXPR SEMICOLON 
-            {
-              TreeNode<String> RESULT =null;
-		int operaleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)).left;
-		int operaright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)).right;
-		Object opera = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-5)).value;
-		int colonleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
-		int colonright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
-		Object colon = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
-		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
-		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
-		String id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
-		int arrowleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int arrowright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		Object arrow = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int conj_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int conj_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> conj_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int semicolonleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int semicolonright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object semicolon = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> operPartNode = new TreeNode<>("OPER_PART");
-    operPartNode.addChild(new TreeNode<>(opera.toString()));
-    operPartNode.addChild(new TreeNode<>(colon.toString()));
-    operPartNode.addChild(new TreeNode<>(id.toString()));
-    operPartNode.addChild(new TreeNode<>(arrow.toString()));
-    operPartNode.addChild(conj_expr);
-    operPartNode.addChild(new TreeNode<>(semicolon.toString()));
-    RESULT = operPartNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("OPER_PART",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 21: // CONJ_EXPR ::= CONJ_EXPR OPER_EXPR EXPRE_CONJ 
-            {
-              TreeNode<String> RESULT =null;
-		int conj_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int conj_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		TreeNode<String> conj_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int oper_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int oper_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> oper_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int expre_conjleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int expre_conjright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> expre_conj = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> conjExprNode = new TreeNode<>("CONJ_EXPR");
-    conjExprNode.addChild(conj_expr);
-    conjExprNode.addChild(oper_expr);
-    conjExprNode.addChild(expre_conj);
-    RESULT = conjExprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("CONJ_EXPR",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 22: // CONJ_EXPR ::= OPER_EXPR EXPRE_CONJ 
-            {
-              TreeNode<String> RESULT =null;
-		int oper_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int oper_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> oper_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int expre_conjleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int expre_conjright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> expre_conj = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> conjExprNode = new TreeNode<>("CONJ_EXPR");
-    conjExprNode.addChild(oper_expr);
-    conjExprNode.addChild(expre_conj);
-    RESULT = conjExprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("CONJ_EXPR",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 23: // OPER_EXPR ::= OPER_EXPR SIMBOL_EXPR 
-            {
-              TreeNode<String> RESULT =null;
-		int oper_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int oper_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> oper_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int simbol_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int simbol_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> simbol_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> operExprNode = new TreeNode<>("OPER_EXPR");
-    operExprNode.addChild(oper_expr);
-    operExprNode.addChild(simbol_expr);
-    RESULT = operExprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("OPER_EXPR",8, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 24: // OPER_EXPR ::= SIMBOL_EXPR 
-            {
-              TreeNode<String> RESULT =null;
-		int simbol_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int simbol_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> simbol_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> operExprNode = new TreeNode<>("OPER_EXPR");
-    operExprNode.addChild(simbol_expr);
-    RESULT = operExprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("OPER_EXPR",8, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 25: // SIMBOL_EXPR ::= UNION 
-            {
-              TreeNode<String> RESULT =null;
-		int unionleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int unionright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object union = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
-    simbolExprNode.addChild(new TreeNode<>(union.toString()));
-    RESULT = simbolExprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("SIMBOL_EXPR",12, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 26: // SIMBOL_EXPR ::= INTERSECCION 
-            {
-              TreeNode<String> RESULT =null;
-		int interseccionleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int interseccionright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object interseccion = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
-    simbolExprNode.addChild(new TreeNode<>(interseccion.toString()));
-    RESULT = simbolExprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("SIMBOL_EXPR",12, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 27: // SIMBOL_EXPR ::= COMPLEMENTO 
-            {
-              TreeNode<String> RESULT =null;
-		int complementoleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int complementoright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object complemento = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
-    simbolExprNode.addChild(new TreeNode<>(complemento.toString()));
-    RESULT = simbolExprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("SIMBOL_EXPR",12, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 28: // SIMBOL_EXPR ::= DIFERENCIA 
-            {
-              TreeNode<String> RESULT =null;
-		int diferencialeft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int diferenciaright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object diferencia = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> simbolExprNode = new TreeNode<>("SIMBOL_EXPR");
-    simbolExprNode.addChild(new TreeNode<>(diferencia.toString()));
-    RESULT = simbolExprNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("SIMBOL_EXPR",12, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 29: // EXPRE_CONJ ::= EXPRE_CONJ LBRACE ID RBRACE 
-            {
-              TreeNode<String> RESULT =null;
-		int expre_conjleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
-		int expre_conjright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
-		TreeNode<String> expre_conj = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
-		int lbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int lbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		Object lbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		String id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int rbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int rbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object rbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprConjNode = new TreeNode<>("EXPRE_CONJ");
-    exprConjNode.addChild(expre_conj);
-    exprConjNode.addChild(new TreeNode<>(lbrace.toString()));
-    exprConjNode.addChild(new TreeNode<>(id.toString()));
-    exprConjNode.addChild(new TreeNode<>(rbrace.toString()));
-    RESULT = exprConjNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRE_CONJ",11, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 30: // EXPRE_CONJ ::= LBRACE ID RBRACE 
-            {
-              TreeNode<String> RESULT =null;
-		int lbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int lbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		Object lbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		String id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int rbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int rbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object rbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> exprConjNode = new TreeNode<>("EXPRE_CONJ");
-    exprConjNode.addChild(new TreeNode<>(lbrace.toString()));
-    exprConjNode.addChild(new TreeNode<>(id.toString()));
-    exprConjNode.addChild(new TreeNode<>(rbrace.toString()));
-    RESULT = exprConjNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRE_CONJ",11, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 31: // EVAL_LIST ::= EVAL_LIST EVAL_PART 
-            {
-              TreeNode<String> RESULT =null;
-		int eval_listleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int eval_listright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		TreeNode<String> eval_list = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int eval_partleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int eval_partright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> eval_part = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> evalListNode = new TreeNode<>("EVAL_LIST");
-    evalListNode.addChild(eval_list);
-    evalListNode.addChild(eval_part);
-    RESULT = evalListNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EVAL_LIST",9, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 32: // EVAL_LIST ::= EVAL_PART 
-            {
-              TreeNode<String> RESULT =null;
-		int eval_partleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int eval_partright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		TreeNode<String> eval_part = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> evalListNode = new TreeNode<>("EVAL_LIST");
-    evalListNode.addChild(eval_part);
-    RESULT = evalListNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EVAL_LIST",9, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 33: // EVAL_PART ::= EVALUAR LPAREN LBRACE CONJUNTO_EXPR RBRACE COMMA ID RPAREN SEMICOLON 
-            {
-              TreeNode<String> RESULT =null;
-		int evaluarleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-8)).left;
-		int evaluarright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-8)).right;
-		Object evaluar = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-8)).value;
-		int lparenleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)).left;
-		int lparenright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)).right;
-		Object lparen = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-7)).value;
-		int lbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)).left;
-		int lbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)).right;
-		Object lbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-6)).value;
-		int conjunto_exprleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)).left;
-		int conjunto_exprright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)).right;
-		TreeNode<String> conjunto_expr = (TreeNode<String>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-5)).value;
-		int rbraceleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
-		int rbraceright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
-		Object rbrace = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
-		int commaleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
-		int commaright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
-		Object comma = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
-		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
-		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
-		String id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
-		int rparenleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int rparenright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object rparen = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		int semicolonleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
-		int semicolonright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
-		Object semicolon = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		
-    TreeNode<String> evalPartNode = new TreeNode<>("EVAL_PART");
-    evalPartNode.addChild(new TreeNode<>(evaluar.toString()));
-    evalPartNode.addChild(new TreeNode<>(lparen.toString()));
-    evalPartNode.addChild(new TreeNode<>(lbrace.toString()));
-    evalPartNode.addChild(conjunto_expr);
-    evalPartNode.addChild(new TreeNode<>(rbrace.toString()));
-    evalPartNode.addChild(new TreeNode<>(comma.toString()));
-    evalPartNode.addChild(new TreeNode<>(id.toString()));
-    evalPartNode.addChild(new TreeNode<>(rparen.toString()));
-    evalPartNode.addChild(new TreeNode<>(semicolon.toString()));
-    RESULT = evalPartNode;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("EVAL_PART",10, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-8)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              Double RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Double e = (Double)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		 RESULT = new Double(e); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("EXPRESION",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 

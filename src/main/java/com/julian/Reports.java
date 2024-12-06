@@ -75,7 +75,7 @@ public class Reports {
         );
     }
 
-    public static String reportLexErrors(List<LexError> lexErrors) {
+    public static String reportLexErrors(List<LexError> errors) {
         AtomicInteger cont = new AtomicInteger();
         return document(
                 html(
@@ -111,13 +111,13 @@ public class Reports {
                                                                                         )
                                                                                 ),
                                                                                 tbody(
-                                                                                        each(lexErrors, lexError ->
+                                                                                        each(errors, error ->
                                                                                                 tr(
                                                                                                         th(String.valueOf(cont.getAndIncrement())).withScope("row"),
-                                                                                                        td(lexError.getTipo()),
-                                                                                                        td(lexError.getMessage()),
-                                                                                                        td(String.valueOf(lexError.getLine())),
-                                                                                                        td(String.valueOf(lexError.getColumn()))
+                                                                                                        td(error.getTipo()),
+                                                                                                        td(error.getMessage()),
+                                                                                                        td(String.valueOf(error.getLine())),
+                                                                                                        td(String.valueOf(error.getColumn()))
                                                                                                 )
                                                                                         )
                                                                                 )
@@ -137,7 +137,7 @@ public class Reports {
         );
     }
 
-    public static String reportSyntaxErrors(List<SyntaxError> syntaxErrors) {
+    public static String reportSyntaxErrors(List<SynError> syntaxErrors) {
         AtomicInteger cont = new AtomicInteger();
         return document(
                 html(

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="951.0" stylesheets="@assets/css/fullpackstyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.julian.Gui">
+    <children>
+        <VBox prefHeight="688.0" prefWidth="283.0" style="-fx-background-color: #52a4e8;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Pane prefHeight="183.0" prefWidth="283.0">
+                    <children>
+                        <ImageView fitHeight="80.0" fitWidth="78.0" layoutX="52.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@assets/img/folder.png" />
+                            </image>
+                        </ImageView>
+                        <Label layoutX="142.0" layoutY="72.0" text="CompScript" textFill="WHITE" wrapText="true">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+                <Button fx:id="buttonFile" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonFile" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="File" textFill="WHITE">
+                    <padding>
+                        <Insets left="50.0" />
+                    </padding>
+                    <graphic>
+                        <ImageView fitHeight="37.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@assets/img/file.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Button>
+                <Button fx:id="buttonExecute" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickExecution" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Execute" textFill="WHITE">
+                    <padding>
+                        <Insets left="50.0" />
+                    </padding>
+                    <graphic>
+                        <ImageView fitHeight="37.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@assets/img/process.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Button>
+                <Button fx:id="buttonReports" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Reports" textFill="WHITE">
+                    <padding>
+                        <Insets left="50.0" />
+                    </padding>
+                    <graphic>
+                        <ImageView fitHeight="37.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@assets/img/report.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Button>
+                <Button fx:id="buttonNewFile" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonCreateNewFile" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="New File" textFill="WHITE">
+                    <padding>
+                        <Insets left="50.0" />
+                    </padding>
+                    <graphic>
+                        <ImageView fitHeight="37.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@assets/img/add-file.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Button>
+                <Button fx:id="buttonSaveAs" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonsaveAsFile" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Save As" textFill="WHITE">
+                    <padding>
+                        <Insets left="50.0" />
+                    </padding>
+                    <graphic>
+                        <ImageView fitHeight="37.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@assets/img/save-as.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Button>
+                <Button fx:id="buttonSave" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonSaveFile" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Save" textFill="WHITE">
+                    <padding>
+                        <Insets left="50.0" />
+                    </padding>
+                    <graphic>
+                        <ImageView fitHeight="37.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@assets/img/save.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Button>
+            </children>
+        </VBox>
+        <Pane layoutX="283.0" layoutY="29.0" prefHeight="103.0" prefWidth="1016.0" style="-fx-background-color: #20b2f0;" AnchorPane.leftAnchor="283.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Label layoutX="31.0" layoutY="43.0" text="Killer Crow Software, by Santiago Barrera" textFill="WHITE" underline="true" wrapText="true">
+                    <font>
+                        <Font name="Times New Roman" size="24.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+      <GridPane layoutX="293.0" layoutY="176.0" prefHeight="378.0" prefWidth="648.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="283.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="166.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TextArea fx:id="textInputArea" prefHeight="200.0" prefWidth="200.0">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+               <padding>
+                  <Insets right="3.0" top="2.0" />
+               </padding></TextArea>
+            <TextArea fx:id="textOutputArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets left="5.0" />
+               </GridPane.margin>
+               <padding>
+                  <Insets left="3.0" top="2.0" />
+               </padding></TextArea>
+         </children>
+      </GridPane>
+      <HBox layoutX="303.0" layoutY="140.0" prefHeight="27.0" prefWidth="638.0" style="-fx-background-color: #52a4E2;" AnchorPane.leftAnchor="293.0" AnchorPane.rightAnchor="20.0">
+         <children>
+            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="17.0" text="INPUT" underline="true" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <textFill>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="24.0" text="TERMINAL" underline="true" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <textFill>
+                  <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </textFill>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+    </children>
+</AnchorPane>

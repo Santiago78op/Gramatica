@@ -11,10 +11,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.util.List;
 import java.util.Optional;
 
-public class  SystemInfo {
+public class Gui {
 
     private File currentFile;
 
@@ -200,19 +199,22 @@ public class  SystemInfo {
 
         try {
                 Lexer lexer = new Lexer(new StringReader(text));
-                parser parser = new parser(lexer);
+                parser p = new parser(lexer);
+                var resultado = p.parse().value;
+
+                textOutputArea.setText((String) resultado);
                 /*
                 TreeNode root = (TreeNode)parser.parse().value;
                 root.printTree(root, "");
                 */
 
                 // Parsear el archivo y obtener el árbol de análisis sintáctico
-                TreeNode<String> root = (TreeNode<String>) parser.parse().value;
+                //TreeNode<String> root = (TreeNode<String>) parser.parse().value;
                 //root.printTree("");
 
                 // Recorrer el árbol de operaciones y evaluar cada nodo
                 //root.obtenerConjuntosDefinidos();
-                root.evaluateOperations();
+                //root.evaluateOperations();
 
 /*
                 reporteToken = Reports.reportToken(lexer.tokens);

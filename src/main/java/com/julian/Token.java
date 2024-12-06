@@ -9,9 +9,9 @@ public class Token {
     private int length;
 
     public Token(String type, String value, int line, int column, int length) {
-        this.type = type;
-        this.value = value;
-        this.line = line;
+        this.type   = type;
+        this.value  = value;
+        this.line   = line;
         this.column = column;
         this.length = length;
     }
