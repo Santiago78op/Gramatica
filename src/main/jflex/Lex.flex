@@ -154,9 +154,9 @@ guion = _
 id = {guion}*{letter}({letter}|{digit}|{guion})*
 
 // Definimos un numero como uno o mas digitos.
-decimal = {digit}+(\.{digit}+)?([eE]?{digit}+)?
+decimal = {digit}+\.([eE]?{digit}+)?
 
-num = {digit}+(\.{digit}+)?([eE]?{digit}+)?
+num = {digit}+([eE]?{digit}+)?
 
 // Definimos un booleano como true o false.
 bool = (true|false)
