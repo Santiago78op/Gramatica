@@ -1,9 +1,7 @@
-package com.julian;
+package com.julian.Gui;
 
-import org.fxmisc.flowless.VirtualizedScrollPane;
-import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.LineNumberFactory;
-
+import com.julian.Lexer;
+import com.julian.parser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -27,17 +25,6 @@ public class Gui {
 
     @FXML
     private TextArea textOutputArea;
-
-    @FXML
-    public void initialize() {
-        CodeArea codeArea = new CodeArea();
-        codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
-        VirtualizedScrollPane<CodeArea> vsPane = new VirtualizedScrollPane<>(codeArea);
-        // Reemplazar el Pane por el CodeArea
-        textOutputArea.getChildren().add(vsPane);
-        vsPane.prefWidthProperty().bind(textOutputArea.widthProperty());
-        vsPane.prefHeightProperty().bind(textOutputArea.heightProperty());
-    }
 
     @FXML
     protected void onClickButtonFile(){

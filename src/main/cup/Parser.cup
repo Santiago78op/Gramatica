@@ -93,7 +93,9 @@ terminal char    CARACTER;
 
 nonterminal INICIO;
 nonterminal Double EXPRESION;
+nonterminal String TIPO;
 nonterminal INSTRUCCIONES, INSTRUCCION;
+nonterminal VARIABLES, VARIABLE;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -128,6 +130,7 @@ INSTRUCCIONES ::= INSTRUCCIONES INSTRUCCION
 
 INSTRUCCION ::= PRINT LPAREN EXPRESION:e RPAREN SEMICOLON  {: consola+=e+"\n"; :}
               | PRINT LPAREN STRING:c    RPAREN SEMICOLON  {: consola+=c+"\n"; :}
+              | VARIABLE:v SEMICOLON    {: consola+=v; :}
 ;
 
 EXPRESION ::= SUB EXPRESION:a                 {: RESULT = -a; :}%prec USUB
@@ -138,4 +141,15 @@ EXPRESION ::= SUB EXPRESION:a                 {: RESULT = -a; :}%prec USUB
             | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
             | NUM:e                           {: RESULT = new Double(e); :}
             | DECIMAL:e                       {: RESULT = new Double(e); :}
+;
+
+TIPO ::= INT      {: RESULT = "int"; :}
+       | FLOAT    {: RESULT = "float"; :}
+       | BOOL     {: RESULT = "boolean"; :}
+       | CHAR     {: RESULT = "char"; :}
+       | STRING   {: RESULT = "String"; :}
+;
+
+VARIABLE ::= LET ID:id COLON TIPO:t EQ EXPRESION:e     {: RESULT = e; :}
+            | CONST ID:id COLON TIPO:t EQ EXPRESION:e  {: RESULT = e; :}
 ;

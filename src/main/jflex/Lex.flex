@@ -158,6 +158,12 @@ decimal = {digit}+\.([eE]?{digit}+)?
 
 num = {digit}+([eE]?{digit}+)?
 
+// Definimos una cadena como un conjunto de caracteres entre comillas dobles.
+cadena = \"([^\"\\]|\\[btnfr\"\\]|\\u[0-9a-fA-F]{4})*\"
+
+// Definimos un caracter como un valor que acepta un único carácter, incluyendo secuencias de escape.
+caracter = \'([^\'\\]|\\[btnfr\"\'\\]|\\u[0-9a-fA-F]{4})\'
+
 // Definimos un booleano como true o false.
 bool = (true|false)
 
@@ -264,11 +270,21 @@ print  = "print"
     ":"    { addToken("COLON",     yytext()); return symbol(sym.COLON, yytext()); }
     "."    { addToken("DOT",       yytext()); return symbol(sym.DOT, yytext()); }
 
-    // Detectar incio de un cadena
-    "\""     { yybegin(STRING_STATE); }
+    // Detectar cadenas entre comillas
+    { cadena } {
+            String cadena = yytext();
+            cadena = cadena.substring(1, cadena.length() - 1); // Quitar comillas
+            addToken("CADENA", yytext());
+            return new Symbol(sym.CADENA, yyline, yycolumn, cadena);
+        }
 
-    // Detectar inicio de un char.
-    "\'"     { yybegin(CHAR_STATE); }
+    // Detectar caracteres entre comillas
+    { caracter } {
+            String caracter = yytext();
+            caracter = caracter.substring(1, caracter.length() - 1); // Quitar comillas
+            addToken("CARACTER", yytext());
+            return new Symbol(sym.CARACTER, yyline, yycolumn, caracter);
+        }
 
     // Detectar comentario
     { Comment } { /* ignore */ }
@@ -277,24 +293,7 @@ print  = "print"
     { WhiteSpace } { /* ignore */ }
 }
 
-<STRING_STATE>{
-    // Detectar fin de una cadena
-    "\""        { yybegin(YYINITIAL); addToken("CADENA", lexeme.toString()); return symbol(sym.CADENA, lexeme.toString()); }
-    // Caracteres validos en una cadena
-    [^\n\r\"\\] { lexeme.append(yytext()); }
-    // Secuencias de escape
-    "\\".       { lexeme.append(yytext()); yybegin(STRING_STATE); }
-    // Error en una cadena
-    [\n\r]      { addError("Error: Caracter invalido en una cadena"); }
-}
-
-<CHAR_STATE>{
-    // Detectar fin de un char
-    "\'"      { yybegin(YYINITIAL); addToken("CARACTER", lexeme.toString()); return symbol(sym.CARACTER, lexeme.toString()); }
-    // Caracteres validos en un char
-    { char }  { lexeme.append(yytext()); }
-    // Secuencias de escape
-    "\\".     { lexeme.append(yytext()); yybegin(CHAR_STATE); }
-    // Error en un char
-    [\n\r]    { addError("Error: Caracter invalido en un char"); }
+<YYINITIAL>{
+    // Detectar errores lexicos
+    . { addError("Caracter invalido: " + yytext()); }
 }

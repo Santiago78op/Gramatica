@@ -19,7 +19,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="951.0" stylesheets="@assets/css/fullpackstyle.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.julian.Gui">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="951.0" stylesheets="@assets/css/fullpackstyle.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.julian.Gui.Gui">
     <children>
         <VBox prefHeight="688.0" prefWidth="283.0" style="-fx-background-color: #52a4e8;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -151,12 +151,7 @@
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin></TextArea>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <TextArea fx:id="textInputArea" prefHeight="368.0" prefWidth="319.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <VBox fx:id="lineNumberBox" layoutX="2.0" layoutY="8.0" prefHeight="360.0" prefWidth="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="8.0" />
-               </children>
-            </AnchorPane>
+            <TextArea fx:id="textInputArea" prefHeight="368.0" prefWidth="319.0" />
          </children>
       </GridPane>
       <HBox layoutX="303.0" layoutY="140.0" prefHeight="27.0" prefWidth="638.0" style="-fx-background-color: #52a4E2;" AnchorPane.leftAnchor="293.0" AnchorPane.rightAnchor="20.0">
