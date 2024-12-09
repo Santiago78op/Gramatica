@@ -13,35 +13,36 @@ import com.julian.symbol.tipoDato;
 */
 public class Igual extends Instruccion {
 
-    private Instruccion operIzq;
-    private Instruccion operDer;
+    private Instruccion expIzq;
+    private Instruccion expDer;
 
     /**
      * Constructor de la clase Igual.
      * -> tipo Tipo de dato de la expresión.
      * @param linea Linea en la que se encuentra la expresión.
      * @param columna Columna en la que se encuentra la expresión.
-     * @param operIzq Operando izquierdo de la expresión.
-     * @param operDer Operando derecho de la expresión.
+     * @param expIzq Operando izquierdo de la expresión.
+     * @param expDer Operando derecho de la expresión.
      */
-    public Igual(Instruccion operIzq, Instruccion operDer, int linea, int columna) {
+    public Igual(Instruccion expIzq, Instruccion expDer, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
-        this.operIzq = operIzq;
-        this.operDer = operDer;
+        this.expIzq = expIzq;
+        this.expDer = expDer;
     }
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        var valorIzq = operIzq.interpretar(arbol, tablaDeSimbolos);
+        // Se interpreta el operando de la expresión.
+        var valorIzq = expIzq.interpretar(arbol, tablaDeSimbolos);
         // Si el valor izquierdo es un error, se retorna.
         if(valorIzq instanceof Error) return valorIzq;
 
-        var valorDer = operDer.interpretar(arbol, tablaDeSimbolos);
+        var valorDer = expDer.interpretar(arbol, tablaDeSimbolos);
         if(valorDer instanceof Error) return valorDer;
 
         // Se obtiene el tipo de dato de los operandos.
-        var tipoIzq = operIzq.tipo.getTipo();
-        var tipoDer = operDer.tipo.getTipo();
+        var tipoIzq = expIzq.tipo.getTipo();
+        var tipoDer = expDer.tipo.getTipo();
 
         // Implementacion de tabla de operatorias para la potencia.
         switch (tipoIzq){
@@ -57,7 +58,8 @@ public class Igual extends Instruccion {
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (int)valorIzq == (char)valorDer;
+                        char charValue = getCharValue(valorDer);
+                        return (int)valorIzq == charValue;
                     }
                     default -> {
                         return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);
@@ -76,7 +78,8 @@ public class Igual extends Instruccion {
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (double)valorIzq == (char)valorDer;
+                        char charValue = getCharValue(valorDer);
+                        return (double)valorIzq == charValue;
                     }
                     default -> {
                         return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
@@ -108,8 +111,9 @@ public class Igual extends Instruccion {
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        char charValue = getCharValue(valorIzq);
-                        return charValue == (char)valorDer;
+                        char charValueIzq = getCharValue(valorIzq);
+                        char charValueDer = getCharValue(valorDer);
+                        return charValueIzq == charValueDer;
                     }
                     default -> {
                         return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);
@@ -120,7 +124,7 @@ public class Igual extends Instruccion {
                 switch (tipoDer){
                     case CADENA -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return valorIzq.equals(valorDer);
+                        return valorIzq.toString().equalsIgnoreCase(valorDer.toString());
                     }
                     default -> {
                         return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);

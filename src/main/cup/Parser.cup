@@ -153,7 +153,6 @@ EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft,
             | EXPRESION:a LE   EXPRESION:b    {: RESULT = new MenorIgual(a, b, aleft, aright); :}
             | EXPRESION:a GT   EXPRESION:b    {: RESULT = new Mayor(a, b, aleft, aright); :}
             | EXPRESION:a GE   EXPRESION:b    {: RESULT = new MayorIgual(a, b, aleft, aright); :}
-            | EXPRESION:a AND  EXPRESION:b    {: RESULT = new And(a, b, aleft, aright); :}
             | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
             | VALOR:e                         {: RESULT = e; :}
 ;
