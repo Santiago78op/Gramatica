@@ -139,7 +139,7 @@ IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, e
 ;
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
-EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft, aright); :}%prec USUB
+EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft, aright); :}%prec USUB // La precedencia se aplicara.
             | EXPRESION:a ADD  EXPRESION:b    {: RESULT = new Suma(a, b, aleft, aright); :}
             | EXPRESION:a SUB  EXPRESION:b    {: RESULT = new Resta(a, b, aleft, aright); :}
             | EXPRESION:a MUL  EXPRESION:b    {: RESULT = new Multiplica(a, b, aleft, aright); :}
