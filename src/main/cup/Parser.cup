@@ -19,8 +19,7 @@ import com.julian.symbol.*;
 import com.julian.instruction.Print;
 
 // Expresiones
-import com.julian.expresion.Nativo;
-import com.julian.expresion.Suma;
+import com.julian.expresion.*;
 
 
 /*
@@ -97,7 +96,7 @@ terminal LPAREN, RPAREN, LBRACE, RBRACE, SEMICOLON, COLON, DOT;
 nonterminal LinkedList<Instruccion> INICIO, INSTRUCCIONES;
 nonterminal Instruccion INSTRUCCION, IMPRESION;
 nonterminal Instruccion EXPRESION;
-//nonterminal Instruccion VALOR;
+nonterminal Instruccion VALOR;
 nonterminal String TIPO;
 nonterminal VARIABLES, VARIABLE;
 
@@ -140,28 +139,25 @@ IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, e
 ;
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
-EXPRESION ::= // SUB EXPRESION:a                 {: RESULT = -a; :}%prec USUB
-            EXPRESION:a ADD EXPRESION:b     {: RESULT = new Suma(a, b, aleft, aright); :}
-//            | EXPRESION:a SUB EXPRESION:b     {: RESULT = a - b; :}
-//            | EXPRESION:a MUL EXPRESION:b     {: RESULT = a * b; :}
-//            | EXPRESION:a DIV EXPRESION:b     {: RESULT = a / b; :}
-            | ENTERO:e        {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
-            | DECIMAL:e    {: RESULT = new Nativo(Double.parseDouble(e), new Tipo(tipoDato.DECIMAL), eleft, eright); :}
-            | BOOLEANO:e   {: RESULT = new Nativo(Boolean.parseBoolean(e), new Tipo(tipoDato.BOOLEANO), eleft, eright); :}
-            | CADENA:e     {: RESULT = new Nativo(e, new Tipo(tipoDato.CADENA), eleft, eright); :}
-            | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
+EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft, aright); :}%prec USUB
+            | EXPRESION:a ADD EXPRESION:b     {: RESULT = new Suma(a, b, aleft, aright); :}
+            | EXPRESION:a SUB EXPRESION:b     {: RESULT = new Resta(a, b, aleft, aright); :}
+            | EXPRESION:a MUL EXPRESION:b     {: RESULT = new Multiplica(a, b, aleft, aright); :}
+            | EXPRESION:a DIV EXPRESION:b     {: RESULT = new Divide(a, b, aleft, aright); :}
+            | EXPRESION:a POW EXPRESION:b     {: RESULT = new Potencia(a, b, aleft, aright); :}
+            | EXPRESION:a ROOT EXPRESION:b    {: RESULT = new Raiz(a, b, aleft, aright); :}
+            | EXPRESION:a MOD EXPRESION:b     {: RESULT = new Modulo(a, b, aleft, aright); :}
             | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
+            | VALOR:e                         {: RESULT = e; :}
 ;
 
 // public Nativo(Object valor, Tipo tipo, int linea, int columna)
-//
-//VALOR ::= NUM:e        {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
-//        | DECIMAL:e    {: RESULT = new Nativo(Double.parseDouble(e), new Tipo(tipoDato.DECIMAL), eleft, eright); :}
-//       | BOOLEANO:e   {: RESULT = new Nativo(Boolean.parseBoolean(e), new Tipo(tipoDato.BOOLEANO), eleft, eright); :}
-//        | CADENA:e     {: RESULT = new Nativo(e, new Tipo(tipoDato.CADENA), eleft, eright); :}
-//        | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
-//;
-
+VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
+          | DECIMAL:e    {: RESULT = new Nativo(Double.parseDouble(e), new Tipo(tipoDato.DECIMAL), eleft, eright); :}
+          | BOOLEANO:e   {: RESULT = new Nativo(Boolean.parseBoolean(e), new Tipo(tipoDato.BOOLEANO), eleft, eright); :}
+          | CADENA:e     {: RESULT = new Nativo(e, new Tipo(tipoDato.CADENA), eleft, eright); :}
+          | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
+;
 
 TIPO ::= INT      {: RESULT = "int"; :}
        | FLOAT    {: RESULT = "float"; :}

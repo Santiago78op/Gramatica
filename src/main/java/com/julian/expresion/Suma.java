@@ -6,7 +6,6 @@ import com.julian.symbol.Arbol;
 import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
 import com.julian.symbol.tipoDato;
-import j2html.utils.Minifier;
 
 /**
  * Clase que representa una expresión de suma.
