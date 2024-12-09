@@ -140,13 +140,20 @@ IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, e
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
 EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft, aright); :}%prec USUB
-            | EXPRESION:a ADD EXPRESION:b     {: RESULT = new Suma(a, b, aleft, aright); :}
-            | EXPRESION:a SUB EXPRESION:b     {: RESULT = new Resta(a, b, aleft, aright); :}
-            | EXPRESION:a MUL EXPRESION:b     {: RESULT = new Multiplica(a, b, aleft, aright); :}
-            | EXPRESION:a DIV EXPRESION:b     {: RESULT = new Divide(a, b, aleft, aright); :}
-            | EXPRESION:a POW EXPRESION:b     {: RESULT = new Potencia(a, b, aleft, aright); :}
+            | EXPRESION:a ADD  EXPRESION:b    {: RESULT = new Suma(a, b, aleft, aright); :}
+            | EXPRESION:a SUB  EXPRESION:b    {: RESULT = new Resta(a, b, aleft, aright); :}
+            | EXPRESION:a MUL  EXPRESION:b    {: RESULT = new Multiplica(a, b, aleft, aright); :}
+            | EXPRESION:a DIV  EXPRESION:b    {: RESULT = new Divide(a, b, aleft, aright); :}
+            | EXPRESION:a POW  EXPRESION:b    {: RESULT = new Potencia(a, b, aleft, aright); :}
             | EXPRESION:a ROOT EXPRESION:b    {: RESULT = new Raiz(a, b, aleft, aright); :}
-            | EXPRESION:a MOD EXPRESION:b     {: RESULT = new Modulo(a, b, aleft, aright); :}
+            | EXPRESION:a MOD  EXPRESION:b    {: RESULT = new Modulo(a, b, aleft, aright); :}
+            | EXPRESION:a EQ   EXPRESION:b    {: RESULT = new Igual(a, b, aleft, aright); :}
+            | EXPRESION:a NE   EXPRESION:b    {: RESULT = new Diferente(a, b, aleft, aright); :}
+            | EXPRESION:a LT   EXPRESION:b    {: RESULT = new Menor(a, b, aleft, aright); :}
+            | EXPRESION:a LE   EXPRESION:b    {: RESULT = new MenorIgual(a, b, aleft, aright); :}
+            | EXPRESION:a GT   EXPRESION:b    {: RESULT = new Mayor(a, b, aleft, aright); :}
+            | EXPRESION:a GE   EXPRESION:b    {: RESULT = new MayorIgual(a, b, aleft, aright); :}
+            | EXPRESION:a AND  EXPRESION:b    {: RESULT = new And(a, b, aleft, aright); :}
             | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
             | VALOR:e                         {: RESULT = e; :}
 ;

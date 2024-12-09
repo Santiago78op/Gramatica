@@ -7,11 +7,23 @@ import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
 import com.julian.symbol.tipoDato;
 
+/*
+    * Clase que representa una expresión de modulo
+    * Valor1 % Valor2
+ */
 public class Modulo extends Instruccion {
 
     private Instruccion operIzq;
     private Instruccion operDer;
 
+    /**
+     * Constructor de la clase Modulo.
+     * -> tipo Tipo de dato de la expresión.
+     * @param linea Linea en la que se encuentra la expresión.
+     * @param columna Columna en la que se encuentra la expresión.
+     * @param operIzq Operando izquierdo de la expresión.
+     * @param operDer Operando derecho de la expresión.
+     * */
     public Modulo(Instruccion operIzq, Instruccion operDer, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.operIzq = operIzq;

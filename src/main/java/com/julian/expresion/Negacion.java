@@ -7,10 +7,21 @@ import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
 import com.julian.symbol.tipoDato;
 
+/*
+    * Clase que representa una expresión de negación.
+    * Ejemplo: -5
+ */
 public class Negacion extends Instruccion {
 
     private Instruccion oper;
 
+    /**
+        * Constructor de la clase Negacion.
+        * -> tipo Tipo de dato de la expresión.
+        * @param linea Linea en la que se encuentra la expresión.
+        * @param columna Columna en la que se encuentra la expresión.
+        * @param oper Operando de la expresión.
+     */
     public Negacion(Instruccion oper, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.oper = oper;

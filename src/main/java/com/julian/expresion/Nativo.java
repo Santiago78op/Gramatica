@@ -6,6 +6,10 @@ import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
 import com.julian.symbol.tipoDato;
 
+/*
+    * Clase que representa un valor nativo.
+    * valor Valor del nativo.
+ */
 public class Nativo extends Instruccion {
 
     public Object valor;

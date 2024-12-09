@@ -7,6 +7,10 @@ import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
 import com.julian.symbol.tipoDato;
 
+/*
+    * Clase que representa una expresión de división.
+    * Valor = Valor izquierdo / Valor derecho
+ */
 public class Divide extends Instruccion {
 
     private Instruccion operIzq;

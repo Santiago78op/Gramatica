@@ -237,11 +237,10 @@ print  = "print"
 <YYINITIAL> { print }  { addToken("PRINT",    yytext()); return new Symbol(sym.PRINT, yyline, yycolumn, yytext()); }
 
 <YYINITIAL>{
-    /* identifier, number y boolean */
+    /* number y boolean */
     { entero }  { addToken("NUM",     yytext()); return new Symbol(sym.ENTERO, yyline, yycolumn, yytext()); }
     { decimal } { addToken("DECIMAL", yytext()); return new Symbol(sym.DECIMAL, yyline, yycolumn, yytext()); }
     { boleano } { addToken("BOOLEANO",yytext()); return new Symbol(sym.BOOLEANO, yyline, yycolumn, yytext()); }
-    { id }      { addToken("ID",      yytext()); return new Symbol(sym.ID, yyline, yycolumn, yytext()); }
 
     /* arithmetic operators */
     "+" { addToken("ADD",  yytext()); return new Symbol(sym.ADD, yyline, yycolumn, yytext()); }
@@ -253,7 +252,7 @@ print  = "print"
     "%" { addToken("MOD",  yytext()); return new Symbol(sym.MOD, yyline, yycolumn, yytext()); }
 
     /* relational operators */
-    "="    { addToken("EQ", yytext()); return new Symbol(sym.EQ, yyline, yycolumn, yytext()); }
+    "=="   { addToken("EQ", yytext()); return new Symbol(sym.EQ, yyline, yycolumn, yytext()); }
     "!="   { addToken("NE", yytext()); return new Symbol(sym.NE, yyline, yycolumn, yytext()); }
     "<"    { addToken("LT", yytext()); return new Symbol(sym.LT, yyline, yycolumn, yytext()); }
     "<="   { addToken("LE", yytext()); return new Symbol(sym.LE, yyline, yycolumn, yytext()); }
@@ -289,6 +288,9 @@ print  = "print"
             addToken("CARACTER", yytext());
             return new Symbol(sym.CARACTER, yyline, yycolumn, caracter);
         }
+
+    // Identifier
+    { id }      { addToken("ID",      yytext()); return new Symbol(sym.ID, yyline, yycolumn, yytext()); }
 
     // Detectar comentario
     { Comment } { /* ignore */ }

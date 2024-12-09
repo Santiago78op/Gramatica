@@ -9,6 +9,7 @@ import com.julian.symbol.tipoDato;
 
 /*
     * Clase que representa una expresión de raiz.
+    * Valor = operIzq ^ (1/operDer)
  */
 public class Raiz extends Instruccion {
 
