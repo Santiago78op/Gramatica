@@ -5,17 +5,21 @@ package com.julian.symbol;
  */
 public class Tipo {
 
-    private tipoDato tipoDato;
+    private tipoDato tipo;
 
-    public Tipo(com.julian.symbol.tipoDato tipoDato) {
-        this.tipoDato = tipoDato;
+    /**
+     * Constructor de la clase Tipo.
+     * @param tipo Tipo de dato.
+     */
+    public Tipo(tipoDato tipo) {
+        this.tipo = tipo;
     }
 
-    public com.julian.symbol.tipoDato getTipoDato() {
-        return tipoDato;
+    public tipoDato getTipo() {
+        return tipo;
     }
 
-    public void setTipoDato(com.julian.symbol.tipoDato tipoDato) {
-        this.tipoDato = tipoDato;
+    public void setTipo(tipoDato tipo) {
+        this.tipo = tipo;
     }
 }

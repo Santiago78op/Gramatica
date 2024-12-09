@@ -4,14 +4,21 @@ package com.julian.exception;
  * Error -> Clase que representa dos tipos de Error.
  * lexico y sintactico.
  */
-public class Error {
+public class Errores {
 
     private String tipo;
     private String desc;
     private int linea;
     private int columna;
 
-    public Error(String tipo, String desc, int linea, int columna) {
+    /**
+     * Constructor de la clase Error.
+     * @param tipo Tipo de error.
+     * @param desc Descripción del error.
+     * @param linea Linea en la que se encuentra el error.
+     * @param columna Columna en la que se encuentra el error.
+     */
+    public Errores(String tipo, String desc, int linea, int columna) {
         this.tipo = tipo;
         this.desc = desc;
         this.linea = linea;

@@ -19,10 +19,21 @@ public abstract class Instruccion {
     public int linea;
     public int columna;
 
+    /**
+     * Constructor de la clase Instruccion.
+     * -> tipo Tipo de dato de la instrucción.
+     * @param tipo Tipo de dato de la instrucción.
+     * @param linea Linea en la que se encuentra la instrucción.
+     * @param columna Columna en la que se encuentra la instrucción.
+     */
     public Instruccion(Tipo tipo, int linea, int columna) {
         this.tipo = tipo;
         this.linea = linea;
         this.columna = columna;
+    }
+
+    public Tipo getTipo() {
+        return tipo;
     }
 
     // Clase abstracta que representa una instrucción.

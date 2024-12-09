@@ -1,4 +1,4 @@
-package com.julian;
+package com.julian.symbol;
 
 public class Token {
 

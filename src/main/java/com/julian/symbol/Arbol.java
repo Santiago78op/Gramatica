@@ -1,6 +1,7 @@
 package com.julian.symbol;
 
 import com.julian.abstracto.Instruccion;
+import com.julian.exception.Errores;
 
 import java.util.LinkedList;
 
@@ -9,20 +10,31 @@ import java.util.LinkedList;
  */
 public class Arbol {
 
+    // Constructor
     private LinkedList<Instruccion> instrucciones;
     private String consola;
-    private LinkedList<Error> errores;
+    private LinkedList<Errores> errores;
+    // tabla de simbolos (global)
 
-    // Tabla de símbolos (Global)
-
-    // Constructor
     public Arbol(LinkedList<Instruccion> instrucciones) {
         this.instrucciones = instrucciones;
-        this.consola = "";
+        consola = "";
         this.errores = new LinkedList<>();
     }
 
-    public void Print(String consola) {
-        this.consola += consola + "\n";
+    public LinkedList<Instruccion> getInstrucciones() {
+        return instrucciones;
+    }
+
+    public String getConsola() {
+        return consola;
+    }
+
+    public void setInstrucciones(LinkedList<Instruccion> instrucciones) {
+        this.instrucciones = instrucciones;
+    }
+
+    public void Print(String valor) {
+        this.consola += valor + "\n";
     }
 }

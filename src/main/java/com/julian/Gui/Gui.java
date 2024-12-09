@@ -1,7 +1,10 @@
 package com.julian.Gui;
 
 import com.julian.Lexer;
+import com.julian.abstracto.Instruccion;
 import com.julian.parser;
+import com.julian.symbol.Arbol;
+import com.julian.symbol.tablaSimbolo;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -12,6 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.LinkedList;
 import java.util.Optional;
 
 public class Gui {
@@ -201,9 +205,17 @@ public class Gui {
         try {
                 Lexer lexer = new Lexer(new StringReader(text));
                 parser p = new parser(lexer);
-                var resultado = p.parse().value;
+                var resultado = p.parse();
 
-                textOutputArea.setText((String) resultado);
+                var ast = new Arbol((LinkedList<Instruccion>) resultado.value);
+                var tabla = new tablaSimbolo();
+
+                for (var a : ast.getInstrucciones()) {
+                    var res = a.interpretar(ast, tabla);
+                    //System.out.println(res);
+                }
+
+                textOutputArea.setText(ast.getConsola());
                 /*
                 TreeNode root = (TreeNode)parser.parse().value;
                 root.printTree(root, "");

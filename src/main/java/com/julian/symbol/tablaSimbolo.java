@@ -10,32 +10,8 @@ public class tablaSimbolo {
     private int linea;
     private int columna;
 
-    public tablaSimbolo(String id, String tipo, String valor, int linea, int columna) {
-        this.id = id;
-        this.tipo = tipo;
-        this.valor = valor;
-        this.linea = linea;
-        this.columna = columna;
-    }
+    public tablaSimbolo() {
 
-    public String getId() {
-        return id;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public String getValor() {
-        return valor;
-    }
-
-    public int getLinea() {
-        return linea;
-    }
-
-    public int getColumna() {
-        return columna;
     }
 
     @Override

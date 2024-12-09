@@ -10,7 +10,16 @@ public class Nativo extends Instruccion {
 
     public Object valor;
 
-    public Nativo(Tipo tipo, int linea, int columna, Object valor) {
+    /**
+     * Constructor de la clase Nativo.
+     * -> valor Valor del nativo.
+     * -> tipo Tipo de dato del nativo.
+     * @param valor Valor del nativo.
+     * @param tipo Tipo de dato del nativo.
+     * @param linea Linea en la que se encuentra el nativo.
+     * @param columna Columna en la que se encuentra el nativo.
+     */
+    public Nativo(Object valor, Tipo tipo, int linea, int columna) {
         super(tipo, linea, columna);
         this.valor = valor;
     }

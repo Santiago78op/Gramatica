@@ -10,12 +10,18 @@ package com.julian;
 // se usan en el analizador sintactico.
 import java_cup.runtime.*;
 
-/*
-    Importamos las clases necesarias para el
-    funcionamiento del analizador sintactico.
-*/
-import java.util.ArrayList;
-import java.util.List;
+// Se importa la clase LinkedList para poder usarla en la gramatica.
+import java.util.LinkedList;
+import com.julian.abstracto.Instruccion;
+import com.julian.symbol.*;
+
+// Instrucciones
+import com.julian.instruction.Print;
+
+// Expresiones
+import com.julian.expresion.Nativo;
+import com.julian.expresion.Suma;
+
 
 /*
     Codigo del parser, se copia integramente a la clase final.
@@ -61,6 +67,11 @@ action code
    lineas.
 */
 
+// Terminales que tienen un valor como los enteros son listados
+// en la segunda o demas lineas.
+terminal String  ID;
+terminal String  NUM, DECIMAL, BOOLEANO, CADENA, CARACTER;
+
 // Terminales que no tienen un valor son listados primero.
 terminal PRINT;
 terminal INT, FLOAT, BOOL, CHAR, STRING;
@@ -73,14 +84,6 @@ terminal EQ, NE, LT, LE, GT, GE;
 terminal OR, AND, NOT;
 terminal LPAREN, RPAREN, LBRACE, RBRACE, SEMICOLON, COLON, DOT;
 
-// Terminales que tienen un valor como los enteros son listados
-// en la segunda o demas lineas.
-terminal String  ID;
-terminal int     NUM;
-terminal Double  DECIMAL;
-terminal boolean BOOLEANO;
-terminal String  CADENA;
-terminal char    CARACTER;
 
 /* ------------- Sección de no terminales ----------- */
 
@@ -91,10 +94,11 @@ terminal char    CARACTER;
    que no tienen tipo, pudiendo ser entero o String.
 */
 
-nonterminal INICIO;
-nonterminal Double EXPRESION;
+nonterminal LinkedList<Instruccion> INICIO, INSTRUCCIONES;
+nonterminal Instruccion INSTRUCCION, IMPRESION;
+nonterminal Instruccion EXPRESION;
+//nonterminal Instruccion VALOR;
 nonterminal String TIPO;
-nonterminal INSTRUCCIONES, INSTRUCCION;
 nonterminal VARIABLES, VARIABLE;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
@@ -121,27 +125,43 @@ start with INICIO;
 
 /* ------------------- Sección de la gramática ------------------------ */
 // ESCRIBIR LA GRAMATICA
-INICIO ::= INSTRUCCIONES    {: RESULT=consola; :}
+INICIO ::= INSTRUCCIONES:a {: RESULT = a; :}
 ;
 
-INSTRUCCIONES ::= INSTRUCCIONES INSTRUCCION
-                | INSTRUCCION
+INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); :}
+                | INSTRUCCION:a                   {: RESULT = new LinkedList<Instruccion>(); RESULT.add(a); :}
 ;
 
-INSTRUCCION ::= PRINT LPAREN EXPRESION:e RPAREN SEMICOLON  {: consola+=e+"\n"; :}
-              | PRINT LPAREN STRING:c    RPAREN SEMICOLON  {: consola+=c+"\n"; :}
-              | VARIABLE:v SEMICOLON    {: consola+=v; :}
+INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
 ;
 
-EXPRESION ::= SUB EXPRESION:a                 {: RESULT = -a; :}%prec USUB
-            | EXPRESION:a ADD EXPRESION:b     {: RESULT = a + b; :}
-            | EXPRESION:a SUB EXPRESION:b     {: RESULT = a - b; :}
-            | EXPRESION:a MUL EXPRESION:b     {: RESULT = a * b; :}
-            | EXPRESION:a DIV EXPRESION:b     {: RESULT = a / b; :}
+IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN SEMICOLON  {: RESULT = new Print(e, eleft, eright); :}
+ //           | PRINT LPAREN STRING:c RPAREN SEMICOLON      {: RESULT = c; :}
+;
+
+// public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
+EXPRESION ::= // SUB EXPRESION:a                 {: RESULT = -a; :}%prec USUB
+            EXPRESION:a ADD EXPRESION:b     {: RESULT = new Suma(a, b, aleft, aright); :}
+//            | EXPRESION:a SUB EXPRESION:b     {: RESULT = a - b; :}
+//            | EXPRESION:a MUL EXPRESION:b     {: RESULT = a * b; :}
+//            | EXPRESION:a DIV EXPRESION:b     {: RESULT = a / b; :}
+            | NUM:e        {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
+            | DECIMAL:e    {: RESULT = new Nativo(Double.parseDouble(e), new Tipo(tipoDato.DECIMAL), eleft, eright); :}
+            | BOOLEANO:e   {: RESULT = new Nativo(Boolean.parseBoolean(e), new Tipo(tipoDato.BOOLEANO), eleft, eright); :}
+            | CADENA:e     {: RESULT = new Nativo(e, new Tipo(tipoDato.CADENA), eleft, eright); :}
+            | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
             | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
-            | NUM:e                           {: RESULT = new Double(e); :}
-            | DECIMAL:e                       {: RESULT = new Double(e); :}
 ;
+
+// public Nativo(Object valor, Tipo tipo, int linea, int columna)
+//
+//VALOR ::= NUM:e        {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
+//        | DECIMAL:e    {: RESULT = new Nativo(Double.parseDouble(e), new Tipo(tipoDato.DECIMAL), eleft, eright); :}
+//       | BOOLEANO:e   {: RESULT = new Nativo(Boolean.parseBoolean(e), new Tipo(tipoDato.BOOLEANO), eleft, eright); :}
+//        | CADENA:e     {: RESULT = new Nativo(e, new Tipo(tipoDato.CADENA), eleft, eright); :}
+//        | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
+//;
+
 
 TIPO ::= INT      {: RESULT = "int"; :}
        | FLOAT    {: RESULT = "float"; :}

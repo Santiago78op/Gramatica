@@ -13,6 +13,13 @@ public class Print extends Instruccion {
 
     private Instruccion expresion;
 
+    /**
+     * Constructor de la clase Print.
+     * -> expresion Expresión a imprimir.
+     * @param expresion Expresión a imprimir.
+     * @param linea Linea en la que se encuentra la instrucción.
+     * @param columna Columna en la que se encuentra la instrucción.
+     */
     public Print(Instruccion expresion, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.expresion = expresion;
