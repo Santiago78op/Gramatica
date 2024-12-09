@@ -70,7 +70,7 @@ action code
 // Terminales que tienen un valor como los enteros son listados
 // en la segunda o demas lineas.
 terminal String  ID;
-terminal String  NUM, DECIMAL, BOOLEANO, CADENA, CARACTER;
+terminal String  ENTERO, DECIMAL, BOOLEANO, CADENA, CARACTER;
 
 // Terminales que no tienen un valor son listados primero.
 terminal PRINT;
@@ -135,7 +135,7 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
 INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
 ;
 
-IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN SEMICOLON  {: RESULT = new Print(e, eleft, eright); :}
+IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
  //           | PRINT LPAREN STRING:c RPAREN SEMICOLON      {: RESULT = c; :}
 ;
 
@@ -145,7 +145,7 @@ EXPRESION ::= // SUB EXPRESION:a                 {: RESULT = -a; :}%prec USUB
 //            | EXPRESION:a SUB EXPRESION:b     {: RESULT = a - b; :}
 //            | EXPRESION:a MUL EXPRESION:b     {: RESULT = a * b; :}
 //            | EXPRESION:a DIV EXPRESION:b     {: RESULT = a / b; :}
-            | NUM:e        {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
+            | ENTERO:e        {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
             | DECIMAL:e    {: RESULT = new Nativo(Double.parseDouble(e), new Tipo(tipoDato.DECIMAL), eleft, eright); :}
             | BOOLEANO:e   {: RESULT = new Nativo(Boolean.parseBoolean(e), new Tipo(tipoDato.BOOLEANO), eleft, eright); :}
             | CADENA:e     {: RESULT = new Nativo(e, new Tipo(tipoDato.CADENA), eleft, eright); :}

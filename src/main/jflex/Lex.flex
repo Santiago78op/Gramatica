@@ -160,7 +160,7 @@ id = {guion}*{letter}({letter}|{digit}|{guion})*
 // Definimos un numero como uno o mas digitos.
 decimal = {digit}+\.([eE]?{digit}+)?
 
-num = {digit}+([eE]?{digit}+)?
+entero = {digit}+([eE]?{digit}+)?
 
 // Definimos una cadena como un conjunto de caracteres entre comillas dobles.
 cadena = \"([^\"\\]|\\[btnfr\"\\]|\\u[0-9a-fA-F]{4})*\"
@@ -238,10 +238,10 @@ print  = "print"
 
 <YYINITIAL>{
     /* identifier, number y boolean */
-    { id }      { addToken("ID",      yytext()); return new Symbol(sym.ID, yyline, yycolumn, yytext()); }
-    { num }     { addToken("NUM",     yytext()); return new Symbol(sym.NUM, yyline, yycolumn, yytext()); }
+    { entero }  { addToken("NUM",     yytext()); return new Symbol(sym.ENTERO, yyline, yycolumn, yytext()); }
     { decimal } { addToken("DECIMAL", yytext()); return new Symbol(sym.DECIMAL, yyline, yycolumn, yytext()); }
     { boleano } { addToken("BOOLEANO",yytext()); return new Symbol(sym.BOOLEANO, yyline, yycolumn, yytext()); }
+    { id }      { addToken("ID",      yytext()); return new Symbol(sym.ID, yyline, yycolumn, yytext()); }
 
     /* arithmetic operators */
     "+" { addToken("ADD",  yytext()); return new Symbol(sym.ADD, yyline, yycolumn, yytext()); }

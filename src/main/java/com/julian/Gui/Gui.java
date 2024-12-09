@@ -212,7 +212,7 @@ public class Gui {
 
                 for (var a : ast.getInstrucciones()) {
                     var res = a.interpretar(ast, tabla);
-                    //System.out.println(res);
+                    System.out.println(res);
                 }
 
                 textOutputArea.setText(ast.getConsola());
