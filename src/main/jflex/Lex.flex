@@ -171,9 +171,6 @@ caracter = \'([^\'\\]|\\[btnfr\"\'\\]|\\u[0-9a-fA-F]{4})\'
 // Definimos un booleano como true o false.
 boleano = (true|false)
 
-// Definimos un char como un valor que acepta un único carácter, incluyendo secuencias de escape.
-char = \'([^\'\\]|\\[btnfr\"\'\\]|\\u[0-9a-fA-F]{4})\'
-
 // Keywords
 // int -> Int, int, inT, INt, ...
 int    = "int"
@@ -265,6 +262,7 @@ print  = "print"
     "!"    { addToken("NOT", yytext()); return new Symbol(sym.NOT, yyline, yycolumn, yytext()); }
 
     /* caracteres del lenguaje */
+    "="    { addToken("ASSIGN",    yytext()); return new Symbol(sym.ASSIGN, yyline, yycolumn, yytext()); }
     "("    { addToken("LPAREN",    yytext()); return new Symbol(sym.LPAREN, yyline, yycolumn, yytext()); }
     ")"    { addToken("RPAREN",    yytext()); return new Symbol(sym.RPAREN, yyline, yycolumn, yytext()); }
     "{"    { addToken("LBRACE",    yytext()); return new Symbol(sym.LBRACE, yyline, yycolumn, yytext()); }

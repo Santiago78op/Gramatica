@@ -50,15 +50,16 @@ public class Mayor extends Instruccion {
                 switch (tipoDer) {
                     case ENTERO -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (int) valorIzq > (int) valorDer ? 1 : 0;
+                        return (int) valorIzq > (int) valorDer;
                     }
                     case DECIMAL -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (int) valorIzq > (double) valorDer ? 1 : 0;
+                        return (int) valorIzq > (double) valorDer;
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (int) valorIzq > (char) valorDer ? 1 : 0;
+                        char charValue = getCharValue(valorDer);
+                        return (int) valorIzq > charValue;
                     }
                     default -> {
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
@@ -69,15 +70,16 @@ public class Mayor extends Instruccion {
                 switch (tipoDer) {
                     case ENTERO -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (double) valorIzq > (int) valorDer ? 1 : 0;
+                        return (double) valorIzq > (int) valorDer;
                     }
                     case DECIMAL -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (double) valorIzq > (double) valorDer ? 1 : 0;
+                        return (double) valorIzq > (double) valorDer;
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (double) valorIzq > (char) valorDer ? 1 : 0;
+                        char charValue = getCharValue(valorDer);
+                        return (double) valorIzq > charValue;
                     }
                     default -> {
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
@@ -88,7 +90,7 @@ public class Mayor extends Instruccion {
                 switch (tipoDer) {
                     case BOOLEANO -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return ((boolean) valorIzq ? 1 : 0) > ((boolean) valorDer ? 1 : 0) ? 1 : 0;
+                        return ((boolean) valorIzq ? 1 : 0) > ((boolean) valorDer ? 1 : 0);
                     }
                     default -> {
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
@@ -99,15 +101,19 @@ public class Mayor extends Instruccion {
                 switch (tipoDer) {
                     case ENTERO -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (char) valorIzq > (int) valorDer ? 1 : 0;
+                        char charValue = getCharValue(valorIzq);
+                        return charValue > (int) valorDer;
                     }
                     case DECIMAL -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (char) valorIzq > (double) valorDer ? 1 : 0;
+                        char charValue = getCharValue(valorIzq);
+                        return charValue > (double) valorDer;
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (char) valorIzq > (char) valorDer ? 1 : 0;
+                        char charValueIzq = getCharValue(valorIzq);
+                        char charValueDer = getCharValue(valorDer);
+                        return charValueIzq > charValueDer;
                     }
                     default -> {
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
@@ -118,7 +124,7 @@ public class Mayor extends Instruccion {
                 switch (tipoDer) {
                     case CADENA -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return valorIzq.toString().compareTo(valorDer.toString()) > 0 ? 1 : 0;
+                        return valorIzq.toString().compareToIgnoreCase(valorDer.toString()) > 0;
                     }
                     default -> {
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
@@ -129,5 +135,20 @@ public class Mayor extends Instruccion {
                 return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
             }
         }
+    }
+
+    private static char getCharValue(Object valorIzq) {
+        char charValue;
+
+        if (valorIzq instanceof String && ((String) valorIzq).length() == 1) {
+            // Convierte un String de un solo carácter a un char
+            charValue = ((String) valorIzq).charAt(0);
+        } else if (valorIzq instanceof Character) {
+            // Si ya es un Character
+            charValue = (char) valorIzq;
+        } else {
+            throw new IllegalArgumentException("valorIzq debe ser un carácter o una cadena de un carácter");
+        }
+        return charValue;
     }
 }

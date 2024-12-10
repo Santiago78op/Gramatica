@@ -66,7 +66,8 @@ public class Suma extends Instruccion {
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.ENTERO);
-                        return (int)valorIzq + (char)valorDer;
+                        char charValue = getCharValue(valorDer);
+                        return (int)valorIzq + charValue;
                     }
                     case CADENA -> {
                         this.tipo.setTipo(tipoDato.CADENA);
@@ -97,7 +98,8 @@ public class Suma extends Instruccion {
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.DECIMAL);
-                        return (double)valorIzq + (char)valorDer;
+                        char charValue = getCharValue(valorDer);
+                        return (double)valorIzq + charValue;
                     }
                     case CADENA -> {
                         this.tipo.setTipo(tipoDato.CADENA);

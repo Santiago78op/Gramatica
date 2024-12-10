@@ -28,6 +28,7 @@ public interface sym {
   public static final int OR = 43;
   public static final int BOOL = 11;
   public static final int DIV = 32;
+  public static final int ASSIGN = 53;
   public static final int IF = 18;
   public static final int DOT = 52;
   public static final int ID = 2;
@@ -114,7 +115,8 @@ public interface sym {
   "RBRACE",
   "SEMICOLON",
   "COLON",
-  "DOT"
+  "DOT",
+  "ASSIGN"
   };
 }
 

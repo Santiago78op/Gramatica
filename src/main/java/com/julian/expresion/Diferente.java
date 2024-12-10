@@ -89,7 +89,7 @@ public class Diferente extends Instruccion {
                 switch (tipoDer) {
                     case BOOLEANO -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (boolean) valorIzq != (boolean) valorDer ? 1 : 0;
+                        return (boolean) valorIzq != (boolean) valorDer;
                     }
                     default -> {
                         return new Errores("Semantico", "Error en la diferencia, tipo de dato no valido", this.linea, this.columna);

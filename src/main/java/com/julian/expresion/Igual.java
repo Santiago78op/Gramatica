@@ -25,7 +25,7 @@ public class Igual extends Instruccion {
      * @param expDer Operando derecho de la expresión.
      */
     public Igual(Instruccion expIzq, Instruccion expDer, int linea, int columna) {
-        super(new Tipo(tipoDato.VOID), linea, columna);
+        super(new Tipo(tipoDato.BOOLEANO), linea, columna);
         this.expIzq = expIzq;
         this.expDer = expDer;
     }
@@ -41,23 +41,20 @@ public class Igual extends Instruccion {
         if(valorDer instanceof Error) return valorDer;
 
         // Se obtiene el tipo de dato de los operandos.
-        var tipoIzq = expIzq.tipo.getTipo();
-        var tipoDer = expDer.tipo.getTipo();
+        var tipoIzq = this.expIzq.tipo.getTipo();
+        var tipoDer = this.expDer.tipo.getTipo();
 
         // Implementacion de tabla de operatorias para la potencia.
         switch (tipoIzq){
             case ENTERO -> {
                 switch (tipoDer){
                     case ENTERO -> {
-                        this.tipo.setTipo(tipoDato.BOOLEANO);
                         return (int)valorIzq == (int)valorDer;
                     }
                     case DECIMAL -> {
-                        this.tipo.setTipo(tipoDato.BOOLEANO);
                         return (int)valorIzq == (double)valorDer;
                     }
                     case CARACTER -> {
-                        this.tipo.setTipo(tipoDato.BOOLEANO);
                         char charValue = getCharValue(valorDer);
                         return (int)valorIzq == charValue;
                     }
@@ -69,15 +66,12 @@ public class Igual extends Instruccion {
             case DECIMAL -> {
                 switch (tipoDer){
                     case ENTERO -> {
-                        this.tipo.setTipo(tipoDato.BOOLEANO);
                         return (double)valorIzq == (int)valorDer;
                     }
                     case DECIMAL -> {
-                        this.tipo.setTipo(tipoDato.BOOLEANO);
                         return (double)valorIzq == (double)valorDer;
                     }
                     case CARACTER -> {
-                        this.tipo.setTipo(tipoDato.BOOLEANO);
                         char charValue = getCharValue(valorDer);
                         return (double)valorIzq == charValue;
                     }

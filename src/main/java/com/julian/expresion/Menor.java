@@ -24,7 +24,7 @@ public class Menor extends Instruccion {
      * @param operIzq Operando izquierdo de la expresión.
      * @param operDer Operando derecho de la expresión.
      * */
-    public Menor(Instruccion operDer, Instruccion operIzq, int linea, int columna) {
+    public Menor(Instruccion operIzq, Instruccion  operDer, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.operDer = operDer;
         this.operIzq = operIzq;
@@ -70,11 +70,11 @@ public class Menor extends Instruccion {
                 switch (tipoDer) {
                     case ENTERO -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (double) valorIzq < (int) valorDer ? 1 : 0;
+                        return (double) valorIzq < (int) valorDer;
                     }
                     case DECIMAL -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return (double) valorIzq < (double) valorDer ? 1 : 0;
+                        return (double) valorIzq < (double) valorDer;
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
@@ -90,7 +90,7 @@ public class Menor extends Instruccion {
                 switch (tipoDer) {
                     case BOOLEANO -> {
                         this.tipo.setTipo(tipoDato.BOOLEANO);
-                        return ((boolean) valorIzq ? 1 : 0) < ((boolean) valorDer ? 1 : 0) ? 1 : 0;
+                        return ((boolean) valorIzq ? 1 : 0) < ((boolean) valorDer ? 1 : 0);
                     }
                     default -> {
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);

@@ -25,7 +25,7 @@ public class And extends Instruccion {
      * @param operDer Operando derecho de la expresión.
      * */
     public And(Instruccion operIzq, Instruccion operDer, int linea, int columna) {
-        super(new Tipo(tipoDato.VOID), linea, columna);
+        super(new Tipo(tipoDato.BOOLEANO), linea, columna);
         this.operIzq = operIzq;
         this.operDer = operDer;
     }

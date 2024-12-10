@@ -58,7 +58,8 @@ public class Divide extends Instruccion {
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.DECIMAL);
-                        return (double)((int)valorIzq / (char)valorDer);
+                        char charValue = getCharValue(valorDer);
+                        return (double)((int)valorIzq / charValue);
                     }
                     default ->
                     {
@@ -78,7 +79,8 @@ public class Divide extends Instruccion {
                     }
                     case CARACTER -> {
                         this.tipo.setTipo(tipoDato.DECIMAL);
-                        return (double)valorIzq / (char)valorDer;
+                        char charValue = getCharValue(valorDer);
+                        return (double)valorIzq / charValue;
                     }
                     default ->
                     {
@@ -90,11 +92,13 @@ public class Divide extends Instruccion {
                 switch (tipoDer){
                     case ENTERO -> {
                         this.tipo.setTipo(tipoDato.ENTERO);
-                        return (char)valorIzq / (double)valorDer;
+                        char charValue = getCharValue(valorIzq);
+                        return (double)(charValue / (int)valorDer);
                     }
                     case DECIMAL -> {
                         this.tipo.setTipo(tipoDato.DECIMAL);
-                        return (char)valorIzq / (double)valorDer;
+                        char charValue = getCharValue(valorIzq);
+                        return charValue / (double)valorDer;
                     }
                     default ->
                     {
@@ -108,5 +112,20 @@ public class Divide extends Instruccion {
                 return new Errores("Semantico", "Error en la división, tipo de dato no valido", this.linea, this.columna);
             }
         }
+    }
+
+    private static char getCharValue(Object valorIzq) {
+        char charValue;
+
+        if (valorIzq instanceof String && ((String) valorIzq).length() == 1) {
+            // Convierte un String de un solo carácter a un char
+            charValue = ((String) valorIzq).charAt(0);
+        } else if (valorIzq instanceof Character) {
+            // Si ya es un Character
+            charValue = (char) valorIzq;
+        } else {
+            throw new IllegalArgumentException("valorIzq debe ser un carácter o una cadena de un carácter");
+        }
+        return charValue;
     }
 }

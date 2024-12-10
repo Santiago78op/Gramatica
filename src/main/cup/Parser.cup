@@ -81,7 +81,7 @@ terminal CONSOLE, LOG;
 terminal ADD, SUB, MUL, DIV, POW, ROOT, MOD, USUB;
 terminal EQ, NE, LT, LE, GT, GE;
 terminal OR, AND, NOT;
-terminal LPAREN, RPAREN, LBRACE, RBRACE, SEMICOLON, COLON, DOT;
+terminal LPAREN, RPAREN, LBRACE, RBRACE, SEMICOLON, COLON, DOT, ASSIGN;
 
 
 /* ------------- Sección de no terminales ----------- */
@@ -108,13 +108,13 @@ nonterminal VARIABLES, VARIABLE;
    que los de las líneas superiores.
 */
 precedence right    USUB;
-precedence nonassoc POW, ROOT, MOD;
-precedence left     MUL, DIV;
-precedence left     ADD, SUB;
-precedence left     EQ, NE, LT, LE, GT, GE;
 precedence right    NOT;
 precedence left     AND;
 precedence left     OR;
+precedence left     EQ, NE, LT, LE, GT, GE;
+precedence nonassoc POW, ROOT, MOD;
+precedence left     MUL, DIV;
+precedence left     ADD, SUB;
 
 /* ------------------- Sección de la gramática ------------------------ */
 
@@ -153,6 +153,9 @@ EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft,
             | EXPRESION:a LE   EXPRESION:b    {: RESULT = new MenorIgual(a, b, aleft, aright); :}
             | EXPRESION:a GT   EXPRESION:b    {: RESULT = new Mayor(a, b, aleft, aright); :}
             | EXPRESION:a GE   EXPRESION:b    {: RESULT = new MayorIgual(a, b, aleft, aright); :}
+            | EXPRESION:a OR  EXPRESION:b     {: RESULT = new Or(a, b, aleft, aright); :}
+            | EXPRESION:a AND EXPRESION:b     {: RESULT = new And(a, b, aleft, aright); :}
+            | NOT EXPRESION:e                 {: RESULT = new Not(e, eleft, eright); :}
             | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
             | VALOR:e                         {: RESULT = e; :}
 ;

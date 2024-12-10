@@ -30,13 +30,17 @@ public class Nativo extends Instruccion {
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        /*
-        if (this.tipo.getTipoDato() == tipoDato.BOOLEANO) {
-            if (this.valor.toString().equals("true")) {
-                return true;
-            }
+        // Secuencias de escape.
+        if (this.tipo.getTipo() == tipoDato.CADENA) {
+            String cadena = (String) this.valor;
+            cadena = cadena.replace("\\n", "\n");
+            cadena = cadena.replace("\\t", "\t");
+            cadena = cadena.replace("\\r", "\r");
+            cadena = cadena.replace("\\\"", "\"");
+            cadena = cadena.replace("\\\\'", "'");
+            cadena = cadena.replace("\\\\", "\\");
+            this.valor = cadena;
         }
-        */
         return this.valor;
     }
 }
