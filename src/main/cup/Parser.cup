@@ -97,8 +97,8 @@ nonterminal LinkedList<Instruccion> INICIO, INSTRUCCIONES;
 nonterminal Instruccion INSTRUCCION, IMPRESION;
 nonterminal Instruccion EXPRESION;
 nonterminal Instruccion VALOR;
+nonterminal Instruccion VARIABLE;
 nonterminal String TIPO;
-nonterminal VARIABLES, VARIABLE;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -132,10 +132,10 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
 ;
 
 INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
+              | VARIABLE:v  SEMICOLON    {: RESULT = new Print(v, vleft, vright); :}
 ;
 
 IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
- //           | PRINT LPAREN STRING:c RPAREN SEMICOLON      {: RESULT = c; :}
 ;
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
@@ -175,6 +175,13 @@ TIPO ::= INT      {: RESULT = "int"; :}
        | STRING   {: RESULT = "String"; :}
 ;
 
-VARIABLE ::= LET ID:id COLON TIPO:t EQ EXPRESION:e     {: RESULT = e; :}
-            | CONST ID:id COLON TIPO:t EQ EXPRESION:e  {: RESULT = e; :}
+CASTEO ::= LPAREN EXPRESION AS TIPO RPAREN  {: RESULT = c; :}
+;
+
+OPERATORIA ::= EXPRESION:e {: RESULT = e; :}
+             | CASTEO:c    {: RESULT = e; :}
+;
+
+VARIABLE ::=  LET ID:id COLON TIPO:t ASSIGN OPERATORIA:e     {: RESULT = e; :}
+            | CONST ID:id COLON TIPO:t ASSIGN OPERATORIA:e   {: RESULT = e; :}
 ;
