@@ -155,7 +155,7 @@ digit = [0-9]
     letras o digitos.
 */
 guion = _
-id = {guion}*{letter}({letter}|{digit}|{guion})*
+id = {letter}({letter}|{digit}|{guion})*
 
 // Definimos un numero como uno o mas digitos.
 decimal = {digit}+\.([eE]?{digit}+)?
