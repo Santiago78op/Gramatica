@@ -351,7 +351,7 @@ public class parser extends java_cup.runtime.lr_parser {
     // Funcion de error posiblemente recuperable
     public void syntax_error(Symbol cur_token) {
         //System.out.println("Error de sintaxis en la linea: " + (s.yyline + 1) + " columna: " + (s.yycolumn + 1));
-        errors.add(new Errores("SINTACTICO RECUPERABLE", "Se esperaba: " + cur_token.sym + " se encontro: " + cur_token.value, cur_token.left, cur_token.right));
+        errors.add(new Errores("Sintactico", " RECUPERABLE Se esperaba: " + cur_token.sym + " se encontro: " + cur_token.value, cur_token.left, cur_token.right));
         System.out.println("Token actual: " + cur_token.value);
         System.out.println("Token esperado: " + cur_token.sym);
         System.out.println("Error recuperable, se intentara recuperar.");
@@ -360,7 +360,7 @@ public class parser extends java_cup.runtime.lr_parser {
     // Funcion de error No recuperable
     public void unrecovered_syntax_error(Symbol s) {
         // System.out.println("Error de sintaxis en la linea: " + (s.yyline + 1) + " columna: " + (s.yycolumn + 1));
-        errors.add(new Errores("SINTACTICO NO RECUPERABLE", "Se esperaba: " + s.sym + " se encontro: " + s.value, s.left, s.right));
+        errors.add(new Errores("Sintactico", "NO RECUPERABLE Se esperaba: " + s.sym + " se encontro: " + s.value, s.left, s.right));
         System.out.println("Token actual: " + cur_token.value);
         System.out.println("Token esperado: " + cur_token.sym);
         System.out.println("Error fatal, no se puede recuperar.");
@@ -477,7 +477,7 @@ class CUP$parser$actions {
           case 6: // INSTRUCCION ::= error SEMICOLON 
             {
               Instruccion RESULT =null;
-		 RESULT = null; 
+		 RESULT = new instruccionError("Sintactico Error"); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("INSTRUCCION",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

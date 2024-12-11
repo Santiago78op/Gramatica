@@ -3,8 +3,10 @@ package com.julian.Gui;
 import com.julian.Lexer;
 import com.julian.abstracto.Instruccion;
 import com.julian.parser;
+import com.julian.reports.Reports;
 import com.julian.symbol.Arbol;
 import com.julian.symbol.tablaSimbolo;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -20,9 +22,10 @@ import java.util.Optional;
 
 public class Gui {
 
-    private File currentFile;
-
-    private String reporteToken;
+    private File   currentFile;
+    private String reporte;
+    private Lexer  lexer;
+    private parser p;
 
     @FXML
     private TextArea textInputArea;
@@ -203,27 +206,9 @@ public class Gui {
         }
 
         try {
-                Lexer lexer = new Lexer(new StringReader(text));
-                parser p = new parser(lexer);
+                lexer = new Lexer(new StringReader(text));
+                p = new parser(lexer);
                 var resultado = p.parse();
-
-                /*
-                var erroresLexicos = lexer.errors;
-
-                if (erroresLexicos.size() > 0) {
-                    for (var error : erroresLexicos) {
-                        System.out.println(error);
-                    }
-                }
-                */
-
-                var erroresSintacticos = p.errors;
-
-                if (erroresSintacticos.size() > 0) {
-                    for (var error : erroresSintacticos) {
-                        System.out.println(error);
-                    }
-                }
 
                 var ast = new Arbol((LinkedList<Instruccion>) resultado.value);
                 var tabla = new tablaSimbolo();
@@ -235,31 +220,54 @@ public class Gui {
                 }
 
                 textOutputArea.setText(ast.getConsola());
-                /*
-                TreeNode root = (TreeNode)parser.parse().value;
-                root.printTree(root, "");
-                */
-
-                // Parsear el archivo y obtener el árbol de análisis sintáctico
-                //TreeNode<String> root = (TreeNode<String>) parser.parse().value;
-                //root.printTree("");
-
-                // Recorrer el árbol de operaciones y evaluar cada nodo
-                //root.obtenerConjuntosDefinidos();
-                //root.evaluateOperations();
-
-/*
-                reporteToken = Reports.reportToken(lexer.tokens);
-                Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Tokens.html");
-
-                reporteToken = Reports.reportLexErrors(lexer.lexErrors);
-                Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Lex_Error.html");
-
-                reporteToken = Reports.reportSyntaxErrors(parser.syntaxErrors);
-                Reports.saveAndOpenHtmlFile(reporteToken, "/reports/Reporte_Syntax_Error.html");
-*/
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while analyzing the content.");
+            e.printStackTrace();
+        }
+    }
+
+    public void openReportes(ActionEvent actionEvent) {
+        var tokens = lexer.tokens;
+        var erroresLexicos = lexer.errors;
+        var erroresSintacticos = p.errors;
+
+        // Merge de errores léxicos y sintácticos
+        erroresLexicos.addAll(erroresSintacticos);
+
+        String reporteToken = null;
+        String reporteErrores = null;
+
+        if (erroresLexicos.size() > 0 || tokens.size() > 0) {
+            Reports reporte = new Reports(tokens, erroresLexicos);
+            reporteToken = reporte.getTokens();
+            reporteErrores = reporte.getErrores();
+        }
+
+        // Generar reporte de tokens, con el string reporte, con formato.
+        createHtmlFile("Reporte_Tokens.html", reporteToken);
+
+        // Generar reporte de errores, con el string reporteErrores, con formato.
+        createHtmlFile("Reporte_Errores.html", reporteErrores);
+    }
+
+    public static void createHtmlFile(String fileName, String htmlContent) {
+        // Obtener la ruta del directorio base del proyecto
+        String basePath = System.getProperty("user.dir");
+        // Construir la ruta relativa al directorio deseado dentro del proyecto
+        String dirPath = basePath + "/reportes";
+        String filePath = dirPath + "/" + fileName;
+
+        File dir = new File(dirPath);
+        if (!dir.exists()) {
+            dir.mkdirs(); // Crear directorio si no existe
+        }
+
+        File htmlFile = new File(filePath);
+        try (FileWriter writer = new FileWriter(htmlFile)) {
+            writer.write(htmlContent); // Escribir contenido HTML en el archivo
+            System.out.println("HTML file created: " + htmlFile.getAbsolutePath());
+        } catch (IOException e) {
+            System.out.println("An error occurred while creating the HTML file.");
             e.printStackTrace();
         }
     }

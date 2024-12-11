@@ -299,5 +299,5 @@ print  = "print"
 
 <YYINITIAL>{
     // Detectar errores lexicos
-    . { addError("LEXICO", yytext()); }
+    . { addError("Lexico", yytext()); }
 }

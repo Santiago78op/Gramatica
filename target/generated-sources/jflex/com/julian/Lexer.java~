@@ -462,7 +462,7 @@ public class Lexer implements java_cup.runtime.Scanner {
       // Lista de tokens
       public LinkedList<Token> tokens = new LinkedList<Token>();
       // Lista de errores lexicos
-      private LinkedList<Errores> errors = new LinkedList<Errores>();
+      public LinkedList<Errores> errors = new LinkedList<Errores>();
 
       /*
         Metodo symbol, parametro token: su funcion es

@@ -35,7 +35,7 @@ parser code {:
     // Funcion de error posiblemente recuperable
     public void syntax_error(Symbol cur_token) {
         //System.out.println("Error de sintaxis en la linea: " + (s.yyline + 1) + " columna: " + (s.yycolumn + 1));
-        errors.add(new Errores("SINTACTICO RECUPERABLE", "Se esperaba: " + cur_token.sym + " se encontro: " + cur_token.value, cur_token.left, cur_token.right));
+        errors.add(new Errores("Sintactico", " RECUPERABLE Se esperaba: " + cur_token.sym + " se encontro: " + cur_token.value, cur_token.left, cur_token.right));
         System.out.println("Token actual: " + cur_token.value);
         System.out.println("Token esperado: " + cur_token.sym);
         System.out.println("Error recuperable, se intentara recuperar.");
@@ -44,7 +44,7 @@ parser code {:
     // Funcion de error No recuperable
     public void unrecovered_syntax_error(Symbol s) {
         // System.out.println("Error de sintaxis en la linea: " + (s.yyline + 1) + " columna: " + (s.yycolumn + 1));
-        errors.add(new Errores("SINTACTICO NO RECUPERABLE", "Se esperaba: " + s.sym + " se encontro: " + s.value, s.left, s.right));
+        errors.add(new Errores("Sintactico", "NO RECUPERABLE Se esperaba: " + s.sym + " se encontro: " + s.value, s.left, s.right));
         System.out.println("Token actual: " + cur_token.value);
         System.out.println("Token esperado: " + cur_token.sym);
         System.out.println("Error fatal, no se puede recuperar.");
@@ -141,7 +141,7 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
 
 INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
               | VARIABLE:v  SEMICOLON    {: RESULT = v; :}
-              | error SEMICOLON          {: RESULT = null; :}
+              | error SEMICOLON          {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
 IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}

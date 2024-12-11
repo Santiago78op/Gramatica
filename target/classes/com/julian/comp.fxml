@@ -67,7 +67,7 @@
                         <Font size="14.0" />
                     </font>
                 </Button>
-                <Button fx:id="buttonReports" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Reports" textFill="WHITE">
+                <Button fx:id="buttonReports" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#openReportes" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Reports" textFill="WHITE">
                     <padding>
                         <Insets left="50.0" />
                     </padding>

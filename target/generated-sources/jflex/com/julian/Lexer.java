@@ -940,8 +940,8 @@ public class Lexer implements java_cup.runtime.Scanner {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
             System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-            System.out.println("action [302] { addError(\"LEXICO\", yytext()); }");
-            { addError("LEXICO", yytext());
+            System.out.println("action [302] { addError(\"Lexico\", yytext()); }");
+            { addError("Lexico", yytext());
             }
           // fall through
           case 54: break;
