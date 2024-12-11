@@ -14,9 +14,10 @@ import java_cup.runtime.*;
 import java.util.LinkedList;
 import com.julian.abstracto.Instruccion;
 import com.julian.symbol.*;
+import com.julian.exception.Errores;
 
 // Instrucciones
-import com.julian.instruction.Print;
+import com.julian.instruction.*;
 
 // Expresiones
 import com.julian.expresion.*;
@@ -28,9 +29,13 @@ import com.julian.expresion.*;
 */
 parser code {:
 
+    // Variable que se usara para almacenar los errores Sintacticos
+    public LinkedList<Errores> errors = new LinkedList<Errores>();
+
     // Funcion de error posiblemente recuperable
     public void syntax_error(Symbol cur_token) {
         //System.out.println("Error de sintaxis en la linea: " + (s.yyline + 1) + " columna: " + (s.yycolumn + 1));
+        errors.add(new Errores("SINTACTICO RECUPERABLE", "Se esperaba: " + cur_token.sym + " se encontro: " + cur_token.value, cur_token.left, cur_token.right));
         System.out.println("Token actual: " + cur_token.value);
         System.out.println("Token esperado: " + cur_token.sym);
         System.out.println("Error recuperable, se intentara recuperar.");
@@ -39,6 +44,7 @@ parser code {:
     // Funcion de error No recuperable
     public void unrecovered_syntax_error(Symbol s) {
         // System.out.println("Error de sintaxis en la linea: " + (s.yyline + 1) + " columna: " + (s.yycolumn + 1));
+        errors.add(new Errores("SINTACTICO NO RECUPERABLE", "Se esperaba: " + s.sym + " se encontro: " + s.value, s.left, s.right));
         System.out.println("Token actual: " + cur_token.value);
         System.out.println("Token esperado: " + cur_token.sym);
         System.out.println("Error fatal, no se puede recuperar.");
@@ -73,7 +79,7 @@ terminal String  ENTERO, DECIMAL, BOOLEANO, CADENA, CARACTER;
 
 // Terminales que no tienen un valor son listados primero.
 terminal PRINT;
-terminal INT, FLOAT, BOOL, CHAR, STRING;
+terminal String INT, FLOAT, BOOL, CHAR, STRING;
 terminal CAST, LET, CONST, AS;
 terminal IF, ELSE, MATCH, DEFAULT;
 terminal DO, WHILE, FOR, BREAK, CONTINUE;
@@ -98,7 +104,9 @@ nonterminal Instruccion INSTRUCCION, IMPRESION;
 nonterminal Instruccion EXPRESION;
 nonterminal Instruccion VALOR;
 nonterminal Instruccion VARIABLE;
-nonterminal String TIPO;
+nonterminal Instruccion CASTEO;
+nonterminal Instruccion OPERATORIA;
+nonterminal Instruccion TIPO;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -132,10 +140,15 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
 ;
 
 INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
-              | VARIABLE:v  SEMICOLON    {: RESULT = new Print(v, vleft, vright); :}
+              | VARIABLE:v  SEMICOLON    {: RESULT = v; :}
+              | error SEMICOLON          {: RESULT = null; :}
 ;
 
 IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
+;
+
+VARIABLE ::=  LET ID:id COLON TIPO:t ASSIGN EXPRESION:e     {: RESULT = new Print(e, eleft, eright); :}
+            | CONST ID:id COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Print(e, eleft, eright); :}
 ;
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
@@ -157,6 +170,7 @@ EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft,
             | EXPRESION:a AND EXPRESION:b     {: RESULT = new And(a, b, aleft, aright); :}
             | NOT EXPRESION:e                 {: RESULT = new Not(e, eleft, eright); :}
             | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
+            | CASTEO:c                        {: RESULT = c; :}
             | VALOR:e                         {: RESULT = e; :}
 ;
 
@@ -168,20 +182,12 @@ VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(ti
           | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
 ;
 
-TIPO ::= INT      {: RESULT = "int"; :}
-       | FLOAT    {: RESULT = "float"; :}
-       | BOOL     {: RESULT = "boolean"; :}
-       | CHAR     {: RESULT = "char"; :}
-       | STRING   {: RESULT = "String"; :}
+TIPO ::= INT:t      {: RESULT = new Nativo(t, new Tipo(tipoDato.ENTERO), tleft, tright); :}
+       | FLOAT:t    {: RESULT = new Nativo(t, new Tipo(tipoDato.DECIMAL), tleft, tright); :}
+       | BOOL:t     {: RESULT = new Nativo(t, new Tipo(tipoDato.BOOLEANO), tleft, tright); :}
+       | CHAR:t     {: RESULT = new Nativo(t, new Tipo(tipoDato.CARACTER), tleft, tright); :}
 ;
 
-CASTEO ::= LPAREN EXPRESION AS TIPO RPAREN  {: RESULT = c; :}
+CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t, eleft, eright); :}
 ;
 
-OPERATORIA ::= EXPRESION:e {: RESULT = e; :}
-             | CASTEO:c    {: RESULT = e; :}
-;
-
-VARIABLE ::=  LET ID:id COLON TIPO:t ASSIGN OPERATORIA:e     {: RESULT = e; :}
-            | CONST ID:id COLON TIPO:t ASSIGN OPERATORIA:e   {: RESULT = e; :}
-;

@@ -13,7 +13,7 @@ package com.julian;
 
 // Cup es la clase que contiene los simbolos que
 // se usan en el analizador sintactico.
-import com.julian.symbol.Token;
+import com.julian.token.Token;
 import com.julian.exception.Errores;
 import java_cup.runtime.*;
 //importaciones si fuesen necesarias
@@ -21,8 +21,7 @@ import java_cup.runtime.Symbol;
 
 // Estas listas son necesarias para guardar los
 // tokens y errores lexicos.
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 %% //inicio de opciones.
 
@@ -74,6 +73,7 @@ import java.util.List;
 %init{
     yyline = 1;
     yycolumn = 1;
+    errors = new LinkedList<Errores>();
 %init}
 
 /*
@@ -88,9 +88,9 @@ import java.util.List;
       StringBuffer lexeme = new StringBuffer();
 
       // Lista de tokens
-      public List<Token> tokens = new ArrayList<Token>();
+      public LinkedList<Token> tokens = new LinkedList<Token>();
       // Lista de errores lexicos
-      public List<Errores> errors = new ArrayList<Errores>();
+      public LinkedList<Errores> errors = new LinkedList<Errores>();
 
       /*
         Metodo symbol, parametro token: su funcion es
@@ -116,8 +116,8 @@ import java.util.List;
       }
 
       // Metodo para agregar errores lexicos.
-      private void addError(String error){
-          String description = "";
+      private void addError(String error, String value){
+          String description = "El caracter '" + value + "' no pertenece al lenguaje.";
           errors.add(new Errores(error, description, yyline, yycolumn));
       }
 
@@ -299,5 +299,5 @@ print  = "print"
 
 <YYINITIAL>{
     // Detectar errores lexicos
-    . { addError("Caracter invalido: " + yytext()); }
+    . { addError("LEXICO", yytext()); }
 }

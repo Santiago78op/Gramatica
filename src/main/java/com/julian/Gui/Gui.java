@@ -207,10 +207,29 @@ public class Gui {
                 parser p = new parser(lexer);
                 var resultado = p.parse();
 
+                /*
+                var erroresLexicos = lexer.errors;
+
+                if (erroresLexicos.size() > 0) {
+                    for (var error : erroresLexicos) {
+                        System.out.println(error);
+                    }
+                }
+                */
+
+                var erroresSintacticos = p.errors;
+
+                if (erroresSintacticos.size() > 0) {
+                    for (var error : erroresSintacticos) {
+                        System.out.println(error);
+                    }
+                }
+
                 var ast = new Arbol((LinkedList<Instruccion>) resultado.value);
                 var tabla = new tablaSimbolo();
 
                 for (var a : ast.getInstrucciones()) {
+                    if (a == null) continue;
                     var res = a.interpretar(ast, tabla);
                     System.out.println(res);
                 }
