@@ -1,5 +1,6 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
@@ -62,6 +63,7 @@ public class Mayor extends Instruccion {
                         return (int) valorIzq > charValue;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
                     }
                 }
@@ -82,6 +84,7 @@ public class Mayor extends Instruccion {
                         return (double) valorIzq > charValue;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
                     }
                 }
@@ -93,6 +96,7 @@ public class Mayor extends Instruccion {
                         return ((boolean) valorIzq ? 1 : 0) > ((boolean) valorDer ? 1 : 0);
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
                     }
                 }
@@ -116,6 +120,7 @@ public class Mayor extends Instruccion {
                         return charValueIzq > charValueDer;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
                     }
                 }
@@ -127,11 +132,13 @@ public class Mayor extends Instruccion {
                         return valorIzq.toString().compareToIgnoreCase(valorDer.toString()) > 0;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
                     }
                 }
             }
             default -> {
+                addSemanticError(tipoIzq, tipoDer, linea, columna);
                 return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
             }
         }
@@ -150,5 +157,12 @@ public class Mayor extends Instruccion {
             throw new IllegalArgumentException("valorIzq debe ser un carácter o una cadena de un carácter");
         }
         return charValue;
+    }
+
+    // Metodo para agregar el error Semantico
+    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        semanticErrorManager errorSemantico = new semanticErrorManager();
+        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Mayor. " +
+                "\n No se puede realizar and entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
     }
 }

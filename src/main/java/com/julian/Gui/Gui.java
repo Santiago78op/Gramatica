@@ -16,6 +16,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.Optional;
@@ -23,7 +24,6 @@ import java.util.Optional;
 public class Gui {
 
     private File   currentFile;
-    private String reporte;
     private Lexer  lexer;
     private parser p;
 
@@ -227,29 +227,39 @@ public class Gui {
     }
 
     public void openReportes(ActionEvent actionEvent) {
-        var tokens = lexer.tokens;
-        var erroresLexicos = lexer.errors;
-        var erroresSintacticos = p.errors;
+        try {
+            var tokens = lexer.tokens;
+            var erroresLexicos = lexer.errors;
+            var erroresSintacticos = p.errors;
 
-        // Merge de errores léxicos y sintácticos
-        erroresLexicos.addAll(erroresSintacticos);
+            // Merge de errores léxicos y sintácticos
+            erroresLexicos.addAll(erroresSintacticos);
 
-        String reporteToken = null;
-        String reporteErrores = null;
+            String reporteToken = null;
+            String reporteErrores = null;
 
-        if (erroresLexicos.size() > 0 || tokens.size() > 0) {
-            Reports reporte = new Reports(tokens, erroresLexicos);
-            reporteToken = reporte.getTokens();
-            reporteErrores = reporte.getErrores();
+            if (erroresLexicos.size() > 0 || tokens.size() > 0) {
+                Reports reporte = new Reports(tokens, erroresLexicos);
+                reporteToken = reporte.getTokens();
+                reporteErrores = reporte.getErrores();
+            }
+
+            // Generar reporte de tokens, con el string reporte, con formato.
+            createHtmlFile("Reporte_Tokens.html", reporteToken);
+
+            // Generar reporte de errores, con el string reporteErrores, con formato.
+            createHtmlFile("Reporte_Errores.html", reporteErrores);
+
+            // Ejecuta reporte de tokens y Errores, con el string reporte, con formato.
+            openHtmlFile("Reporte_Tokens.html");
+            openHtmlFile("Reporte_Errores.html");
+        }catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred when generating the reports or \n No code was entered in the console to report.");
+            e.printStackTrace();
         }
-
-        // Generar reporte de tokens, con el string reporte, con formato.
-        createHtmlFile("Reporte_Tokens.html", reporteToken);
-
-        // Generar reporte de errores, con el string reporteErrores, con formato.
-        createHtmlFile("Reporte_Errores.html", reporteErrores);
     }
 
+    // Crea el archivo HTML
     public static void createHtmlFile(String fileName, String htmlContent) {
         // Obtener la ruta del directorio base del proyecto
         String basePath = System.getProperty("user.dir");
@@ -268,6 +278,28 @@ public class Gui {
             System.out.println("HTML file created: " + htmlFile.getAbsolutePath());
         } catch (IOException e) {
             System.out.println("An error occurred while creating the HTML file.");
+            e.printStackTrace();
+        }
+    }
+
+    // Abre el archivo HTML en el navegador.
+    public static void openHtmlFile(String fileName) {
+        // Obtener la ruta del directorio base del proyecto
+        String basePath = System.getProperty("user.dir");
+        // Construir la ruta relativa al directorio deseado dentro del proyecto
+        String dirPath = basePath + "/reportes";
+        String filePath = dirPath + "/" + fileName;
+
+        try {
+            File htmlFile = new File(filePath);
+            if (htmlFile.exists()) {
+                Desktop.getDesktop().browse(htmlFile.toURI());
+                System.out.println("HTML file opened in browser: " + htmlFile.getAbsolutePath());
+            } else {
+                System.out.println("File does not exist: " + filePath);
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while opening the HTML file.");
             e.printStackTrace();
         }
     }

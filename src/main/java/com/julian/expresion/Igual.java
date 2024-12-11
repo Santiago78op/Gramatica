@@ -1,5 +1,6 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
@@ -59,6 +60,7 @@ public class Igual extends Instruccion {
                         return (int)valorIzq == charValue;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
@@ -76,6 +78,7 @@ public class Igual extends Instruccion {
                         return (double)valorIzq == charValue;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
@@ -87,6 +90,7 @@ public class Igual extends Instruccion {
                         return (boolean)valorIzq == (boolean)valorDer;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
@@ -110,6 +114,7 @@ public class Igual extends Instruccion {
                         return charValueIzq == charValueDer;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
@@ -121,11 +126,13 @@ public class Igual extends Instruccion {
                         return valorIzq.toString().equalsIgnoreCase(valorDer.toString());
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
             }
             default -> {
+                addSemanticError(tipoIzq, tipoDer, linea, columna);
                 return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
             }
         }
@@ -144,5 +151,12 @@ public class Igual extends Instruccion {
             throw new IllegalArgumentException("valorIzq debe ser un carácter o una cadena de un carácter");
         }
         return charValue;
+    }
+
+    // Metodo para agregar el error Semantico
+    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        semanticErrorManager errorSemantico = new semanticErrorManager();
+        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Igualdad. " +
+                "\n No se puede realizar and entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
     }
 }

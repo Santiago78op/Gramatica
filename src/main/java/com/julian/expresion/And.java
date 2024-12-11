@@ -1,5 +1,6 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
@@ -53,12 +54,20 @@ public class And extends Instruccion {
                         return (boolean) valorIzq && (boolean) valorDer;
                     }
                     default -> {
-                        return new Errores("Semantico", "Error de tipos en la operación and.", linea, columna);
+                        semanticErrorManager errorSemantico = new semanticErrorManager();
+                        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación and. \n No se puede realizar and entre\n" +
+                                "BOOLEANO y " + tipoDer, linea, columna));
+                        return new Errores("Semantico", "Error de tipos en la operación and. \n No se puede realizar and entre\n" +
+                                "BOOLEANO y " + tipoDer, linea, columna);
                     }
                 }
             }
             default -> {
-                return new Errores("Semantico", "Error de tipos en la operación and.", linea, columna);
+                semanticErrorManager errorSemantico = new semanticErrorManager();
+                errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación and. \n No se puede realizar and entre\n" +
+                        tipoIzq + " y " + tipoDer, linea, columna));
+                return new Errores("Semantico", "Error de tipos en la operación and. \n No se puede realizar and entre\n" +
+                        tipoIzq + " y " + tipoDer, linea, columna);
             }
         }
     }
