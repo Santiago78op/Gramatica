@@ -1,5 +1,6 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
@@ -51,13 +52,22 @@ public class Or extends Instruccion {
                         return (boolean)valorIzq || (boolean)valorDer;
                     }
                     default -> {
+                        addSemanticError(tipoDer, linea, columna);
                         return new Errores("Semantico", "Error de tipos en la operación or.", linea, columna);
                     }
                 }
             }
             default -> {
+                addSemanticError(tipoDer, linea, columna);
                 return new Errores("Semantico", "Error de tipos en la operación or.", linea, columna);
             }
         }
+    }
+
+    // Metodo para agregar el error Semantico
+    private void addSemanticError(tipoDato tipoOper, int linea, int columna) {
+        semanticErrorManager errorSemantico = new semanticErrorManager();
+        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Or. " +
+                "\n No se puede realizar Or con\n" + tipoOper, linea, columna));
     }
 }

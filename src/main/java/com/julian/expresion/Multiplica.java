@@ -1,5 +1,6 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
@@ -62,6 +63,7 @@ public class Multiplica extends Instruccion{
                         return (int)valorIzq * charValue;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la multiplicación, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
@@ -82,6 +84,7 @@ public class Multiplica extends Instruccion{
                         return (double)valorIzq * charValue;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la multiplicación, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
@@ -99,11 +102,13 @@ public class Multiplica extends Instruccion{
                         return charValue * (double)valorDer;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la multiplicación, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
             }
             default -> {
+                addSemanticError(tipoIzq, tipoDer, linea, columna);
                 return new Errores("Semantico", "Error en la multiplicación, tipo de dato no valido", this.linea, this.columna);
             }
         }
@@ -122,5 +127,12 @@ public class Multiplica extends Instruccion{
             throw new IllegalArgumentException("valorIzq debe ser un carácter o una cadena de un carácter");
         }
         return charValue;
+    }
+
+    // Metodo para agregar el error Semantico
+    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        semanticErrorManager errorSemantico = new semanticErrorManager();
+        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Multiplicacion. " +
+                "\n No se puede realizar la Multiplicacion entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
     }
 }

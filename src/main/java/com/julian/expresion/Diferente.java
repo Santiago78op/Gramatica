@@ -162,6 +162,6 @@ public class Diferente extends Instruccion {
     private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
         semanticErrorManager errorSemantico = new semanticErrorManager();
         errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación diferencia. " +
-                "\n No se puede realizar and entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
+                "\n No se puede realizar la diferencia entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
     }
 }

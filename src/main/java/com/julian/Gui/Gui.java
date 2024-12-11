@@ -1,7 +1,9 @@
 package com.julian.Gui;
 
 import com.julian.Lexer;
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
+import com.julian.exception.Errores;
 import com.julian.parser;
 import com.julian.reports.Reports;
 import com.julian.symbol.Arbol;
@@ -228,31 +230,39 @@ public class Gui {
 
     public void openReportes(ActionEvent actionEvent) {
         try {
+            
             var tokens = lexer.tokens;
             var erroresLexicos = lexer.errors;
             var erroresSintacticos = p.errors;
-
-            // Merge de errores léxicos y sintácticos
-            erroresLexicos.addAll(erroresSintacticos);
+            var erroresSemantico = 0;
+            //var erroresSemantico = getErroresSemanticos();
 
             String reporteToken = null;
-            String reporteErrores = null;
+            String reporteErroresLexicos = null;
+            String reporteErroresSintacticos = null;
+            String reporteErroresSemanticos = null;
 
             if (erroresLexicos.size() > 0 || tokens.size() > 0) {
-                Reports reporte = new Reports(tokens, erroresLexicos);
+                Reports reporte = new Reports(tokens, erroresLexicos, erroresSintacticos);
                 reporteToken = reporte.getTokens();
-                reporteErrores = reporte.getErrores();
+                reporteErroresLexicos = reporte.erroresLexicos();
+                reporteErroresSintacticos = reporte.erroresSintacticos();
+                reporteErroresSemanticos = reporte.erroresSemanticos();
             }
 
             // Generar reporte de tokens, con el string reporte, con formato.
             createHtmlFile("Reporte_Tokens.html", reporteToken);
 
             // Generar reporte de errores, con el string reporteErrores, con formato.
-            createHtmlFile("Reporte_Errores.html", reporteErrores);
+            createHtmlFile("Reporte_Errores_Lexicos.html", reporteErroresLexicos);
+            createHtmlFile("Reporte_Errores_Sintacticos.html", reporteErroresSintacticos);
+            createHtmlFile("Reporte_Errores_Semanticos.html", reporteErroresSemanticos);
 
             // Ejecuta reporte de tokens y Errores, con el string reporte, con formato.
             openHtmlFile("Reporte_Tokens.html");
-            openHtmlFile("Reporte_Errores.html");
+            openHtmlFile("Reporte_Errores_Lexicos.html");
+            openHtmlFile("Reporte_Errores_Sintacticos.html");
+            openHtmlFile("Reporte_Errores_Semanticos.html");
         }catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred when generating the reports or \n No code was entered in the console to report.");
             e.printStackTrace();

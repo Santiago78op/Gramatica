@@ -1,5 +1,6 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
@@ -48,9 +49,17 @@ public class Negacion extends Instruccion {
                 return -(double) valorOper;
             }
             default -> {
+                addSemanticError(tipoOper, linea, columna);
                 // Se retorna un error si el tipo de dato no es booleano.
                 return new Errores("Semantico", "No se puede negar el tipo de dato " + tipoOper, linea, columna);
             }
         }
+    }
+
+    // Metodo para agregar el error Semantico
+    private void addSemanticError(tipoDato tipoOper, int linea, int columna) {
+        semanticErrorManager errorSemantico = new semanticErrorManager();
+        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Negacion. " +
+                "\n No se puede realizar la Negacion con\n" + tipoOper, linea, columna));
     }
 }

@@ -1,5 +1,6 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
@@ -57,6 +58,7 @@ public class Raiz extends Instruccion {
                         return Math.pow((int)valorIzq, 1/(double)valorDer);
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la raiz, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
@@ -72,13 +74,22 @@ public class Raiz extends Instruccion {
                         return Math.pow((double)valorIzq, 1/(double)valorDer);
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la raiz, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
             }
             default -> {
+                addSemanticError(tipoIzq, tipoDer, linea, columna);
                 return new Errores("Semantico", "Error en la raiz, tipo de dato no valido", this.linea, this.columna);
             }
         }
+    }
+
+    // Metodo para agregar el error Semantico
+    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        semanticErrorManager errorSemantico = new semanticErrorManager();
+        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Raiz. " +
+                "\n No se puede realizar la Raiz entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
     }
 }

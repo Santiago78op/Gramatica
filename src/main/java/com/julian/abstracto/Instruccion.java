@@ -1,8 +1,12 @@
 package com.julian.abstracto;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.symbol.Arbol;
 import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
+import com.julian.symbol.tipoDato;
+
+import java.util.LinkedList;
 
 /**
  * Instruccion -> Clase abstracta que representa una instrucción.
@@ -18,6 +22,7 @@ public abstract class Instruccion {
     public Tipo tipo;
     public int linea;
     public int columna;
+    //public Object resultado = new Enum<>() {};
 
     /**
      * Constructor de la clase Instruccion.
@@ -35,6 +40,7 @@ public abstract class Instruccion {
     public Tipo getTipo() {
         return tipo;
     }
+
 
     // Clase abstracta que representa una instrucción.
     public abstract Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos);

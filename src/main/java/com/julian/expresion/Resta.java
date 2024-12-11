@@ -1,11 +1,14 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
 import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
 import com.julian.symbol.tipoDato;
+
+import java.util.LinkedList;
 
 /**
  * Clase que representa una expresión de resta.
@@ -62,6 +65,7 @@ public class Resta extends Instruccion {
                         return (int)valorIzq - charValue;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la resta, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
@@ -82,6 +86,7 @@ public class Resta extends Instruccion {
                         return (double)valorIzq - charValue;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la resta, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
@@ -99,11 +104,13 @@ public class Resta extends Instruccion {
                         return charValue - (double)valorDer;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en la resta, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
             }
             default -> {
+                addSemanticError(tipoIzq, tipoDer, linea, columna);
                 return new Errores("Semantico", "Error en la resta, tipo de dato no valido", this.linea, this.columna);
             }
         }
@@ -122,5 +129,12 @@ public class Resta extends Instruccion {
             throw new IllegalArgumentException("valorIzq debe ser un carácter o una cadena de un carácter");
         }
         return charValue;
+    }
+
+    // Metodo para agregar el error Semantico
+    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        semanticErrorManager errorSemantico = new semanticErrorManager();
+        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Resta. " +
+                "\n No se puede realizar la Resta entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
     }
 }

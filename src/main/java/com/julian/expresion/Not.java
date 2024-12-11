@@ -1,5 +1,6 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
@@ -29,8 +30,16 @@ public class Not extends Instruccion {
                 return !(boolean)valor;
             }
             default -> {
+                addSemanticError(tipo, linea, columna);
                 return new Errores("Semantico", "Error de tipos en la operación not.", linea, columna);
             }
         }
+    }
+
+    // Metodo para agregar el error Semantico
+    private void addSemanticError(tipoDato tipo, int linea, int columna) {
+        semanticErrorManager errorSemantico = new semanticErrorManager();
+        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Not. " +
+                "\n No se puede realizar Not en\n" + tipo, linea, columna));
     }
 }

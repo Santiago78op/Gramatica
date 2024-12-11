@@ -1,5 +1,6 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
@@ -56,6 +57,7 @@ public class Modulo extends Instruccion {
                         return (int)valorIzq % (double)valorDer;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
@@ -71,13 +73,22 @@ public class Modulo extends Instruccion {
                         return (double)valorIzq % (double)valorDer;
                     }
                     default -> {
+                        addSemanticError(tipoIzq, tipoDer, linea, columna);
                         return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
                     }
                 }
             }
             default -> {
+                addSemanticError(tipoIzq, tipoDer, linea, columna);
                 return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
             }
         }
+    }
+
+    // Metodo para agregar el error Semantico
+    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        semanticErrorManager errorSemantico = new semanticErrorManager();
+        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Modulo. " +
+                "\n No se puede realizar Modulo entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
     }
 }

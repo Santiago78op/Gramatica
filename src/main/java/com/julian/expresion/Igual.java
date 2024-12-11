@@ -157,6 +157,6 @@ public class Igual extends Instruccion {
     private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
         semanticErrorManager errorSemantico = new semanticErrorManager();
         errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Igualdad. " +
-                "\n No se puede realizar and entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
+                "\n No se puede realizar la iguldad entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
     }
 }
