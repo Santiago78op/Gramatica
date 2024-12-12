@@ -15,7 +15,7 @@ public class Reports {
     private LinkedList<Errores> erroresSintacticos;
     private LinkedList<Errores> erroresSemanticos;
 
-    public Reports(LinkedList<Token> tokens, LinkedList<Errores> erroresLexicos, LinkedList<Errores> erroresSintacticos) {
+    public Reports(LinkedList<Token> tokens, LinkedList<Errores> erroresLexicos, LinkedList<Errores> erroresSintacticos, LinkedList<Errores> erroresSemanticos) {
         this.tokens = tokens;
         this.erroresLexicos = erroresLexicos;
         this.erroresSintacticos = erroresSintacticos;

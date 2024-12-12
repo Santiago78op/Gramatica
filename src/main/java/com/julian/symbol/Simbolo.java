@@ -5,16 +5,13 @@ public class Simbolo {
     private Tipo tipo;
     private String id;
     private Object valor;
+    private boolean constante = false;
 
-    public Simbolo(Tipo tipo, String id) {
-        this.tipo = tipo;
-        this.id = id;
-    }
-
-    public Simbolo(Tipo tipo, String id, Object valor) {
+    public Simbolo(Tipo tipo, String id, Object valor, boolean constante) {
         this.tipo = tipo;
         this.id = id;
         this.valor = valor;
+        this.constante = constante;
     }
 
     public Tipo getTipo() {
@@ -39,5 +36,13 @@ public class Simbolo {
 
     public void setValor(Object valor) {
         this.valor = valor;
+    }
+
+    public boolean isConstante() {
+        return constante;
+    }
+
+    public void setConstante(boolean constante) {
+        this.constante = constante;
     }
 }

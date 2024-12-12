@@ -3,24 +3,17 @@ package com.julian.LinkedList;
 import com.julian.exception.Errores;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class semanticErrorManager {
 
-    private LinkedList<Errores> erroresSemanticos;
+    private static LinkedList<Errores> erroresSemanticos = new LinkedList<>();
 
-    public semanticErrorManager() {
-        erroresSemanticos = new LinkedList<>();
-    }
-
-    public void addError(Errores error) {
+    public static void addError(Errores error) {
         erroresSemanticos.add(error);
     }
 
-    public LinkedList<Errores> getErroresSemanticos() {
+    public static LinkedList<Errores> getErrors() {
         return erroresSemanticos;
-    }
-
-    public void setErroresSemanticos(LinkedList<Errores> erroresSemanticos) {
-        this.erroresSemanticos = erroresSemanticos;
     }
 }

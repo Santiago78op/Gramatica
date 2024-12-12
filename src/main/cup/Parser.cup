@@ -100,13 +100,13 @@ terminal LPAREN, RPAREN, LBRACE, RBRACE, SEMICOLON, COLON, DOT, ASSIGN;
 */
 
 nonterminal LinkedList<Instruccion> INICIO, INSTRUCCIONES;
-nonterminal Instruccion INSTRUCCION, IMPRESION;
+nonterminal Instruccion INSTRUCCION, IMPRESION, ASIGNACION;
 nonterminal Instruccion EXPRESION;
 nonterminal Instruccion VALOR;
 nonterminal Instruccion VARIABLE;
 nonterminal Instruccion CASTEO;
 nonterminal Instruccion OPERATORIA;
-nonterminal Instruccion TIPO;
+nonterminal Tipo TIPO;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -141,14 +141,15 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
 
 INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
               | VARIABLE:v  SEMICOLON    {: RESULT = v; :}
+              | ASIGNACION:a SEMICOLON   {: RESULT = a; :}
               | error SEMICOLON          {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
 IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
 ;
 
-VARIABLE ::=  LET ID:id COLON TIPO:t ASSIGN EXPRESION:e     {: RESULT = new Print(e, eleft, eright); :}
-            | CONST ID:id COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Print(e, eleft, eright); :}
+VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(false, i, t, tleft, tright, e); :}
+            | CONST ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(true, i, t, tleft, tright, e); :}
 ;
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
@@ -172,6 +173,7 @@ EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft,
             | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
             | CASTEO:c                        {: RESULT = c; :}
             | VALOR:e                         {: RESULT = e; :}
+            | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
 ;
 
 // public Nativo(Object valor, Tipo tipo, int linea, int columna)
@@ -182,10 +184,14 @@ VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(ti
           | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
 ;
 
-TIPO ::= INT:t      {: RESULT = new Nativo(t, new Tipo(tipoDato.ENTERO), tleft, tright); :}
-       | FLOAT:t    {: RESULT = new Nativo(t, new Tipo(tipoDato.DECIMAL), tleft, tright); :}
-       | BOOL:t     {: RESULT = new Nativo(t, new Tipo(tipoDato.BOOLEANO), tleft, tright); :}
-       | CHAR:t     {: RESULT = new Nativo(t, new Tipo(tipoDato.CARACTER), tleft, tright); :}
+ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ileft, eright); :}
+;
+
+TIPO ::= INT:t      {: RESULT = new Tipo(tipoDato.ENTERO); :}
+       | FLOAT:t    {: RESULT = new Tipo(tipoDato.DECIMAL); :}
+       | BOOL:t     {: RESULT = new Tipo(tipoDato.BOOLEANO); :}
+       | CHAR:t     {: RESULT = new Tipo(tipoDato.CARACTER); :}
+       | STRING:t   {: RESULT = new Tipo(tipoDato.CADENA); :}
 ;
 
 CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t, eleft, eright); :}

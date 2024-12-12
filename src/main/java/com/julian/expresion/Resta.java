@@ -133,8 +133,7 @@ public class Resta extends Instruccion {
 
     // Metodo para agregar el error Semantico
     private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
-        semanticErrorManager errorSemantico = new semanticErrorManager();
-        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Resta. " +
+        semanticErrorManager.addError(new Errores("Semantico", "Error de tipos en la operación Resta. " +
                 "\n No se puede realizar la Resta entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
     }
 }

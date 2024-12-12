@@ -14,7 +14,7 @@ import com.julian.symbol.tipoDato;
 public class Casteo extends Instruccion {
 
     private Instruccion expresion;
-    private Instruccion tipoCasteo;
+    private Tipo tipoCasteo;
 
     /**
      * Constructor de la clase Casteo.
@@ -22,7 +22,7 @@ public class Casteo extends Instruccion {
      * @param linea Linea en la que se encuentra el casteo.
      * @param columna Columna en la que se encuentra el casteo.
      */
-    public Casteo(Instruccion expresion, Instruccion tipoCasteo, int linea, int columna) {
+    public Casteo(Instruccion expresion, Tipo tipoCasteo, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.expresion = expresion;
         this.tipoCasteo = tipoCasteo;
@@ -35,9 +35,6 @@ public class Casteo extends Instruccion {
         // Si el valor es un error, se retorna.
         if (valor instanceof Errores) return valor;
 
-        var valorTipo = tipoCasteo.interpretar(arbol, tablaDeSimbolos);
-        // Si el valor es un error, se retorna.
-        if (valorTipo instanceof Errores) return valorTipo;
 
         /**
          * Datos a Castear:
@@ -47,7 +44,7 @@ public class Casteo extends Instruccion {
          * char a int -> cast('a' as int)
          * char a double -> cast('a' as double)
          */
-        switch (tipoCasteo.tipo.getTipo()) {
+        switch (tipoCasteo.getTipo()) {
             case tipoDato.ENTERO -> {
                 switch (expresion.tipo.getTipo()) {
                     case tipoDato.DECIMAL -> {

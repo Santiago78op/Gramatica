@@ -1,6 +1,7 @@
 package com.julian.instruction;
 
 import com.julian.abstracto.Instruccion;
+import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
 import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
@@ -28,7 +29,7 @@ public class Print extends Instruccion {
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         var valor = this.expresion.interpretar(arbol, tablaDeSimbolos);
-        if(valor instanceof Error) return valor;
+        if(valor instanceof Errores) return valor;
         arbol.Print(valor.toString());
         return null;
     }

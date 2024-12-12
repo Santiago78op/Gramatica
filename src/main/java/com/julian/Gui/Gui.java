@@ -234,8 +234,7 @@ public class Gui {
             var tokens = lexer.tokens;
             var erroresLexicos = lexer.errors;
             var erroresSintacticos = p.errors;
-            var erroresSemantico = 0;
-            //var erroresSemantico = getErroresSemanticos();
+            var erroresSemantico =  semanticErrorManager.getErrors();
 
             String reporteToken = null;
             String reporteErroresLexicos = null;
@@ -243,7 +242,7 @@ public class Gui {
             String reporteErroresSemanticos = null;
 
             if (erroresLexicos.size() > 0 || tokens.size() > 0) {
-                Reports reporte = new Reports(tokens, erroresLexicos, erroresSintacticos);
+                Reports reporte = new Reports(tokens, erroresLexicos, erroresSintacticos, erroresSemantico);
                 reporteToken = reporte.getTokens();
                 reporteErroresLexicos = reporte.erroresLexicos();
                 reporteErroresSintacticos = reporte.erroresSintacticos();
