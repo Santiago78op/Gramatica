@@ -31,10 +31,21 @@ public class AccesoVar extends Instruccion {
             return new Errores("Semantico", "La variable " + this.id + " no existe en la tabla de simbolos", this.linea, this.columna);
         }
 
-        // Actulizar el tipo de la variable
-        this.tipo.setTipo(simbolo.getTipo().getTipo());
+        // Validaciones del tipo de varible -> let edad:int = (10 + 10) - 5; o const edad:int = (10 + 10) - 5;
+        if (!simbolo.isConstante()) {
+            // El if valida si lo que entro no es una constante se actualiza el valor.
+            // Actulizar el tipo de la variable
+            this.tipo.setTipo(simbolo.getTipo().getTipo());
 
-        // Se retorna el valor de la variable
-        return simbolo.getValor();
+            // Se retorna el valor de la variable
+            return simbolo.getValor();
+        }else if(simbolo.isConstante()){
+            // El if valida si lo que entro si es contante entonces no se actualiza el valor.
+            return simbolo.getValor();
+        }else {
+            // Indicamos el error.
+            semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.id + " es constante", this.linea, this.columna));
+            return new Errores("Semantico", "La variable " + this.id + " es constante", this.linea, this.columna);
+        }
     }
 }

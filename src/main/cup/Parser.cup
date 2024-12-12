@@ -115,14 +115,14 @@ nonterminal Tipo TIPO;
    Los operadores en las líneas inferiores tienen mayor precedencia
    que los de las líneas superiores.
 */
-precedence right    USUB;
 precedence right    NOT;
 precedence left     AND;
 precedence left     OR;
 precedence left     EQ, NE, LT, LE, GT, GE;
-precedence nonassoc POW, ROOT, MOD;
-precedence left     MUL, DIV;
 precedence left     ADD, SUB;
+precedence left     MUL, DIV;
+precedence nonassoc POW, ROOT, MOD;
+precedence right    USUB;
 
 /* ------------------- Sección de la gramática ------------------------ */
 
@@ -148,29 +148,42 @@ INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
 IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
 ;
 
-VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(false, i, t, tleft, tright, e); :}
-            | CONST ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(true, i, t, tleft, tright, e); :}
+VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(t, tleft, tright, i, e, true); :}
+            | LET   ID:i COLON TIPO:t                      {: RESULT = new Declaracion(t, tleft, tright, i, true); :}
+            | CONST ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(t, tleft, tright, i, e, false); :}
+            | CONST ID:i COLON TIPO:t                      {: RESULT = new Declaracion(t, tleft, tright, i, false); :}
 ;
+
+TIPO ::= INT:t      {: RESULT = new Tipo(tipoDato.ENTERO); :}
+       | FLOAT:t    {: RESULT = new Tipo(tipoDato.DECIMAL); :}
+       | BOOL:t     {: RESULT = new Tipo(tipoDato.BOOLEANO); :}
+       | CHAR:t     {: RESULT = new Tipo(tipoDato.CARACTER); :}
+       | STRING:t   {: RESULT = new Tipo(tipoDato.CADENA); :}
+;
+
+ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ileft, eright); :}
+;
+
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
 EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft, aright); :}%prec USUB // La precedencia se aplicara.
-            | EXPRESION:a ADD  EXPRESION:b    {: RESULT = new Suma(a, b, aleft, aright); :}
-            | EXPRESION:a SUB  EXPRESION:b    {: RESULT = new Resta(a, b, aleft, aright); :}
-            | EXPRESION:a MUL  EXPRESION:b    {: RESULT = new Multiplica(a, b, aleft, aright); :}
-            | EXPRESION:a DIV  EXPRESION:b    {: RESULT = new Divide(a, b, aleft, aright); :}
+            | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
             | EXPRESION:a POW  EXPRESION:b    {: RESULT = new Potencia(a, b, aleft, aright); :}
             | EXPRESION:a ROOT EXPRESION:b    {: RESULT = new Raiz(a, b, aleft, aright); :}
+            | EXPRESION:a MUL  EXPRESION:b    {: RESULT = new Multiplica(a, b, aleft, aright); :}
+            | EXPRESION:a DIV  EXPRESION:b    {: RESULT = new Divide(a, b, aleft, aright); :}
             | EXPRESION:a MOD  EXPRESION:b    {: RESULT = new Modulo(a, b, aleft, aright); :}
+            | EXPRESION:a ADD  EXPRESION:b    {: RESULT = new Suma(a, b, aleft, aright); :}
+            | EXPRESION:a SUB  EXPRESION:b    {: RESULT = new Resta(a, b, aleft, aright); :}
             | EXPRESION:a EQ   EXPRESION:b    {: RESULT = new Igual(a, b, aleft, aright); :}
             | EXPRESION:a NE   EXPRESION:b    {: RESULT = new Diferente(a, b, aleft, aright); :}
             | EXPRESION:a LT   EXPRESION:b    {: RESULT = new Menor(a, b, aleft, aright); :}
             | EXPRESION:a LE   EXPRESION:b    {: RESULT = new MenorIgual(a, b, aleft, aright); :}
             | EXPRESION:a GT   EXPRESION:b    {: RESULT = new Mayor(a, b, aleft, aright); :}
             | EXPRESION:a GE   EXPRESION:b    {: RESULT = new MayorIgual(a, b, aleft, aright); :}
-            | EXPRESION:a OR  EXPRESION:b     {: RESULT = new Or(a, b, aleft, aright); :}
+            | NOT             EXPRESION:e     {: RESULT = new Not(e, eleft, eright); :}
             | EXPRESION:a AND EXPRESION:b     {: RESULT = new And(a, b, aleft, aright); :}
-            | NOT EXPRESION:e                 {: RESULT = new Not(e, eleft, eright); :}
-            | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
+            | EXPRESION:a OR  EXPRESION:b     {: RESULT = new Or(a, b, aleft, aright); :}
             | CASTEO:c                        {: RESULT = c; :}
             | VALOR:e                         {: RESULT = e; :}
             | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
@@ -184,16 +197,5 @@ VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(ti
           | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
 ;
 
-ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ileft, eright); :}
-;
-
-TIPO ::= INT:t      {: RESULT = new Tipo(tipoDato.ENTERO); :}
-       | FLOAT:t    {: RESULT = new Tipo(tipoDato.DECIMAL); :}
-       | BOOL:t     {: RESULT = new Tipo(tipoDato.BOOLEANO); :}
-       | CHAR:t     {: RESULT = new Tipo(tipoDato.CARACTER); :}
-       | STRING:t   {: RESULT = new Tipo(tipoDato.CADENA); :}
-;
-
 CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t, eleft, eright); :}
 ;
-
