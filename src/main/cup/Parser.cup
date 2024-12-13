@@ -103,7 +103,7 @@ nonterminal Instruccion INSTRUCCION, IMPRESION, ASIGNACION;
 nonterminal Instruccion EXPRESION;
 nonterminal Instruccion VALOR;
 nonterminal Instruccion VARIABLE;
-nonterminal Instruccion CONDICIONAL;
+nonterminal Instruccion CONDICION, CONDIF, CONDELSE, CONDELSEIF;
 nonterminal Instruccion CICLOFOR, ACTUALIZFOR;
 nonterminal Instruccion CASTEO;
 nonterminal Tipo TIPO;
@@ -142,7 +142,7 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
 INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
               | VARIABLE:v  SEMICOLON    {: RESULT = v; :}
               | ASIGNACION:a SEMICOLON   {: RESULT = a; :}
-              | CONDICIONAL:c            {: RESULT = c; :}
+              | CONDICION:c              {: RESULT = c; :}
               | CICLOFOR:f               {: RESULT = f; :}
               | error SEMICOLON          {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
@@ -166,14 +166,24 @@ TIPO ::= INT:t      {: RESULT = new Tipo(tipoDato.ENTERO); :}
 ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ileft, eright); :}
 ;
 
+CONDCION ::= CONDIF:c    {: RESULT = c; :}
+           | CONDELSE    {: RESULT = c; :}
+           | CONDELSEIF  {: RESULT = c; :}
+;
+
+CONDIF ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new If(e, i, eleft, iright); :}
+;
+
+CONDELSE ::= ELSE LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Else(i, ileft, iright); :}
+;
+
+CONDELSEIF ::= ELSE IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new elseIf(e, i, eleft, iright); :}
+;
+
 CICLOFOR ::= FOR LPAREN ASIGNACION:a SEMICOLON EXPRESION:e SEMICOLON ACTUALIZFOR:u RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new For(a, e, u, i, aleft, iright); :}
 ;
 
 ACTUALIZFOR ::= ASIGNACION:a {: RESULT = a; :}
-;
-
-CONDICIONAL ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new If(e, i, eleft, eright); :}
-              | IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE ELSE LBRACE INSTRUCCIONES:j RBRACE {: RESULT = new If(e, i, j, eleft, eright); :}
 ;
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)

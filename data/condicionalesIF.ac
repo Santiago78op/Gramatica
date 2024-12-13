@@ -1,0 +1,11 @@
+let edad:int = 11;
+
+if(edad > 18){
+	console.log("Eres mayor de edad");
+} else if ( edad = 18){
+	console.log("felisidades ahora eres mayor de edad");
+} else if ( edad < 10){
+	console.log("Eres un niño");
+} else {
+	console.log("Eres menor de edad");
+}

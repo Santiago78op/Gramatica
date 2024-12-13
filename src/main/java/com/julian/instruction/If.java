@@ -32,19 +32,11 @@ public class If extends Instruccion {
 
     private Instruccion condicion;
     private LinkedList<Instruccion> instruccionesIf;
-    private LinkedList<Instruccion> instruccionesElse;
 
     public If(Instruccion condicion, LinkedList<Instruccion> instruccionesIf, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.condicion = condicion;
         this.instruccionesIf = instruccionesIf;
-    }
-
-    public If(Instruccion condicion, LinkedList<Instruccion> instruccionesIf, LinkedList<Instruccion> instruccionesElse, int linea, int columna) {
-        super(new Tipo(tipoDato.VOID), linea, columna);
-        this.condicion = condicion;
-        this.instruccionesIf = instruccionesIf;
-        this.instruccionesElse = instruccionesElse;
     }
 
     @Override
@@ -71,14 +63,6 @@ public class If extends Instruccion {
                 var result = instruccion.interpretar(arbol, nuevaTabla);
                 if(result instanceof Errores){
                     return result;
-                }
-            }
-        } else {
-            // Si la condicion es falsa se ejecutan las instrucciones del else
-            for (Instruccion instruccion : instruccionesElse) {
-                var result = instruccion.interpretar(arbol, nuevaTabla);
-                if(result instanceof Errores){
-                    arbol.addError((Errores) result);
                 }
             }
         }
