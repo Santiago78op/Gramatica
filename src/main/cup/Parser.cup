@@ -105,6 +105,7 @@ nonterminal Instruccion EXPRESION;
 nonterminal Instruccion VALOR;
 nonterminal Instruccion VARIABLE;
 nonterminal Instruccion CONDICIONAL;
+nonterminal Instruccion CICLOFOR, ACTUALIZFOR;
 nonterminal Instruccion CASTEO;
 nonterminal Instruccion OPERATORIA;
 nonterminal Tipo TIPO;
@@ -144,6 +145,7 @@ INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
               | VARIABLE:v  SEMICOLON    {: RESULT = v; :}
               | ASIGNACION:a SEMICOLON   {: RESULT = a; :}
               | CONDICIONAL:c            {: RESULT = c; :}
+              | CICLOFOR:f               {: RESULT = f; :}
               | error SEMICOLON          {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
@@ -204,4 +206,10 @@ CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t,
 
 CONDICIONAL ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new If(e, i, eleft, eright); :}
               | IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE ELSE LBRACE INSTRUCCIONES:j RBRACE {: RESULT = new If(e, i, j, eleft, eright); :}
+;
+
+CICLOFOR ::= FOR LPAREN ASIGNACION:a SEMICOLON EXPRESION:e SEMICOLON ACTUALIZFOR:u RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new For(a, e, u, i, aleft, iright); :}
+;
+
+ACTUALIZFOR ::= ASIGNACION:a {: RESULT = a; :}
 ;
