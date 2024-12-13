@@ -53,6 +53,10 @@ public class tablaSimbolo {
         this.nombre = nombre;
     }
 
+    public tablaSimbolo getTablaSimboloAnterior() {
+        return tablaSimboloAnterior;
+    }
+
     public boolean setVariable(Simbolo simbolo){
         // Verificar si la variable ya existe en la tabla de simbolos.
         Simbolo busqueda = this.tablaActual.get(simbolo.getId().toLowerCase());
@@ -68,9 +72,11 @@ public class tablaSimbolo {
     }
 
     public Simbolo getVariable(String id){
-        Simbolo busqueda = this.tablaActual.get(id.toLowerCase());
-        if (busqueda != null) {
-            return busqueda;
+        for(tablaSimbolo i = this; i != null; i = i.getTablaSimboloAnterior()){
+            Simbolo busqueda = i.tablaActual.get(id.toLowerCase());
+            if (busqueda != null) {
+                return busqueda;
+            }
         }
         return null;
     }

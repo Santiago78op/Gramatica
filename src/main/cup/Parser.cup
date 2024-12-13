@@ -104,6 +104,7 @@ nonterminal Instruccion INSTRUCCION, IMPRESION, ASIGNACION;
 nonterminal Instruccion EXPRESION;
 nonterminal Instruccion VALOR;
 nonterminal Instruccion VARIABLE;
+nonterminal Instruccion CONDICIONAL;
 nonterminal Instruccion CASTEO;
 nonterminal Instruccion OPERATORIA;
 nonterminal Tipo TIPO;
@@ -115,13 +116,13 @@ nonterminal Tipo TIPO;
    Los operadores en las líneas inferiores tienen mayor precedencia
    que los de las líneas superiores.
 */
-precedence right    NOT;
-precedence left     AND;
 precedence left     OR;
+precedence left     AND;
+precedence right    NOT;
 precedence left     EQ, NE, LT, LE, GT, GE;
 precedence left     ADD, SUB;
-precedence left     MUL, DIV;
-precedence nonassoc POW, ROOT, MOD;
+precedence left     MUL, DIV, MOD;
+precedence nonassoc POW, ROOT;
 precedence right    USUB;
 
 /* ------------------- Sección de la gramática ------------------------ */
@@ -142,6 +143,7 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
 INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
               | VARIABLE:v  SEMICOLON    {: RESULT = v; :}
               | ASIGNACION:a SEMICOLON   {: RESULT = a; :}
+              | CONDICIONAL:c            {: RESULT = c; :}
               | error SEMICOLON          {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
@@ -166,24 +168,24 @@ ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ile
 
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
-EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft, aright); :}%prec USUB // La precedencia se aplicara.
+EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft, aright); :}     %prec USUB // La precedencia se aplicara.
+            | EXPRESION:a POW  EXPRESION:b    {: RESULT = new Potencia(a, b, aleft, aright); :}  %prec POW
+            | EXPRESION:a ROOT EXPRESION:b    {: RESULT = new Raiz(a, b, aleft, aright); :}      %prec ROOT
+            | EXPRESION:a MUL  EXPRESION:b    {: RESULT = new Multiplica(a, b, aleft, aright); :}%prec MUL
+            | EXPRESION:a DIV  EXPRESION:b    {: RESULT = new Divide(a, b, aleft, aright); :}    %prec DIV
+            | EXPRESION:a MOD  EXPRESION:b    {: RESULT = new Modulo(a, b, aleft, aright); :}    %prec MOD
+            | EXPRESION:a ADD  EXPRESION:b    {: RESULT = new Suma(a, b, aleft, aright); :}      %prec ADD
+            | EXPRESION:a SUB  EXPRESION:b    {: RESULT = new Resta(a, b, aleft, aright); :}     %prec SUB
+            | EXPRESION:a EQ   EXPRESION:b    {: RESULT = new Igual(a, b, aleft, aright); :}     %prec EQ
+            | EXPRESION:a NE   EXPRESION:b    {: RESULT = new Diferente(a, b, aleft, aright); :} %prec NE
+            | EXPRESION:a LT   EXPRESION:b    {: RESULT = new Menor(a, b, aleft, aright); :}     %prec LT
+            | EXPRESION:a LE   EXPRESION:b    {: RESULT = new MenorIgual(a, b, aleft, aright); :}%prec LE
+            | EXPRESION:a GT   EXPRESION:b    {: RESULT = new Mayor(a, b, aleft, aright); :}     %prec GT
+            | EXPRESION:a GE   EXPRESION:b    {: RESULT = new MayorIgual(a, b, aleft, aright); :}%prec GE
+            | NOT             EXPRESION:e     {: RESULT = new Not(e, eleft, eright); :}          %prec NOT
+            | EXPRESION:a AND EXPRESION:b     {: RESULT = new And(a, b, aleft, aright); :}       %prec AND
+            | EXPRESION:a OR  EXPRESION:b     {: RESULT = new Or(a, b, aleft, aright); :}        %prec OR
             | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
-            | EXPRESION:a POW  EXPRESION:b    {: RESULT = new Potencia(a, b, aleft, aright); :}
-            | EXPRESION:a ROOT EXPRESION:b    {: RESULT = new Raiz(a, b, aleft, aright); :}
-            | EXPRESION:a MUL  EXPRESION:b    {: RESULT = new Multiplica(a, b, aleft, aright); :}
-            | EXPRESION:a DIV  EXPRESION:b    {: RESULT = new Divide(a, b, aleft, aright); :}
-            | EXPRESION:a MOD  EXPRESION:b    {: RESULT = new Modulo(a, b, aleft, aright); :}
-            | EXPRESION:a ADD  EXPRESION:b    {: RESULT = new Suma(a, b, aleft, aright); :}
-            | EXPRESION:a SUB  EXPRESION:b    {: RESULT = new Resta(a, b, aleft, aright); :}
-            | EXPRESION:a EQ   EXPRESION:b    {: RESULT = new Igual(a, b, aleft, aright); :}
-            | EXPRESION:a NE   EXPRESION:b    {: RESULT = new Diferente(a, b, aleft, aright); :}
-            | EXPRESION:a LT   EXPRESION:b    {: RESULT = new Menor(a, b, aleft, aright); :}
-            | EXPRESION:a LE   EXPRESION:b    {: RESULT = new MenorIgual(a, b, aleft, aright); :}
-            | EXPRESION:a GT   EXPRESION:b    {: RESULT = new Mayor(a, b, aleft, aright); :}
-            | EXPRESION:a GE   EXPRESION:b    {: RESULT = new MayorIgual(a, b, aleft, aright); :}
-            | NOT             EXPRESION:e     {: RESULT = new Not(e, eleft, eright); :}
-            | EXPRESION:a AND EXPRESION:b     {: RESULT = new And(a, b, aleft, aright); :}
-            | EXPRESION:a OR  EXPRESION:b     {: RESULT = new Or(a, b, aleft, aright); :}
             | CASTEO:c                        {: RESULT = c; :}
             | VALOR:e                         {: RESULT = e; :}
             | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
@@ -198,4 +200,8 @@ VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(ti
 ;
 
 CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t, eleft, eright); :}
+;
+
+CONDICIONAL ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new If(e, i, eleft, eright); :}
+              | IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE ELSE LBRACE INSTRUCCIONES:j RBRACE {: RESULT = new If(e, i, j, eleft, eright); :}
 ;

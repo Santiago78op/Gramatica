@@ -137,7 +137,7 @@ public class Declaracion extends Instruccion {
             // 2. Se debe validar si la variable ya existe en la tabla de simbolos.
             Simbolo busqueda = tablaDeSimbolos.getVariable(this.id);
             // 3. Si la variable ya existe, se retorna un error.
-            if (busqueda != null) {
+            if (busqueda == null) {
                 semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna));
                 return new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna);
             }
@@ -175,7 +175,7 @@ public class Declaracion extends Instruccion {
                 this.valueExpresion = '\u0000';
                 break;
             case BOOLEANO:
-                this.valueExpresion = false;
+                this.valueExpresion = true;
                 break;
         }
     }

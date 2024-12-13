@@ -37,4 +37,8 @@ public class Arbol {
     public void Print(String valor) {
         this.consola += valor + "\n";
     }
+
+    public void addError(Errores error){
+        this.errores.add(error);
+    }
 }
