@@ -231,7 +231,6 @@ print  = "print"
 <YYINITIAL> { consol } { addToken("CONSOLE",  yytext()); return new Symbol(sym.CONSOLE, yyline, yycolumn, yytext()); }
 <YYINITIAL> { log }    { addToken("LOG",      yytext()); return new Symbol(sym.LOG, yyline, yycolumn, yytext()); }
 <YYINITIAL> { conti }  { addToken("CONTINUE", yytext()); return new Symbol(sym.CONTINUE, yyline, yycolumn, yytext()); }
-<YYINITIAL> { print }  { addToken("PRINT",    yytext()); return new Symbol(sym.PRINT, yyline, yycolumn, yytext()); }
 
 <YYINITIAL>{
     /* number y boolean */

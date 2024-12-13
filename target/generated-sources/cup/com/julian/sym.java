@@ -8,60 +8,59 @@ package com.julian;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int CAST = 14;
-  public static final int POW = 33;
-  public static final int CONST = 16;
-  public static final int CHAR = 12;
-  public static final int GE = 42;
+  public static final int CAST = 13;
+  public static final int POW = 32;
+  public static final int CONST = 15;
+  public static final int CHAR = 11;
+  public static final int GE = 41;
   public static final int ENTERO = 3;
-  public static final int LPAREN = 46;
-  public static final int CONTINUE = 26;
-  public static final int INT = 9;
-  public static final int FOR = 24;
-  public static final int MATCH = 20;
-  public static final int RPAREN = 47;
-  public static final int SEMICOLON = 50;
-  public static final int NOT = 45;
-  public static final int AND = 44;
-  public static final int LT = 39;
+  public static final int LPAREN = 45;
+  public static final int CONTINUE = 25;
+  public static final int INT = 8;
+  public static final int FOR = 23;
+  public static final int MATCH = 19;
+  public static final int RPAREN = 46;
+  public static final int SEMICOLON = 49;
+  public static final int NOT = 44;
+  public static final int AND = 43;
+  public static final int LT = 38;
   public static final int CARACTER = 7;
-  public static final int OR = 43;
-  public static final int BOOL = 11;
-  public static final int DIV = 32;
-  public static final int ASSIGN = 53;
-  public static final int IF = 18;
-  public static final int DOT = 52;
+  public static final int OR = 42;
+  public static final int BOOL = 10;
+  public static final int DIV = 31;
+  public static final int ASSIGN = 52;
+  public static final int IF = 17;
+  public static final int DOT = 51;
   public static final int ID = 2;
-  public static final int LE = 40;
+  public static final int LE = 39;
   public static final int EOF = 0;
   public static final int DECIMAL = 4;
   public static final int error = 1;
-  public static final int MUL = 31;
+  public static final int MUL = 30;
   public static final int CADENA = 6;
-  public static final int ADD = 29;
-  public static final int MOD = 35;
-  public static final int BREAK = 25;
-  public static final int EQ = 37;
-  public static final int LOG = 28;
-  public static final int COLON = 51;
-  public static final int LBRACE = 48;
-  public static final int ELSE = 19;
-  public static final int WHILE = 23;
-  public static final int DEFAULT = 21;
-  public static final int LET = 15;
-  public static final int FLOAT = 10;
-  public static final int RBRACE = 49;
-  public static final int NE = 38;
-  public static final int USUB = 36;
+  public static final int ADD = 28;
+  public static final int MOD = 34;
+  public static final int BREAK = 24;
+  public static final int EQ = 36;
+  public static final int LOG = 27;
+  public static final int COLON = 50;
+  public static final int LBRACE = 47;
+  public static final int ELSE = 18;
+  public static final int WHILE = 22;
+  public static final int DEFAULT = 20;
+  public static final int LET = 14;
+  public static final int FLOAT = 9;
+  public static final int RBRACE = 48;
+  public static final int NE = 37;
+  public static final int USUB = 35;
   public static final int BOOLEANO = 5;
-  public static final int ROOT = 34;
-  public static final int STRING = 13;
-  public static final int AS = 17;
-  public static final int GT = 41;
-  public static final int SUB = 30;
-  public static final int PRINT = 8;
-  public static final int DO = 22;
-  public static final int CONSOLE = 27;
+  public static final int ROOT = 33;
+  public static final int STRING = 12;
+  public static final int AS = 16;
+  public static final int GT = 40;
+  public static final int SUB = 29;
+  public static final int DO = 21;
+  public static final int CONSOLE = 26;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -71,7 +70,6 @@ public interface sym {
   "BOOLEANO",
   "CADENA",
   "CARACTER",
-  "PRINT",
   "INT",
   "FLOAT",
   "BOOL",

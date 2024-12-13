@@ -25,7 +25,6 @@ public class For extends Instruccion {
 
     /**
      * Constructor de la instruccion For.
-     * @param tipo Tipo de dato de la instruccion.
      * @param linea Linea en la que se encuentra la instruccion.
      * @param columna Columna en la que se encuentra la instruccion.
      * @param asignacion Instruccion de asignacion.

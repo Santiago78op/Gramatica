@@ -65,8 +65,7 @@ public class Resta extends Instruccion {
                         return (int)valorIzq - charValue;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la resta, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -86,8 +85,7 @@ public class Resta extends Instruccion {
                         return (double)valorIzq - charValue;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la resta, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -104,14 +102,12 @@ public class Resta extends Instruccion {
                         return charValue - (double)valorDer;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la resta, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
             default -> {
-                addSemanticError(tipoIzq, tipoDer, linea, columna);
-                return new Errores("Semantico", "Error en la resta, tipo de dato no valido", this.linea, this.columna);
+                return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
             }
         }
     }
@@ -132,8 +128,10 @@ public class Resta extends Instruccion {
     }
 
     // Metodo para agregar el error Semantico
-    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
-        semanticErrorManager.addError(new Errores("Semantico", "Error de tipos en la operación Resta. " +
-                "\n No se puede realizar la Resta entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
+    private Errores addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        Errores error = new Errores("Semantico", "Error de tipos en la operación Resta. " +
+                "\n No se puede realizar la Resta entre\n" + tipoIzq + " y " + tipoDer, linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

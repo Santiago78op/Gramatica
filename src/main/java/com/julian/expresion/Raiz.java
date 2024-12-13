@@ -58,8 +58,7 @@ public class Raiz extends Instruccion {
                         return Math.pow((int)valorIzq, 1/(double)valorDer);
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la raiz, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -74,22 +73,21 @@ public class Raiz extends Instruccion {
                         return Math.pow((double)valorIzq, 1/(double)valorDer);
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la raiz, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
             default -> {
-                addSemanticError(tipoIzq, tipoDer, linea, columna);
-                return new Errores("Semantico", "Error en la raiz, tipo de dato no valido", this.linea, this.columna);
+                return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
             }
         }
     }
 
     // Metodo para agregar el error Semantico
-    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
-        semanticErrorManager errorSemantico = new semanticErrorManager();
-        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Raiz. " +
-                "\n No se puede realizar la Raiz entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
+    private Errores addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        Errores error = new Errores("Semantico", "Error de tipos en la operación Raiz. " +
+                "\n No se puede realizar la Raiz entre\n" + tipoIzq + " y " + tipoDer, linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

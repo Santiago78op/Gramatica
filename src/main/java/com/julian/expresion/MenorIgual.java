@@ -63,8 +63,7 @@ public class MenorIgual extends Instruccion {
                         return (int) valorIzq <= charValue;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -84,8 +83,7 @@ public class MenorIgual extends Instruccion {
                         return (double) valorIzq <= charValue;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -96,8 +94,7 @@ public class MenorIgual extends Instruccion {
                         return ((boolean) valorIzq ? 1 : 0) <= ((boolean) valorDer ? 1 : 0);
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -120,8 +117,7 @@ public class MenorIgual extends Instruccion {
                         return charValueIzq <= charValueDer;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -132,14 +128,12 @@ public class MenorIgual extends Instruccion {
                         return valorIzq.toString().compareToIgnoreCase(valorDer.toString()) <= 0;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
             default -> {
-                addSemanticError(tipoIzq, tipoDer, linea, columna);
-                return new Errores("Semantico", "Error de tipos en la operación menor.", linea, columna);
+                return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
             }
         }
     }
@@ -160,9 +154,10 @@ public class MenorIgual extends Instruccion {
     }
 
     // Metodo para agregar el error Semantico
-    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
-        semanticErrorManager errorSemantico = new semanticErrorManager();
-        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Menor o Igual. " +
-                "\n No se puede realizar Menor o Igual entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
+    private Errores addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        Errores error = new Errores("Semantico", "Error de tipos en la operación Menor o Igual. " +
+                "\n No se puede realizar Menor o Igual entre\n" + tipoIzq + " y " + tipoDer, linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

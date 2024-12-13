@@ -1,7 +1,0 @@
-OPERA: op2 -> ^ U & ^{pares} ^{pares} &  ^{naturales}  ^{naturales} ;
-
-     # ^((^ pares & ^ pares )  U (^ naturales & ^ naturales ) )
-     # ^(^ (pares U pares )  U ^( naturales U  naturales ) )
-     # ^(^ ( pares )  U ^( naturales ) )
-     # ^^( ( pares )  & (   naturales ) )
-     #  pares   &    naturales

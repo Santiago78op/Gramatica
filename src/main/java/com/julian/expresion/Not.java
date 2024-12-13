@@ -30,16 +30,16 @@ public class Not extends Instruccion {
                 return !(boolean)valor;
             }
             default -> {
-                addSemanticError(tipo, linea, columna);
-                return new Errores("Semantico", "Error de tipos en la operación not.", linea, columna);
+                return addSemanticError(tipo, this.linea, this.columna);
             }
         }
     }
 
     // Metodo para agregar el error Semantico
-    private void addSemanticError(tipoDato tipo, int linea, int columna) {
-        semanticErrorManager errorSemantico = new semanticErrorManager();
-        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Not. " +
-                "\n No se puede realizar Not en\n" + tipo, linea, columna));
+    private Errores addSemanticError(tipoDato tipo, int linea, int columna) {
+        Errores error = new Errores("Semantico", "Error de tipos en la operación Not. " +
+                "\n No se puede realizar Not en\n" + tipo, linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

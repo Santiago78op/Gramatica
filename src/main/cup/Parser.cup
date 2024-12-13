@@ -78,7 +78,6 @@ terminal String  ID;
 terminal String  ENTERO, DECIMAL, BOOLEANO, CADENA, CARACTER;
 
 // Terminales que no tienen un valor son listados primero.
-terminal PRINT;
 terminal String INT, FLOAT, BOOL, CHAR, STRING;
 terminal CAST, LET, CONST, AS;
 terminal IF, ELSE, MATCH, DEFAULT;
@@ -107,7 +106,6 @@ nonterminal Instruccion VARIABLE;
 nonterminal Instruccion CONDICIONAL;
 nonterminal Instruccion CICLOFOR, ACTUALIZFOR;
 nonterminal Instruccion CASTEO;
-nonterminal Instruccion OPERATORIA;
 nonterminal Tipo TIPO;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
@@ -149,7 +147,7 @@ INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
               | error SEMICOLON          {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
-IMPRESION ::= PRINT LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
+IMPRESION ::= CONSOLE DOT LOG LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
 ;
 
 VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(t, tleft, tright, i, e, true); :}
@@ -168,6 +166,15 @@ TIPO ::= INT:t      {: RESULT = new Tipo(tipoDato.ENTERO); :}
 ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ileft, eright); :}
 ;
 
+CICLOFOR ::= FOR LPAREN ASIGNACION:a SEMICOLON EXPRESION:e SEMICOLON ACTUALIZFOR:u RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new For(a, e, u, i, aleft, iright); :}
+;
+
+ACTUALIZFOR ::= ASIGNACION:a {: RESULT = a; :}
+;
+
+CONDICIONAL ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new If(e, i, eleft, eright); :}
+              | IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE ELSE LBRACE INSTRUCCIONES:j RBRACE {: RESULT = new If(e, i, j, eleft, eright); :}
+;
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
 EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft, aright); :}     %prec USUB // La precedencia se aplicara.
@@ -202,14 +209,4 @@ VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(ti
 ;
 
 CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t, eleft, eright); :}
-;
-
-CONDICIONAL ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new If(e, i, eleft, eright); :}
-              | IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE ELSE LBRACE INSTRUCCIONES:j RBRACE {: RESULT = new If(e, i, j, eleft, eright); :}
-;
-
-CICLOFOR ::= FOR LPAREN ASIGNACION:a SEMICOLON EXPRESION:e SEMICOLON ACTUALIZFOR:u RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new For(a, e, u, i, aleft, iright); :}
-;
-
-ACTUALIZFOR ::= ASIGNACION:a {: RESULT = a; :}
 ;

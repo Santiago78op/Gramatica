@@ -37,7 +37,7 @@
                         </Label>
                     </children>
                 </Pane>
-                <Button fx:id="buttonFile" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonFile" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="File" textFill="WHITE">
+                <Button fx:id="buttonFile" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonOpenFile" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="File" textFill="WHITE">
                     <padding>
                         <Insets left="50.0" />
                     </padding>
@@ -52,7 +52,7 @@
                         <Font size="14.0" />
                     </font>
                 </Button>
-                <Button fx:id="buttonExecute" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickExecution" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Execute" textFill="WHITE">
+                <Button fx:id="buttonExecute" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonCompilar" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Execute" textFill="WHITE">
                     <padding>
                         <Insets left="50.0" />
                     </padding>
@@ -67,7 +67,7 @@
                         <Font size="14.0" />
                     </font>
                 </Button>
-                <Button fx:id="buttonReports" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#openReportes" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Reports" textFill="WHITE">
+                <Button fx:id="buttonReports" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonReportes" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Reports" textFill="WHITE">
                     <padding>
                         <Insets left="50.0" />
                     </padding>
@@ -82,7 +82,7 @@
                         <Font size="14.0" />
                     </font>
                 </Button>
-                <Button fx:id="buttonNewFile" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonCreateNewFile" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="New File" textFill="WHITE">
+                <Button fx:id="buttonNewFile" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonNewFile" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="New File" textFill="WHITE">
                     <padding>
                         <Insets left="50.0" />
                     </padding>
@@ -97,7 +97,7 @@
                         <Font size="14.0" />
                     </font>
                 </Button>
-                <Button fx:id="buttonSaveAs" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonsaveAsFile" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Save As" textFill="WHITE">
+                <Button fx:id="buttonSaveAs" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#onClickButtonSaveAsFile" prefHeight="82.0" prefWidth="283.0" stylesheets="@assets/css/fullpackstyle.css" text="Save As" textFill="WHITE">
                     <padding>
                         <Insets left="50.0" />
                     </padding>

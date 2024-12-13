@@ -19,12 +19,13 @@ public class And extends Instruccion {
 
     /**
      * Constructor de la clase And.
-     *  -> tipo Tipo de dato de la expresión.
-     * @param linea Linea en la que se encuentra la expresión.
+     * -> tipo Tipo de dato de la expresión.
+     *
+     * @param linea   Linea en la que se encuentra la expresión.
      * @param columna Columna en la que se encuentra la expresión.
      * @param operIzq Operando izquierdo de la expresión.
      * @param operDer Operando derecho de la expresión.
-     * */
+     */
     public And(Instruccion operIzq, Instruccion operDer, int linea, int columna) {
         super(new Tipo(tipoDato.BOOLEANO), linea, columna);
         this.operIzq = operIzq;
@@ -54,21 +55,22 @@ public class And extends Instruccion {
                         return (boolean) valorIzq && (boolean) valorDer;
                     }
                     default -> {
-                        semanticErrorManager errorSemantico = new semanticErrorManager();
-                        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación and. \n No se puede realizar and entre\n" +
-                                "BOOLEANO y " + tipoDer, linea, columna));
-                        return new Errores("Semantico", "Error de tipos en la operación and. \n No se puede realizar and entre\n" +
-                                "BOOLEANO y " + tipoDer, linea, columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
             default -> {
-                semanticErrorManager errorSemantico = new semanticErrorManager();
-                errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación and. \n No se puede realizar and entre\n" +
-                        tipoIzq + " y " + tipoDer, linea, columna));
-                return new Errores("Semantico", "Error de tipos en la operación and. \n No se puede realizar and entre\n" +
-                        tipoIzq + " y " + tipoDer, linea, columna);
+                return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
             }
         }
+    }
+
+    // Metodo para agregar el error Semantico
+    private Errores addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        Errores error = new Errores("Semantico",
+                "Error de tipos en la operación And. " + "\n No se puede realizar and entre\n" +
+                tipoIzq + " y " + tipoDer, linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

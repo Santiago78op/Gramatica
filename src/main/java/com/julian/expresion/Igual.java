@@ -60,8 +60,7 @@ public class Igual extends Instruccion {
                         return (int)valorIzq == charValue;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -78,8 +77,7 @@ public class Igual extends Instruccion {
                         return (double)valorIzq == charValue;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -90,8 +88,7 @@ public class Igual extends Instruccion {
                         return (boolean)valorIzq == (boolean)valorDer;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -114,8 +111,7 @@ public class Igual extends Instruccion {
                         return charValueIzq == charValueDer;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -126,14 +122,12 @@ public class Igual extends Instruccion {
                         return valorIzq.toString().equalsIgnoreCase(valorDer.toString());
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la igualdad, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
             default -> {
-                addSemanticError(tipoIzq, tipoDer, linea, columna);
-                return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
+                return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
             }
         }
     }
@@ -154,9 +148,10 @@ public class Igual extends Instruccion {
     }
 
     // Metodo para agregar el error Semantico
-    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
-        semanticErrorManager errorSemantico = new semanticErrorManager();
-        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Igualdad. " +
-                "\n No se puede realizar la iguldad entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
+    private Errores addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        Errores error = new Errores("Semantico", "Error de tipos en la operación Igualdad. " +
+                "\n No se puede realizar la iguldad entre\n" + tipoIzq + " y " + tipoDer, linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

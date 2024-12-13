@@ -49,17 +49,16 @@ public class Negacion extends Instruccion {
                 return -(double) valorOper;
             }
             default -> {
-                addSemanticError(tipoOper, linea, columna);
-                // Se retorna un error si el tipo de dato no es booleano.
-                return new Errores("Semantico", "No se puede negar el tipo de dato " + tipoOper, linea, columna);
+                return addSemanticError(tipoOper, this.linea, this.columna);
             }
         }
     }
 
     // Metodo para agregar el error Semantico
-    private void addSemanticError(tipoDato tipoOper, int linea, int columna) {
-        semanticErrorManager errorSemantico = new semanticErrorManager();
-        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Negacion. " +
-                "\n No se puede realizar la Negacion con\n" + tipoOper, linea, columna));
+    private Errores addSemanticError(tipoDato tipoOper, int linea, int columna) {
+        Errores error = new Errores("Semantico", "Error de tipos en la operación Negacion. " +
+                "\n No se puede realizar la Negacion con\n" + tipoOper, linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

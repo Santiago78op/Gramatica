@@ -16,6 +16,12 @@ public class AccesoVar extends Instruccion {
 
     private String id;
 
+    /**
+     * Constructor de la clase AccesoVar.
+     * @param id Identificador de la variable.
+     * @param linea Linea en la que se encuentra la expresión.
+     * @param columna Columna en la que se encuentra la expresión.
+     */
     public AccesoVar(String id, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.id = id;
@@ -27,8 +33,7 @@ public class AccesoVar extends Instruccion {
         var simbolo = tablaDeSimbolos.getVariable(this.id);
         // Si la variable no existe, se retorna un error
         if (simbolo == null) {
-            semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.id + " no existe en la tabla de simbolos", this.linea, this.columna));
-            return new Errores("Semantico", "La variable " + this.id + " no existe en la tabla de simbolos", this.linea, this.columna);
+            return addSemanticError(this.id, this.linea,  this.columna);
         }
 
         // Validaciones del tipo de varible -> let edad:int = (10 + 10) - 5; o const edad:int = (10 + 10) - 5;
@@ -43,9 +48,15 @@ public class AccesoVar extends Instruccion {
             // El if valida si lo que entro si es contante entonces no se actualiza el valor.
             return simbolo.getValor();
         }else {
-            // Indicamos el error.
-            semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.id + " es constante", this.linea, this.columna));
-            return new Errores("Semantico", "La variable " + this.id + " es constante", this.linea, this.columna);
+            return addSemanticError(this.id, this.linea,  this.columna);
         }
+    }
+
+    // Metodo para agregar el error Semantico
+    private Errores addSemanticError(String id, int linea, int columna) {
+        Errores error = new Errores("Semantico",
+                "La variable " + id + " es constante", linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

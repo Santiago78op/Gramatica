@@ -57,8 +57,7 @@ public class Modulo extends Instruccion {
                         return (int)valorIzq % (double)valorDer;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -73,22 +72,21 @@ public class Modulo extends Instruccion {
                         return (double)valorIzq % (double)valorDer;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
             default -> {
-                addSemanticError(tipoIzq, tipoDer, linea, columna);
-                return new Errores("Semantico", "Error en el modulo, tipo de dato no valido", this.linea, this.columna);
+                return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
             }
         }
     }
 
     // Metodo para agregar el error Semantico
-    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
-        semanticErrorManager errorSemantico = new semanticErrorManager();
-        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Modulo. " +
-                "\n No se puede realizar Modulo entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
+    private Errores addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        Errores error = new Errores("Semantico", "Error de tipos en la operación Modulo. " +
+                "\n No se puede realizar Modulo entre\n" + tipoIzq + " y " + tipoDer, linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

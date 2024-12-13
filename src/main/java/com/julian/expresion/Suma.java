@@ -75,8 +75,7 @@ public class Suma extends Instruccion {
                         return valorIzq.toString() + valorDer.toString();
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la suma, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -108,8 +107,7 @@ public class Suma extends Instruccion {
                         return valorIzq.toString() + valorDer.toString();
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la suma, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -145,8 +143,7 @@ public class Suma extends Instruccion {
                         return cadenaBol + "\n" + cadenaBin;
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la suma, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -171,8 +168,7 @@ public class Suma extends Instruccion {
                         return valorIzq.toString() + valorDer.toString();
                     }
                     default -> {
-                        addSemanticError(tipoIzq, tipoDer, linea, columna);
-                        return new Errores("Semantico", "Error en la suma, tipo de dato no valido", this.linea, this.columna);
+                        return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
                     }
                 }
             }
@@ -181,8 +177,7 @@ public class Suma extends Instruccion {
                 return valorIzq.toString() + valorDer.toString();
             }
             default -> {
-                addSemanticError(tipoIzq, tipoDer, linea, columna);
-                return new Errores("Semantico", "Error en la suma, tipo de dato no valido", this.linea, this.columna);
+                return addSemanticError(tipoIzq, tipoDer, this.linea, this.columna);
             }
         }
     }
@@ -203,9 +198,10 @@ public class Suma extends Instruccion {
     }
 
     // Metodo para agregar el error Semantico
-    private void addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
-        semanticErrorManager errorSemantico = new semanticErrorManager();
-        errorSemantico.addError(new Errores("Semantico", "Error de tipos en la operación Suma. " +
-                "\n No se puede realizar la Suma entre\n" + tipoIzq + " y " + tipoDer, linea, columna));
+    private Errores addSemanticError(tipoDato tipoIzq, tipoDato tipoDer, int linea, int columna) {
+        Errores error = new Errores("Semantico", "Error de tipos en la operación Suma. " +
+                "\n No se puede realizar la Suma entre\n" + tipoIzq + " y " + tipoDer, linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }
