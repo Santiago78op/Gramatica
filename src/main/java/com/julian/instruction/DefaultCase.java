@@ -1,6 +1,7 @@
 package com.julian.instruction;
 
 import com.julian.abstracto.Instruccion;
+import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
 import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
@@ -38,7 +39,7 @@ public class DefaultCase extends Instruccion {
         for (Instruccion instruccion : this.instrucciones) {
             var result = instruccion.interpretar(arbol, nuevaTabla);
             if (result != null) {
-                return result;
+                arbol.addError((Errores) result);
             }
         }
         return null;

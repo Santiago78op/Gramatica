@@ -45,7 +45,7 @@ public class While extends Instruccion {
             for (Instruccion instruccion : this.instrucciones) {
                 var result = instruccion.interpretar(arbol, nuevaTabla);
                 if (result instanceof Errores) {
-                    return result;
+                    arbol.addError((Errores) result);
                 }
                 // Se evalua la condicion del while, por si cambia en el transcurso de las instrucciones
                 condicion = this.condicion.interpretar(arbol, tablaDeSimbolos);

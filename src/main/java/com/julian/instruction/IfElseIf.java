@@ -46,7 +46,7 @@ public class IfElseIf extends Instruccion {
             for (Instruccion instruccion : this.instruccionsIf) {
                 var result = instruccion.interpretar(arbol, nuevaTabla);
                 if (result instanceof Errores) {
-                    return result;
+                    arbol.addError((Errores) result);
                 }
             }
         } else {

@@ -106,7 +106,10 @@ nonterminal Instruccion EXPRESION;
 nonterminal Instruccion VALOR;
 nonterminal Instruccion VARIABLE;
 nonterminal Instruccion CONDICION, CONDIF, CONDELSE, CONDELSEIF;
-nonterminal Instruccion SELECCION, CASELIST, CASE, DEFAULTCASE;
+nonterminal Instruccion SELECCION;
+nonterminal LinkedList<Case> CASELIST;
+nonterminal Case CASE;
+nonterminal DefaultCase DEFAULTCASE;
 nonterminal Instruccion CICLOFOR, ACTUALIZFOR;
 nonterminal Instruccion CICLOWHILE, CICLODO;
 nonterminal Instruccion CASTEO;
@@ -164,9 +167,9 @@ VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Decla
 ;
 
 TIPO ::= INT:t      {: RESULT = new Tipo(tipoDato.ENTERO); :}
-       | FLOAT:t    {: RESULT = new Tipo(tipoDato.DECIMAL); :}
-       | BOOL:t     {: RESULT = new Tipo(tipoDato.BOOLEANO); :}
-       | CHAR:t     {: RESULT = new Tipo(tipoDato.CARACTER); :}
+       | FLOAT:t     {: RESULT = new Tipo(tipoDato.DECIMAL); :}
+       | BOOL:t      {: RESULT = new Tipo(tipoDato.BOOLEANO); :}
+       | CHAR:t      {: RESULT = new Tipo(tipoDato.CARACTER); :}
        | STRING:t   {: RESULT = new Tipo(tipoDato.CADENA); :}
 ;
 
@@ -196,19 +199,19 @@ ACTUALIZFOR ::= ASIGNACION:a {: RESULT = a; :}
 ;
 
 
-SELECCION ::= MATCH LPAREN EXPRESION:e RPAREN LBRACE CASELIST:c DEFAULTCASE:d RBRACE {: RESULT = new Match(e, c, d, eleft, eright); :}
-            | MATCH LPAREN EXPRESION:e RPAREN LBRACE CASELIST:c RBRACE               {: RESULT = new Match(e, c, eleft, eright); :}
-            | MATCH LPAREN EXPRESION:e RPAREN LBRACE DEFAULTCASE:d RBRACE            {: RESULT = new Match(e, d, eleft, eright); :}
+SELECCION ::= MATCH  EXPRESION:e  LBRACE CASELIST:c DEFAULTCASE:d RBRACE {: RESULT = new Switch(e, c, d, eleft, eright); :}
+            | MATCH  EXPRESION:e  LBRACE CASELIST:c RBRACE               {: RESULT = new Switch(e, c, eleft, eright); :}
+            | MATCH  EXPRESION:e  LBRACE DEFAULTCASE:d RBRACE            {: RESULT = new Switch(e, d, eleft, eright); :}
 ;
 
-CASELIST ::= CASELIST CASE {: RESULT = a; RESULT.add(b); :}
-           | CASE          {: RESULT = new LinkedList<Instruccion>(); RESULT.add(a); :}
+CASELIST ::= CASELIST:a CASE:b {: RESULT = a; RESULT.add(b); :}
+           | CASE:a          {: RESULT = new LinkedList<Case>(); RESULT.add(a); :}
 ;
 
-CASE ::= CASE EXPRESION:e ARROW LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Case(e, i, eleft, eright); :}
+CASE ::= EXPRESION:e ARROW LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Case(e, i, eleft, eright); :}
 ;
 
-DEFAULTCASE ::= DEFAULT ARROW LBRACE INSTRUCCIONES:i RBRACE   {: RESULT = new DefaultCase(i, aleft, aright); :}
+DEFAULTCASE ::= DEFAULT ARROW LBRACE INSTRUCCIONES:i RBRACE   {: RESULT = new DefaultCase(i, ileft, iright); :}
 ;
 
 CICLOWHILE ::= WHILE LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new While(e, i, eleft, eright); :}

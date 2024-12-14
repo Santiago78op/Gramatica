@@ -1,11 +1,14 @@
 package com.julian.instruction;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.symbol.Arbol;
 import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
 import com.julian.symbol.tipoDato;
 import com.julian.exception.Errores;
+
+import java.util.LinkedList;
 
 /**
  * Clase que ejecuta la instrucción de switch.
@@ -24,21 +27,25 @@ import com.julian.exception.Errores;
 public class Switch extends Instruccion {
 
     private Instruccion expresion;
-    private Instruccion casos;
-    private Instruccion defecto;
+    private LinkedList<Case> casos;
+    private DefaultCase defecto;
 
-    /**
-     * Constructor de la clase Switch.
-     * @param expresion Expresión a evaluar.
-     * @param casos Casos a evaluar.
-     * @param defecto Caso por defecto.
-     * @param linea Linea en la que se encuentra el switch.
-     * @param columna Columna en la que se encuentra el switch.
-     */
-    public Switch(Instruccion expresion, Instruccion casos, Instruccion defecto, int linea, int columna) {
+    public Switch(Instruccion expresion, LinkedList<Case> casos, DefaultCase defecto, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.expresion = expresion;
         this.casos = casos;
+        this.defecto = defecto;
+    }
+
+    public Switch(Instruccion expresion, LinkedList<Case> casos, int linea, int columna) {
+        super(new Tipo(tipoDato.VOID), linea, columna);
+        this.expresion = expresion;
+        this.casos = casos;
+    }
+
+    public Switch(Instruccion expresion, DefaultCase defecto, int linea, int columna) {
+        super(new Tipo(tipoDato.VOID), linea, columna);
+        this.expresion = expresion;
         this.defecto = defecto;
     }
 
@@ -51,25 +58,50 @@ public class Switch extends Instruccion {
             return exp;
         }
 
-        // tenemos un bloque de instrucciones para el switch y otro para el default
+        // tenemos un bloque de instrucciones para el switch
         var nuevaTabla = new tablaSimbolo(tablaDeSimbolos);
 
-        // Se ejecutan los casos del switch
-        var result = this.casos.interpretar(arbol, nuevaTabla);
-        // Si el resultado es un error se retorna el error.
-        if (result instanceof Errores) {
-            return result;
+        // Se ejecutan los casos del switch, validando que la expresion sea igual a alguno de los casos
+        if (this.casos != null) {
+            for (Case caso : this.casos) {
+                // Se extrae la expresion del caso
+                var caseExp = caso.getExpresion();
+                // Se evalua la expresion del caso
+                var condExp = caseExp.interpretar(arbol, nuevaTabla);
+                // Si la expresion es un error se retorna el error.
+                if(condExp instanceof Errores){
+                    return condExp;
+                }
+
+                // Se compara la expresion del switch con la expresion del caso
+                if(this.expresion.tipo.getTipo() != caseExp.tipo.getTipo()){
+                    semanticErrorManager.addError(new Errores("Semantico", "La expresion del switch y del case deben ser del mismo tipo", this.linea, this.columna));
+                    return new Errores("Semantico", "La expresion del switch y del case deben ser del mismo tipo", this.linea, this.columna);
+                }else {
+                    // Si son del mismo tipo se comparan
+                    if(this.expresion.tipo.getTipo() == tipoDato.ENTERO) {
+                        if ((int) exp == (int) condExp) {
+                            // Si son iguales se ejecutan las instrucciones del caso
+                            for (Instruccion instruccion : caso.getInstrucciones()) {
+                                var result = instruccion.interpretar(arbol, nuevaTabla);
+                                if (result instanceof Errores) {
+                                    arbol.addError((Errores) result);
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         // Se ejecuta el caso por defecto
-        result = this.defecto.interpretar(arbol, nuevaTabla);
-        // Si el resultado es un error se retorna el error.
-        if (result instanceof Errores) {
-            return result;
+        if (this.defecto != null) {
+            var result = this.defecto.interpretar(arbol, nuevaTabla);
+            if (result != null) {
+                return result;
+            }
         }
-
-
-
 
         return null;
     }

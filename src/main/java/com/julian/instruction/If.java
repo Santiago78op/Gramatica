@@ -62,7 +62,7 @@ public class If extends Instruccion {
             for (Instruccion instruccion : instruccionesIf) {
                 var result = instruccion.interpretar(arbol, nuevaTabla);
                 if(result instanceof Errores){
-                    return result;
+                    arbol.addError((Errores) result);
                 }
             }
         }
