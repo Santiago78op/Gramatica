@@ -14,27 +14,29 @@ public interface sym {
   public static final int CHAR = 11;
   public static final int GE = 41;
   public static final int ENTERO = 3;
-  public static final int LPAREN = 45;
+  public static final int LPAREN = 48;
   public static final int CONTINUE = 25;
   public static final int INT = 8;
   public static final int FOR = 23;
   public static final int MATCH = 19;
-  public static final int RPAREN = 46;
-  public static final int SEMICOLON = 49;
-  public static final int NOT = 44;
-  public static final int AND = 43;
+  public static final int RPAREN = 49;
+  public static final int SEMICOLON = 52;
+  public static final int NOT = 45;
+  public static final int AND = 44;
   public static final int LT = 38;
   public static final int CARACTER = 7;
-  public static final int OR = 42;
+  public static final int OR = 43;
   public static final int BOOL = 10;
   public static final int DIV = 31;
-  public static final int ASSIGN = 52;
+  public static final int INCREMENTO = 46;
+  public static final int ASSIGN = 55;
   public static final int IF = 17;
-  public static final int DOT = 51;
+  public static final int DOT = 54;
   public static final int ID = 2;
   public static final int LE = 39;
   public static final int EOF = 0;
   public static final int DECIMAL = 4;
+  public static final int DECREMENTO = 47;
   public static final int error = 1;
   public static final int MUL = 30;
   public static final int CADENA = 6;
@@ -43,14 +45,15 @@ public interface sym {
   public static final int BREAK = 24;
   public static final int EQ = 36;
   public static final int LOG = 27;
-  public static final int COLON = 50;
-  public static final int LBRACE = 47;
+  public static final int ARROW = 42;
+  public static final int COLON = 53;
+  public static final int LBRACE = 50;
   public static final int ELSE = 18;
   public static final int WHILE = 22;
   public static final int DEFAULT = 20;
   public static final int LET = 14;
   public static final int FLOAT = 9;
-  public static final int RBRACE = 48;
+  public static final int RBRACE = 51;
   public static final int NE = 37;
   public static final int USUB = 35;
   public static final int BOOLEANO = 5;
@@ -104,9 +107,12 @@ public interface sym {
   "LE",
   "GT",
   "GE",
+  "ARROW",
   "OR",
   "AND",
   "NOT",
+  "INCREMENTO",
+  "DECREMENTO",
   "LPAREN",
   "RPAREN",
   "LBRACE",

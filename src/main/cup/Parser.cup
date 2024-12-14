@@ -85,7 +85,9 @@ terminal DO, WHILE, FOR, BREAK, CONTINUE;
 terminal CONSOLE, LOG;
 terminal ADD, SUB, MUL, DIV, POW, ROOT, MOD, USUB;
 terminal EQ, NE, LT, LE, GT, GE;
+terminal ARROW;
 terminal OR, AND, NOT;
+terminal INCREMENTO, DECREMENTO;
 terminal LPAREN, RPAREN, LBRACE, RBRACE, SEMICOLON, COLON, DOT, ASSIGN;
 
 
@@ -104,7 +106,9 @@ nonterminal Instruccion EXPRESION;
 nonterminal Instruccion VALOR;
 nonterminal Instruccion VARIABLE;
 nonterminal Instruccion CONDICION, CONDIF, CONDELSE, CONDELSEIF;
+nonterminal Instruccion SELECCION, CASELIST, CASE, DEFAULTCASE;
 nonterminal Instruccion CICLOFOR, ACTUALIZFOR;
+nonterminal Instruccion CICLOWHILE, CICLODO;
 nonterminal Instruccion CASTEO;
 nonterminal Tipo TIPO;
 
@@ -139,12 +143,15 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
                 | INSTRUCCION:a                   {: RESULT = new LinkedList<Instruccion>(); RESULT.add(a); :}
 ;
 
-INSTRUCCION ::= IMPRESION:i SEMICOLON    {: RESULT = i; :}
-              | VARIABLE:v  SEMICOLON    {: RESULT = v; :}
-              | ASIGNACION:a SEMICOLON   {: RESULT = a; :}
-              | CONDICION:c              {: RESULT = c; :}
-              | CICLOFOR:f               {: RESULT = f; :}
-              | error SEMICOLON          {: RESULT = new instruccionError("Sintactico Error"); :}
+INSTRUCCION ::= IMPRESION:i  SEMICOLON    {: RESULT = i; :}
+              | VARIABLE:v   SEMICOLON    {: RESULT = v; :}
+              | ASIGNACION:a SEMICOLON    {: RESULT = a; :}
+              | CONDICION:c               {: RESULT = c; :}
+              | SELECCION:s               {: RESULT = s; :}
+              | CICLOWHILE:w              {: RESULT = w; :}
+              | CICLODO:d    SEMICOLON    {: RESULT = d; :}
+              | CICLOFOR:f                {: RESULT = f; :}
+              | error SEMICOLON           {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
 IMPRESION ::= CONSOLE DOT LOG LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
@@ -164,26 +171,58 @@ TIPO ::= INT:t      {: RESULT = new Tipo(tipoDato.ENTERO); :}
 ;
 
 ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ileft, eright); :}
+            | ID:i INCREMENTO            {: RESULT = new Incremento(i, ileft, iright); :}
+            | ID:i DECREMENTO            {: RESULT = new Decremento(i, ileft, iright); :}
 ;
 
-CONDCION ::= CONDIF:c    {: RESULT = c; :}
-           | CONDELSE    {: RESULT = c; :}
-           | CONDELSEIF  {: RESULT = c; :}
+CONDICION ::= CONDIF:c     {: RESULT = c; :}
+            | CONDELSE:c   {: RESULT = c; :}
+            | CONDELSEIF:c {: RESULT = c; :}
 ;
 
-CONDIF ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new If(e, i, eleft, iright); :}
+CONDIF ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new If(e, i, eleft, eright); :}
 ;
 
-CONDELSE ::= ELSE LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Else(i, ileft, iright); :}
+CONDELSE ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE ELSE LBRACE INSTRUCCIONES:j RBRACE {: RESULT = new Else(e, i, j, eleft, eright); :}
 ;
 
-CONDELSEIF ::= ELSE IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new elseIf(e, i, eleft, iright); :}
+CONDELSEIF ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE ELSE CONDICION:c {: RESULT = new IfElseIf(e, i, c, eleft, eright); :}
 ;
 
 CICLOFOR ::= FOR LPAREN ASIGNACION:a SEMICOLON EXPRESION:e SEMICOLON ACTUALIZFOR:u RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new For(a, e, u, i, aleft, iright); :}
 ;
 
 ACTUALIZFOR ::= ASIGNACION:a {: RESULT = a; :}
+;
+
+
+SELECCION ::= MATCH LPAREN EXPRESION:e RPAREN LBRACE CASELIST:c DEFAULTCASE:d RBRACE {: RESULT = new Match(e, c, d, eleft, eright); :}
+            | MATCH LPAREN EXPRESION:e RPAREN LBRACE CASELIST:c RBRACE               {: RESULT = new Match(e, c, eleft, eright); :}
+            | MATCH LPAREN EXPRESION:e RPAREN LBRACE DEFAULTCASE:d RBRACE            {: RESULT = new Match(e, d, eleft, eright); :}
+;
+
+CASELIST ::= CASELIST CASE {: RESULT = a; RESULT.add(b); :}
+           | CASE          {: RESULT = new LinkedList<Instruccion>(); RESULT.add(a); :}
+;
+
+CASE ::= CASE EXPRESION:e ARROW LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Case(e, i, eleft, eright); :}
+;
+
+DEFAULTCASE ::= DEFAULT ARROW LBRACE INSTRUCCIONES:i RBRACE   {: RESULT = new DefaultCase(i, aleft, aright); :}
+;
+
+CICLOWHILE ::= WHILE LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new While(e, i, eleft, eright); :}
+;
+
+CICLODO ::= DO LBRACE INSTRUCCIONES:i RBRACE WHILE LPAREN EXPRESION:e RPAREN {: RESULT = new doWhile(i, e, eleft, eright); :}
+;
+
+// public Nativo(Object valor, Tipo tipo, int linea, int columna)
+VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
+          | DECIMAL:e    {: RESULT = new Nativo(Double.parseDouble(e), new Tipo(tipoDato.DECIMAL), eleft, eright); :}
+          | BOOLEANO:e   {: RESULT = new Nativo(Boolean.parseBoolean(e), new Tipo(tipoDato.BOOLEANO), eleft, eright); :}
+          | CADENA:e     {: RESULT = new Nativo(e, new Tipo(tipoDato.CADENA), eleft, eright); :}
+          | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
 ;
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
@@ -208,14 +247,6 @@ EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft,
             | CASTEO:c                        {: RESULT = c; :}
             | VALOR:e                         {: RESULT = e; :}
             | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
-;
-
-// public Nativo(Object valor, Tipo tipo, int linea, int columna)
-VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
-          | DECIMAL:e    {: RESULT = new Nativo(Double.parseDouble(e), new Tipo(tipoDato.DECIMAL), eleft, eright); :}
-          | BOOLEANO:e   {: RESULT = new Nativo(Boolean.parseBoolean(e), new Tipo(tipoDato.BOOLEANO), eleft, eright); :}
-          | CADENA:e     {: RESULT = new Nativo(e, new Tipo(tipoDato.CADENA), eleft, eright); :}
-          | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
 ;
 
 CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t, eleft, eright); :}

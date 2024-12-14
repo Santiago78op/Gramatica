@@ -3,7 +3,6 @@ package com.julian.LinkedList;
 import com.julian.exception.Errores;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class semanticErrorManager {
 

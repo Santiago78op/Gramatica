@@ -38,7 +38,7 @@ import java.util.LinkedList;
     Usar Unicode para las expresiones regulares y
     el codigo generado por JFlex .
 */
-%unicode
+%full
 
 /*
     Ignorar mayusculas y minusculas en las expresiones
@@ -238,6 +238,10 @@ print  = "print"
     { decimal } { addToken("DECIMAL", yytext()); return new Symbol(sym.DECIMAL, yyline, yycolumn, yytext()); }
     { boleano } { addToken("BOOLEANO",yytext()); return new Symbol(sym.BOOLEANO, yyline, yycolumn, yytext()); }
 
+    /* Incremento y Decremento*/
+    "++" { addToken("INCREMENTO", yytext()); return new Symbol(sym.INCREMENTO, yyline, yycolumn, yytext()); }
+    "--" { addToken("DECREMENTO", yytext()); return new Symbol(sym.DECREMENTO, yyline, yycolumn, yytext()); }
+
     /* arithmetic operators */
     "+" { addToken("ADD",  yytext()); return new Symbol(sym.ADD, yyline, yycolumn, yytext()); }
     "-" { addToken("SUB",  yytext()); return new Symbol(sym.SUB, yyline, yycolumn, yytext()); }
@@ -269,6 +273,7 @@ print  = "print"
     ";"    { addToken("SEMICOLON", yytext()); return new Symbol(sym.SEMICOLON, yyline, yycolumn, yytext()); }
     ":"    { addToken("COLON",     yytext()); return new Symbol(sym.COLON, yyline, yycolumn, yytext()); }
     "."    { addToken("DOT",       yytext()); return new Symbol(sym.DOT, yyline, yycolumn, yytext()); }
+    "=>"   { addToken("ARROW",     yytext()); return new Symbol(sym.ARROW, yyline, yycolumn, yytext()); }
 
     // Detectar cadenas entre comillas
     { cadena } {
