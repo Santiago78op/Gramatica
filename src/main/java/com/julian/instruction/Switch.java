@@ -82,21 +82,70 @@ public class Switch extends Instruccion {
                     return new Errores("Semantico", "La expresion del switch y del case deben ser del mismo tipo", this.linea, this.columna);
                 }else {
                     // Si son del mismo tipo se comparan
-                    if(this.expresion.tipo.getTipo() == tipoDato.ENTERO) {
-                        if ((int) exp == (int) condExp) {
-                            match = true;
-                            // Si son iguales se ejecutan las instrucciones del caso
-                            for (Instruccion instruccion : caso.getInstrucciones()) {
-                                var result = instruccion.interpretar(arbol, nuevaTabla);
-                                if (result instanceof Errores) {
-                                    arbol.addError((Errores) result);
-                                } else if (result instanceof Break) {
-                                    return null; // Termina la ejecución del switch
-                                } else if (result instanceof Continue) {
-                                    break; // Salta al siguiente caso
+                    switch (this.expresion.tipo.getTipo()) {
+                        case ENTERO -> {
+                            if ((int) exp == (int) condExp) {
+                                match = true;
+                                // Si son iguales se ejecutan las instrucciones del caso
+                                for (Instruccion instruccion : caso.getInstrucciones()) {
+                                    var result = instruccion.interpretar(arbol, nuevaTabla);
+                                    if (result instanceof Errores) {
+                                        arbol.addError((Errores) result);
+                                    } else if (result instanceof Break) {
+                                        return null; // Termina la ejecución del switch
+                                    } else if (result instanceof Continue) {
+                                        break; // Salta al siguiente caso
+                                    }
                                 }
                             }
-                            break;
+                        }
+                        case DECIMAL -> {
+                            if ((double) exp == (double) condExp) {
+                                match = true;
+                                // Si son iguales se ejecutan las instrucciones del caso
+                                for (Instruccion instruccion : caso.getInstrucciones()) {
+                                    var result = instruccion.interpretar(arbol, nuevaTabla);
+                                    if (result instanceof Errores) {
+                                        arbol.addError((Errores) result);
+                                    } else if (result instanceof Break) {
+                                        return null; // Termina la ejecución del switch
+                                    } else if (result instanceof Continue) {
+                                        break; // Salta al siguiente caso
+                                    }
+                                }
+                            }
+                        }
+                        case CARACTER -> {
+                            if ((char) exp == (char) condExp) {
+                                match = true;
+                                // Si son iguales se ejecutan las instrucciones del caso
+                                for (Instruccion instruccion : caso.getInstrucciones()) {
+                                    var result = instruccion.interpretar(arbol, nuevaTabla);
+                                    if (result instanceof Errores) {
+                                        arbol.addError((Errores) result);
+                                    } else if (result instanceof Break) {
+                                        return null; // Termina la ejecución del switch
+                                    } else if (result instanceof Continue) {
+                                        break; // Salta al siguiente caso
+                                    }
+                                }
+                            }
+                        }
+                        case CADENA -> {
+                            if (exp.equals(condExp)) {
+                                match = true;
+                                // Si son iguales se ejecutan las instrucciones del caso
+                                for (Instruccion instruccion : caso.getInstrucciones()) {
+                                    var result = instruccion.interpretar(arbol, nuevaTabla);
+                                    if (result instanceof Errores) {
+                                        arbol.addError((Errores) result);
+                                    } else if (result instanceof Break) {
+                                        return null; // Termina la ejecución del switch
+                                    } else if (result instanceof Continue) {
+                                        break; // Salta al siguiente caso
+                                    }
+                                }
+                            }
                         }
                     }
                 }
