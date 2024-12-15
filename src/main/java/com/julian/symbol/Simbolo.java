@@ -18,6 +18,10 @@ public class Simbolo {
     private Tipo tipo;
     private String id;
     private Object valor;
+    private String ambito;
+    private String tipoDato;
+    private int linea;
+    private int columna;
     private boolean constante = false;
 
     /**
@@ -27,11 +31,15 @@ public class Simbolo {
      * @param valor Valor de la variable.
      * @param constante Si la variable es constante o no.
      */
-    public Simbolo(Tipo tipo, String id, Object valor, boolean constante) {
+    public Simbolo(Tipo tipo, String id, Object valor, boolean constante, String ambito, String tipoDato, int linea, int columna) {
         this.tipo = tipo;
         this.id = id;
         this.valor = valor;
         this.constante = constante;
+        this.ambito = ambito;
+        this.tipoDato = tipoDato;
+        this.linea = linea;
+        this.columna = columna;
     }
 
     public Tipo getTipo() {
@@ -68,5 +76,51 @@ public class Simbolo {
 
     public boolean isMutable() {
         return !constante;
+    }
+
+    public String getAmbito() {
+        return ambito;
+    }
+
+    public void setAmbito(String ambito) {
+        this.ambito = ambito;
+    }
+
+    public String getTipoDato() {
+        return tipoDato;
+    }
+
+    public void setTipoDato(String tipoDato) {
+        this.tipoDato = tipoDato;
+    }
+
+    public int getLinea() {
+        return linea;
+    }
+
+    public void setLinea(int linea) {
+        this.linea = linea;
+    }
+
+    public int getColumna() {
+        return columna;
+    }
+
+    public void setColumna(int columna) {
+        this.columna = columna;
+    }
+
+    @Override
+    public String toString() {
+        return "Simbolo{" +
+                "tipo=" + tipo +
+                ", id='" + id + '\'' +
+                ", valor=" + valor +
+                ", ambito='" + ambito + '\'' +
+                ", tipoDato='" + tipoDato + '\'' +
+                ", linea=" + linea +
+                ", columna=" + columna +
+                ", constante=" + constante +
+                '}';
     }
 }

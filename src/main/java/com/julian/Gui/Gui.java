@@ -27,6 +27,7 @@ public class Gui {
     private File   currentFile;
     private Lexer  lexer;
     private parser p;
+    private tablaSimbolo tablaSimboloInstance = new tablaSimbolo();
 
     @FXML
     private TextArea textInputArea;
@@ -118,6 +119,7 @@ public class Gui {
                 showAlert(Alert.AlertType.ERROR, "Compilation Error", "There are errors in the code.");
             } else {
                 showAlert(Alert.AlertType.INFORMATION, "Compilation Successful", "The code was compiled successfully.");
+                tablaSimboloInstance.imprimirTabla(); // Llamada al método imprimirTabla
             }
 
         } catch (Exception e) {

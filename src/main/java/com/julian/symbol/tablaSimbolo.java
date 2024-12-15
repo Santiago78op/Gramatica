@@ -71,6 +71,7 @@ public class tablaSimbolo {
         return false;
     }
 
+
     public Simbolo getVariable(String id){
         for(tablaSimbolo i = this; i != null; i = i.getTablaSimboloAnterior()){
             Simbolo busqueda = i.tablaActual.get(id.toLowerCase());
@@ -79,5 +80,13 @@ public class tablaSimbolo {
             }
         }
         return null;
+    }
+
+    /** Metodo que permite imprimir la tabla de simbolos */
+    public void imprimirTabla() {
+        System.out.println("Tabla de simbolos: " + this.nombre);
+        for (Simbolo simbolo : this.tablaActual.values()) {
+            System.out.println("ID: " + simbolo.getId() + " | Tipo: " + simbolo.getTipo().getTipo() + " | Valor: " + simbolo.getValor());
+        }
     }
 }

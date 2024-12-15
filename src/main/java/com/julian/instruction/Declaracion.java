@@ -115,7 +115,7 @@ public class Declaracion extends Instruccion {
                 return new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna);
             }
             // 4. Si la variable no existe, se agrega a la tabla de simbolos.
-            Simbolo simbolo = new Simbolo(this.tipo, this.id, valorInterpretado, !this.mutable);
+            Simbolo simbolo = new Simbolo(this.tipo, this.id, valorInterpretado, !this.mutable, "", "", this.linea, this.columna);
             // 5. Si la variable es constante, no se puede modificar su valor.
             if (!this.mutable) {
                 simbolo.setConstante(true);
@@ -129,6 +129,7 @@ public class Declaracion extends Instruccion {
                     return new Errores("Semantico", "El tipo de la variable no coincide con el tipo de la expresion", this.linea, this.columna);
                 }
                 simbolo.setValor(valor);
+                simbolo.setTipoDato("let");
             }
             tablaDeSimbolos.setVariable(simbolo);
         } else {
@@ -142,8 +143,9 @@ public class Declaracion extends Instruccion {
                 return new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna);
             }
             // 4. Si la variable no existe, se agrega a la tabla de simbolos.
-            Simbolo simbolo = new Simbolo(this.tipo, this.id, this.valueExpresion, !this.mutable);
+            Simbolo simbolo = new Simbolo(this.tipo, this.id, this.valueExpresion, !this.mutable, "", "", this.linea, this.columna);
             // 5. Si la variable es constante, no se puede modificar su valor.
+            simbolo.setTipoDato("const");
             if (!this.mutable) {
                 simbolo.setConstante(true);
             }

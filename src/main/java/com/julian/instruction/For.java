@@ -89,6 +89,9 @@ public class For extends Instruccion {
                     return resultado2;
                 }
 
+                // Add tabla de simbolos.
+
+
             }
         }
         return null;
