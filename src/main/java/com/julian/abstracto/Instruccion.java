@@ -44,4 +44,9 @@ public abstract class Instruccion {
 
     // Clase abstracta que representa una instrucción.
     public abstract Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos);
+
+    public String getId()
+    {
+        return null;
+    }
 }

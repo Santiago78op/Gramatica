@@ -1,0 +1,98 @@
+
+<INICIO> ::= <INSTRUCCIONES> ;
+
+<INSTRUCCIONES> ::= <INSTRUCCIONES> <INSTRUCCION>
+                  | <INSTRUCCION> ;
+
+<INSTRUCCION> ::= <IMPRESION> ";"
+                | <VARIABLE> ";"
+                | <ASIGNACION> ";"
+                | <CONDICION>
+                | <SELECCION>
+                | <CICLOWHILE>
+                | <CICLODO> ";"
+                | <CICLOFOR>
+                | "error" ";" ;
+
+<IMPRESION> ::= "CONSOLE" "." "LOG" "(" <EXPRESION> ")" ;
+
+<VARIABLE> ::= "LET" <ID> ":" <TIPO> "=" <EXPRESION>
+             | "LET" <ID> ":" <TIPO>
+             | "CONST" <ID> ":" <TIPO> "=" <EXPRESION>
+             | "CONST" <ID> ":" <TIPO> ;
+
+<TIPO> ::= "INT"
+         | "FLOAT"
+         | "BOOL"
+         | "CHAR"
+         | "STRING" ;
+
+<ASIGNACION> ::= <ID> "=" <EXPRESION>
+               | <ID> "++"
+               | <ID> "--"
+               | <TRANSFERENCIA> ;
+
+<TRANSFERENCIA> ::= "BREAK"
+                  | "CONTINUE" ;
+
+<CONDICION> ::= <CONDIF>
+              | <CONDELSE>
+              | <CONDELSEIF> ;
+
+<CONDIF> ::= "IF" "(" <EXPRESION> ")" "{" <INSTRUCCIONES> "}" ;
+
+<CONDELSE> ::= "IF" "(" <EXPRESION> ")" "{" <INSTRUCCIONES> "}" "ELSE" "{" <INSTRUCCIONES> "}" ;
+
+<CONDELSEIF> ::= "IF" "(" <EXPRESION> ")" "{" <INSTRUCCIONES> "}" "ELSE" <CONDICION> ;
+
+<CICLOFOR> ::= "FOR" "(" <ASIGNACION> ";" <EXPRESION> ";" <ACTUALIZFOR> ")" "{" <INSTRUCCIONES> "}" ;
+
+<ACTUALIZFOR> ::= <ASIGNACION> ;
+
+<SELECCION> ::= "MATCH" <EXPRESION> "{" <CASELIST> <DEFAULTCASE> "}" 
+              | "MATCH" <EXPRESION> "{" <CASELIST> "}"
+              | "MATCH" <EXPRESION> "{" <DEFAULTCASE> "}" ;
+
+<CASELIST> ::= <CASELIST> <CASE>
+             | <CASE> ;
+
+<CASE> ::= <EXPRESION> "=>" "{" <INSTRUCCIONES> "}" ;
+
+<DEFAULTCASE> ::= "DEFAULT" "=>" "{" <INSTRUCCIONES> "}" ;
+
+<CICLOWHILE> ::= "WHILE" "(" <EXPRESION> ")" "{" <INSTRUCCIONES> "}" ;
+
+<CICLODO> ::= "DO" "{" <INSTRUCCIONES> "}" "WHILE" "(" <EXPRESION> ")" ;
+
+<VALOR> ::= "ENTERO"
+          | "DECIMAL"
+          | "BOOLEANO"
+          | "CADENA"
+          | "CARACTER" ;
+
+<EXPRESION> ::= "-" <VALOR> %prec USUB
+              | "-" <ID> %prec USUB
+              | <EXPRESION> "^" <EXPRESION>
+              | <EXPRESION> "√" <EXPRESION>
+              | <EXPRESION> "*" <EXPRESION>
+              | <EXPRESION> "/" <EXPRESION>
+              | <EXPRESION> "%" <EXPRESION>
+              | <EXPRESION> "+" <EXPRESION>
+              | <EXPRESION> "-" <EXPRESION>
+              | <EXPRESION> "==" <EXPRESION>
+              | <EXPRESION> "!=" <EXPRESION>
+              | <EXPRESION> "<" <EXPRESION>
+              | <EXPRESION> "<=" <EXPRESION>
+              | <EXPRESION> ">" <EXPRESION>
+              | <EXPRESION> ">=" <EXPRESION>
+              | "!" <EXPRESION>
+              | <EXPRESION> "&&" <EXPRESION>
+              | <EXPRESION> "||" <EXPRESION>
+              | "(" <EXPRESION> ")"
+              | <CASTEO>
+              | <VALOR>
+              | <ID> ;
+
+<CASTEO> ::= "CAST" "(" <EXPRESION> "AS" <TIPO> ")" ;
+
+<ID> ::= cualquier identificador válido ;

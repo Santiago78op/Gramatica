@@ -27,7 +27,7 @@ public class Gui {
     private File   currentFile;
     private Lexer  lexer;
     private parser p;
-    private tablaSimbolo tablaSimboloInstance = new tablaSimbolo();
+    private tablaSimbolo tabla;
 
     @FXML
     private TextArea textInputArea;
@@ -52,12 +52,17 @@ public class Gui {
         // Construir la ruta relativa al directorio deseado dentro del proyecto
         String dirPath = basePath + "/data";
 
+        // Verificar si el directorio existe, si no, crearlo
         File dir = new File(dirPath);
-        if (dir.exists()) {
-            fileChooser.setInitialDirectory(dir); // Establecer la carpeta inicial
+        if (!dir.exists()) {
+            if (dir.mkdirs()) {
+                showAlert(Alert.AlertType.INFORMATION, "Folder Created", "The specified folder did not exist and was created.");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Folder Creation Failed", "The specified folder could not be created.");
+                return;
+            }
         } else {
-            showAlert(Alert.AlertType.WARNING, "Folder Not Found", "The specified folder does not exist.");
-            return;
+            fileChooser.setInitialDirectory(dir); // Establecer la carpeta inicial
         }
 
         File file = fileChooser.showOpenDialog(null);
@@ -85,7 +90,7 @@ public class Gui {
             var resultado = p.parse();
 
             var ast = new Arbol((LinkedList<Instruccion>) resultado.value);
-            var tabla = new tablaSimbolo();
+            tabla = new tablaSimbolo();
 
             for (var a : ast.getInstrucciones()) {
                 if (a == null) continue;
@@ -119,7 +124,6 @@ public class Gui {
                 showAlert(Alert.AlertType.ERROR, "Compilation Error", "There are errors in the code.");
             } else {
                 showAlert(Alert.AlertType.INFORMATION, "Compilation Successful", "The code was compiled successfully.");
-                tablaSimboloInstance.imprimirTabla(); // Llamada al método imprimirTabla
             }
 
         } catch (Exception e) {
@@ -135,26 +139,35 @@ public class Gui {
     public void onClickButtonReportes(ActionEvent actionEvent) {
         try {
 
+            // Verificar si el directorio existe, si no, crearlo y limpiar los archivos existentes
+            clearReportesFolder();
+
             var tokens = lexer.tokens;
             var erroresLexicos = lexer.errors;
             var erroresSintacticos = p.errors;
-            var erroresSemantico =  semanticErrorManager.getErrors();
+            var erroresSemantico = semanticErrorManager.getErrors();
+            var tablaSimbolos = tabla.getTablaActual();
 
             String reporteToken = null;
+            String reporteTablaSimbolos = null;
             String reporteErroresLexicos = null;
             String reporteErroresSintacticos = null;
             String reporteErroresSemanticos = null;
 
-            if (erroresLexicos.size() > 0 || tokens.size() > 0) {
-                Reports reporte = new Reports(tokens, erroresLexicos, erroresSintacticos, erroresSemantico);
+            if (erroresLexicos.size() > 0 || tokens.size() > 0 || tablaSimbolos.size() > 0) {
+                Reports reporte = new Reports(tokens, erroresLexicos, erroresSintacticos, erroresSemantico, tablaSimbolos);
                 reporteToken = reporte.getTokens();
                 reporteErroresLexicos = reporte.erroresLexicos();
                 reporteErroresSintacticos = reporte.erroresSintacticos();
                 reporteErroresSemanticos = reporte.erroresSemanticos();
+                reporteTablaSimbolos = reporte.tablaSimbolos();
             }
 
             // Generar reporte de tokens, con el string reporte, con formato.
             createHtmlFile("Reporte_Tokens.html", reporteToken);
+
+            // Generar reporte de tabla de simbolos, con el string reporteTablaSimbolos, con formato.
+            createHtmlFile("Reporte_Tabla_Simbolos.html", reporteTablaSimbolos);
 
             // Generar reporte de errores, con el string reporteErrores, con formato.
             createHtmlFile("Reporte_Errores_Lexicos.html", reporteErroresLexicos);
@@ -163,6 +176,7 @@ public class Gui {
 
             // Ejecuta reporte de tokens y Errores, con el string reporte, con formato.
             openHtmlFile("Reporte_Tokens.html");
+            openHtmlFile("Reporte_Tabla_Simbolos.html");
             openHtmlFile("Reporte_Errores_Lexicos.html");
             openHtmlFile("Reporte_Errores_Sintacticos.html");
             openHtmlFile("Reporte_Errores_Semanticos.html");
@@ -185,11 +199,7 @@ public class Gui {
         String dirPath = basePath + "/reportes";
         String filePath = dirPath + "/" + fileName;
 
-        File dir = new File(dirPath);
-        if (!dir.exists()) {
-            dir.mkdirs(); // Crear directorio si no existe
-        }
-
+        // Crear el archivo HTML
         File htmlFile = new File(filePath);
         try (FileWriter writer = new FileWriter(htmlFile)) {
             writer.write(htmlContent); // Escribir contenido HTML en el archivo
@@ -361,5 +371,25 @@ public class Gui {
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while reading the file.");
             e.printStackTrace();
         }
+    }
+
+    public static void clearReportesFolder() {
+            // Obtener la ruta del directorio base del proyecto
+            String basePath = System.getProperty("user.dir");
+            // Construir la ruta relativa al directorio deseado dentro del proyecto
+            String dirPath = basePath + "/reportes";
+
+            // Verificar si el directorio existe, si no, crearlo
+            File dir = new File(dirPath);
+            if (dir.exists() && dir.isDirectory()) {
+                File[] files = dir.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (!file.isDirectory()) {
+                            file.delete();
+                        }
+                    }
+                }
+            }
     }
 }

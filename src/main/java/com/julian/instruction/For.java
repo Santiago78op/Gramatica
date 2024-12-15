@@ -2,10 +2,7 @@ package com.julian.instruction;
 
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
-import com.julian.symbol.Arbol;
-import com.julian.symbol.Tipo;
-import com.julian.symbol.tablaSimbolo;
-import com.julian.symbol.tipoDato;
+import com.julian.symbol.*;
 
 import java.util.LinkedList;
 
@@ -88,9 +85,6 @@ public class For extends Instruccion {
                 if (resultado2 instanceof Errores) {
                     return resultado2;
                 }
-
-                // Add tabla de simbolos.
-
 
             }
         }

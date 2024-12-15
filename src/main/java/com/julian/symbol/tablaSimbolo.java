@@ -86,7 +86,8 @@ public class tablaSimbolo {
     public void imprimirTabla() {
         System.out.println("Tabla de simbolos: " + this.nombre);
         for (Simbolo simbolo : this.tablaActual.values()) {
-            System.out.println("ID: " + simbolo.getId() + " | Tipo: " + simbolo.getTipo().getTipo() + " | Valor: " + simbolo.getValor());
+            System.out.println("ID: " + simbolo.getId() + " | Tipo: " + simbolo.getTipo().getTipo() + " | Valor: " + simbolo.getValor()
+                    + " | Ambito: " + simbolo.getAmbito() + " | TipoDato: " + simbolo.getTipoDato() + " | Linea: " + simbolo.getLinea() + " | Columna: " + simbolo.getColumna());
         }
     }
 }
