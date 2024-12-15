@@ -43,7 +43,7 @@ public class Gui {
         fileChooser.setTitle("Open Resource File");
 
         // Agregar filtro de extensión para archivos .cs
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CS files (*.cs)", "*.ac");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CS files (*.cs)", "*.cs");
         fileChooser.getExtensionFilters().add(extFilter);
 
         // Obtener la ruta del directorio base del proyecto
@@ -93,6 +93,33 @@ public class Gui {
             }
 
             textOutputArea.setText(ast.getConsola());
+
+            if (lexer.errors.size() > 0 || p.errors.size() > 0 || semanticErrorManager.getErrors().size() > 0) {
+
+                textOutputArea.setText("\n Salida de Error: \n" + "Generando Salida de Errores...");
+                var erroresLexicos = lexer.errors;
+                var erroresSintacticos = p.errors;
+                var erroresSemantico =  semanticErrorManager.getErrors();
+                textOutputArea.setText("\n Salida de Errores Lexicos: \n" + "Generando Salida de Errores...");
+                for (var error : erroresLexicos) {
+                    textOutputArea.appendText(error.toString() + "\n");
+                }
+
+                textOutputArea.appendText("\n Salida de Errores Sintacticos: \n" + "Generando Salida de Errores...");
+                for (var error : erroresSintacticos) {
+                    textOutputArea.appendText(error.toString() + "\n");
+                }
+
+                textOutputArea.appendText("\n Salida de Errores Semanticos: \n" + "Generando Salida de Errores...");
+                for (var error : erroresSemantico) {
+                    textOutputArea.appendText(error.toString() + "\n");
+                }
+
+                showAlert(Alert.AlertType.ERROR, "Compilation Error", "There are errors in the code.");
+            } else {
+                showAlert(Alert.AlertType.INFORMATION, "Compilation Successful", "The code was compiled successfully.");
+            }
+
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while analyzing the content.");
             e.printStackTrace();
@@ -137,6 +164,11 @@ public class Gui {
             openHtmlFile("Reporte_Errores_Lexicos.html");
             openHtmlFile("Reporte_Errores_Sintacticos.html");
             openHtmlFile("Reporte_Errores_Semanticos.html");
+
+            // limpiar errores
+            lexer.errors.clear();
+            p.errors.clear();
+            semanticErrorManager.clearErrors();
         }catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred when generating the reports or \n No code was entered in the console to report.");
             e.printStackTrace();
@@ -221,7 +253,7 @@ public class Gui {
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             String fileName = result.get();
-            // Asegurarse de que el nombre del archivo tenga la extensión .ac
+            // Asegurarse de que el nombre del archivo tenga la extensión .cs
             if (!fileName.endsWith(".cs")) {
                 fileName += ".cs";
             }
@@ -260,8 +292,8 @@ public class Gui {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
 
-        // Agregar filtro de extensión para archivos .ac
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CS files (*.cs)", "*.ac");
+        // Agregar filtro de extensión para archivos .cs
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CS files (*.cs)", "*.cs");
         fileChooser.getExtensionFilters().add(extFilter);
 
         // Obtener la ruta del directorio base del proyecto

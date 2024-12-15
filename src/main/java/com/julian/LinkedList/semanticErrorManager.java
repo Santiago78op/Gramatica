@@ -15,4 +15,8 @@ public class semanticErrorManager {
     public static LinkedList<Errores> getErrors() {
         return erroresSemanticos;
     }
+
+    public static void clearErrors() {
+        erroresSemanticos.clear();
+    }
 }
