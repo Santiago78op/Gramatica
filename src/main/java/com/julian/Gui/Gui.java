@@ -42,8 +42,8 @@ public class Gui {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
 
-        // Agregar filtro de extensión para archivos .ac
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("AC files (*.ac)", "*.ac");
+        // Agregar filtro de extensión para archivos .cs
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CS files (*.cs)", "*.ac");
         fileChooser.getExtensionFilters().add(extFilter);
 
         // Obtener la ruta del directorio base del proyecto
@@ -68,7 +68,7 @@ public class Gui {
     }
 
     /**
-     * Funcion -> Compilar el archivo .ac
+     * Funcion -> Compilar el archivo .cs
      * @param actionEvent Evento de acción.
      */
     public void onClickButtonCompilar(ActionEvent actionEvent) {
@@ -189,7 +189,7 @@ public class Gui {
     }
 
     /**
-     * Funcion -> Crear un nuevo archivo .ac
+     * Funcion -> Crear un nuevo archivo .sc
      *         -> Guardar el archivo anterior si este existe.
      *         -> Guardar el nuevo contenido en un archivo nuevo.
      * @param actionEvent
@@ -222,8 +222,8 @@ public class Gui {
         if (result.isPresent()) {
             String fileName = result.get();
             // Asegurarse de que el nombre del archivo tenga la extensión .ac
-            if (!fileName.endsWith(".ac")) {
-                fileName += ".ac";
+            if (!fileName.endsWith(".cs")) {
+                fileName += ".cs";
             }
             // Obtener la ruta del directorio base del proyecto
             String basePath = System.getProperty("user.dir");
@@ -261,7 +261,7 @@ public class Gui {
         fileChooser.setTitle("Open Resource File");
 
         // Agregar filtro de extensión para archivos .ac
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("AC files (*.ac)", "*.ac");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CS files (*.cs)", "*.ac");
         fileChooser.getExtensionFilters().add(extFilter);
 
         // Obtener la ruta del directorio base del proyecto

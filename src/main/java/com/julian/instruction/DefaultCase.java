@@ -38,7 +38,7 @@ public class DefaultCase extends Instruccion {
         // Se ejecutan las instrucciones del default
         for (Instruccion instruccion : this.instrucciones) {
             var result = instruccion.interpretar(arbol, nuevaTabla);
-            if (result != null) {
+            if (result instanceof Errores) {
                 arbol.addError((Errores) result);
             }
         }

@@ -58,6 +58,9 @@ public class Switch extends Instruccion {
             return exp;
         }
 
+        // Variable para validar que hiso match con algun caso
+        boolean match = false;
+
         // tenemos un bloque de instrucciones para el switch
         var nuevaTabla = new tablaSimbolo(tablaDeSimbolos);
 
@@ -81,11 +84,16 @@ public class Switch extends Instruccion {
                     // Si son del mismo tipo se comparan
                     if(this.expresion.tipo.getTipo() == tipoDato.ENTERO) {
                         if ((int) exp == (int) condExp) {
+                            match = true;
                             // Si son iguales se ejecutan las instrucciones del caso
                             for (Instruccion instruccion : caso.getInstrucciones()) {
                                 var result = instruccion.interpretar(arbol, nuevaTabla);
                                 if (result instanceof Errores) {
                                     arbol.addError((Errores) result);
+                                } else if (result instanceof Break) {
+                                    return null; // Termina la ejecución del switch
+                                } else if (result instanceof Continue) {
+                                    break; // Salta al siguiente caso
                                 }
                             }
                             break;
@@ -96,7 +104,7 @@ public class Switch extends Instruccion {
         }
 
         // Se ejecuta el caso por defecto
-        if (this.defecto != null) {
+        if (!match && this.defecto != null) {
             var result = this.defecto.interpretar(arbol, nuevaTabla);
             if (result != null) {
                 return result;

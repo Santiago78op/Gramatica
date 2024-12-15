@@ -1,4 +1,5 @@
-let i:int = 2;
+
+let i:int = 6;
 const tabla: int = 7;
 
 match i {
@@ -18,6 +19,7 @@ match i {
             console.log("" + tabla + " x " + i + " = " + (tabla * i));
         }
         default => {
+	    continue;
             console.log("Esto no se va a imprimir");
         }
     }

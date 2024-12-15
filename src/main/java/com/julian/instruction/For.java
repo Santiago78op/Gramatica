@@ -77,6 +77,10 @@ public class For extends Instruccion {
                 var resultado = instruccion.interpretar(arbol, tablaLocalFor);
                 if (resultado instanceof Errores) {
                     arbol.addError((Errores) resultado);
+                }else if (resultado instanceof Break) {
+                    return null; // Termina la ejecución del switch
+                } else if (resultado instanceof Continue) {
+                    break; // Salta al siguiente caso
                 }
 
                 // Actualizar la variable.

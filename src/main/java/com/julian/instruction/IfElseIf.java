@@ -47,6 +47,10 @@ public class IfElseIf extends Instruccion {
                 var result = instruccion.interpretar(arbol, nuevaTabla);
                 if (result instanceof Errores) {
                     arbol.addError((Errores) result);
+                }else if (result instanceof Break) {
+                    return null; // Termina la ejecución del switch
+                } else if (result instanceof Continue) {
+                    break; // Salta al siguiente caso
                 }
             }
         } else {

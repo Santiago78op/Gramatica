@@ -81,7 +81,8 @@ terminal String  ENTERO, DECIMAL, BOOLEANO, CADENA, CARACTER;
 terminal String INT, FLOAT, BOOL, CHAR, STRING;
 terminal CAST, LET, CONST, AS;
 terminal IF, ELSE, MATCH, DEFAULT;
-terminal DO, WHILE, FOR, BREAK, CONTINUE;
+terminal DO, WHILE, FOR;
+terminal BREAK, CONTINUE;
 terminal CONSOLE, LOG;
 terminal ADD, SUB, MUL, DIV, POW, ROOT, MOD, USUB;
 terminal EQ, NE, LT, LE, GT, GE;
@@ -110,6 +111,7 @@ nonterminal Instruccion SELECCION;
 nonterminal LinkedList<Case> CASELIST;
 nonterminal Case CASE;
 nonterminal DefaultCase DEFAULTCASE;
+nonterminal Instruccion TRANSFERENCIA;
 nonterminal Instruccion CICLOFOR, ACTUALIZFOR;
 nonterminal Instruccion CICLOWHILE, CICLODO;
 nonterminal Instruccion CASTEO;
@@ -166,16 +168,21 @@ VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Decla
             | CONST ID:i COLON TIPO:t                      {: RESULT = new Declaracion(t, tleft, tright, i, false); :}
 ;
 
-TIPO ::= INT:t      {: RESULT = new Tipo(tipoDato.ENTERO); :}
+TIPO ::= INT:t       {: RESULT = new Tipo(tipoDato.ENTERO); :}
        | FLOAT:t     {: RESULT = new Tipo(tipoDato.DECIMAL); :}
        | BOOL:t      {: RESULT = new Tipo(tipoDato.BOOLEANO); :}
        | CHAR:t      {: RESULT = new Tipo(tipoDato.CARACTER); :}
-       | STRING:t   {: RESULT = new Tipo(tipoDato.CADENA); :}
+       | STRING:t    {: RESULT = new Tipo(tipoDato.CADENA); :}
 ;
 
 ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ileft, eright); :}
             | ID:i INCREMENTO            {: RESULT = new Incremento(i, ileft, iright); :}
             | ID:i DECREMENTO            {: RESULT = new Decremento(i, ileft, iright); :}
+            | TRANSFERENCIA:t            {: RESULT = t; :}
+;
+
+TRANSFERENCIA ::= BREAK:b    {: RESULT = new Break(b, bleft, bright); :}
+                | CONTINUE:c {: RESULT = new Continue(c, cleft, cright); :}
 ;
 
 CONDICION ::= CONDIF:c     {: RESULT = c; :}
@@ -197,7 +204,6 @@ CICLOFOR ::= FOR LPAREN ASIGNACION:a SEMICOLON EXPRESION:e SEMICOLON ACTUALIZFOR
 
 ACTUALIZFOR ::= ASIGNACION:a {: RESULT = a; :}
 ;
-
 
 SELECCION ::= MATCH  EXPRESION:e  LBRACE CASELIST:c DEFAULTCASE:d RBRACE {: RESULT = new Switch(e, c, d, eleft, eright); :}
             | MATCH  EXPRESION:e  LBRACE CASELIST:c RBRACE               {: RESULT = new Switch(e, c, eleft, eright); :}
@@ -230,6 +236,7 @@ VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(ti
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
 EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft, aright); :}     %prec USUB // La precedencia se aplicara.
+            | SUB ID:a                        {: RESULT = new NegacionId(a, aleft, aright); :}    %prec USUB // La precedencia se aplicara.
             | EXPRESION:a POW  EXPRESION:b    {: RESULT = new Potencia(a, b, aleft, aright); :}  %prec POW
             | EXPRESION:a ROOT EXPRESION:b    {: RESULT = new Raiz(a, b, aleft, aright); :}      %prec ROOT
             | EXPRESION:a MUL  EXPRESION:b    {: RESULT = new Multiplica(a, b, aleft, aright); :}%prec MUL

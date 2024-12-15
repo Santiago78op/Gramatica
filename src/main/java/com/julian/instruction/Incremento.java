@@ -43,8 +43,20 @@ public class Incremento extends Instruccion {
             // Validaciones del tipo de varible -> let edad:int = (10 + 10) - 5;
             // El if valida si lo que entro no es una constante se actualiza el valor.
             if(!simbolo.isConstante()){
-                // Actulizar el valor de la variable.
-                simbolo.setValor((int) simbolo.getValor() + 1);
+                // Si la variable es de tipo entero se le suma 1.
+                if(simbolo.getTipo().getTipo() == tipoDato.ENTERO){
+                    // Actulizar el valor de la variable.
+                    simbolo.setValor((int) simbolo.getValor() + 1);
+                }
+
+                // Si la variable es de tipo flotante se le suma 1.
+                if(simbolo.getTipo().getTipo() == tipoDato.DECIMAL){
+                    // Actulizar el valor de la variable.
+                    simbolo.setValor((double) simbolo.getValor() + 1);
+                }
+
+                // Actulizar el tipo de la variable.
+                this.tipo.setTipo(simbolo.getTipo().getTipo());
 
                 // Se retorna el valor de la variable.
                 return simbolo.getValor();

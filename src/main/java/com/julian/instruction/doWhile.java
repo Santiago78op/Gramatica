@@ -39,11 +39,17 @@ public class doWhile extends Instruccion {
 
         // Mientras la condicion sea verdadera se ejecutan las instrucciones del do while
         do {
+            // Crear un nuevo ambito, para las instrucciones del do while.
+            var tablaLocalDoWhile = new tablaSimbolo(nuevaTabla);
 
             for (Instruccion instruccion : this.instrucciones) {
-                var result = instruccion.interpretar(arbol, nuevaTabla);
+                var result = instruccion.interpretar(arbol, tablaLocalDoWhile);
                 if (result instanceof Errores) {
                     arbol.addError((Errores) result);
+                }else if (result instanceof Break) {
+                    return null; // Termina la ejecución del switch
+                } else if (result instanceof Continue) {
+                    break; // Salta al siguiente caso
                 }
                 // Se evalua la condicion del do while, por si cambia en el transcurso de las instrucciones
                 condicion = this.condicion.interpretar(arbol, tablaDeSimbolos);
