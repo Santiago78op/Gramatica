@@ -77,9 +77,9 @@ public class Else extends Instruccion {
                 if (result instanceof Errores) {
                     arbol.addError((Errores) result);
                 }else if (result instanceof Break) {
-                    return null; // Termina la ejecución del switch
+                    return result; // Termina la ejecución del switch
                 } else if (result instanceof Continue) {
-                    break; // Salta al siguiente caso
+                    return result; // Salta al siguiente caso
                 }
             }
         }
