@@ -45,6 +45,10 @@ public class tablaSimbolo {
         return nombre;
     }
 
+    public tablaSimbolo getTablaSimboloAnterior() {
+        return tablaSimboloAnterior;
+    }
+
     public void setTablaActual(HashMap<String, Simbolo> tablaActual) {
         this.tablaActual = tablaActual;
     }
@@ -53,18 +57,12 @@ public class tablaSimbolo {
         this.nombre = nombre;
     }
 
-    public tablaSimbolo getTablaSimboloAnterior() {
-        return tablaSimboloAnterior;
-    }
-
-    public boolean setVariable(Simbolo simbolo){
-        // Verificar si la variable ya existe en la tabla de simbolos.
-        Simbolo busqueda = this.tablaActual.get(simbolo.getId().toLowerCase());
+    public boolean setVariable(Simbolo simbolo) {
+        // Se obtiene el id de la variable.
+        Simbolo busqueda = this.tablaActual.get(simbolo.getId());
         // Si la variable no existe, se agrega a la tabla de simbolos.
         if (busqueda == null) {
-            // Se agrega la variable a la tabla de simbolos.
             this.tablaActual.put(simbolo.getId().toLowerCase(), simbolo);
-            // Se retorna true.
             return true;
         }
         // Si la variable ya existe, se retorna false.
@@ -74,7 +72,7 @@ public class tablaSimbolo {
 
     public Simbolo getVariable(String id){
         for(tablaSimbolo i = this; i != null; i = i.getTablaSimboloAnterior()){
-            Simbolo busqueda = i.tablaActual.get(id.toLowerCase());
+            Simbolo busqueda = i.getTablaActual().get(id.toLowerCase());
             if (busqueda != null) {
                 return busqueda;
             }

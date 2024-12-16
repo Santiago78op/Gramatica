@@ -163,10 +163,10 @@ decimal = {digit}+\.([eE]?{digit}+)?
 entero = {digit}+([eE]?{digit}+)?
 
 // Definimos una cadena como un conjunto de caracteres entre comillas dobles.
-cadena = \"([^\"\\]|\\[btnfr\"\\]|\\u[0-9a-fA-F]{4})*\"
+cadena = [\"]([^\"\\\n\t]|\\.)*[\"]
 
 // Definimos un caracter como un valor que acepta un único carácter, incluyendo secuencias de escape.
-caracter = \'([^\'\\]|\\[btnfr\"\'\\]|\\u[0-9a-fA-F]{4})\'
+caracter = [\']([^\'\\]|\\(n|\\|\"\t\'))+[\']
 
 // Definimos un booleano como true o false.
 boleano = (true|false)
@@ -274,6 +274,7 @@ print  = "print"
     ":"    { addToken("COLON",     yytext()); return new Symbol(sym.COLON, yyline, yycolumn, yytext()); }
     "."    { addToken("DOT",       yytext()); return new Symbol(sym.DOT, yyline, yycolumn, yytext()); }
     "=>"   { addToken("ARROW",     yytext()); return new Symbol(sym.ARROW, yyline, yycolumn, yytext()); }
+
 
     // Detectar cadenas entre comillas
     { cadena } {

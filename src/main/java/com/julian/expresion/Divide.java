@@ -92,7 +92,7 @@ public class Divide extends Instruccion {
             case CARACTER -> {
                 switch (tipoDer){
                     case ENTERO -> {
-                        this.tipo.setTipo(tipoDato.ENTERO);
+                        this.tipo.setTipo(tipoDato.DECIMAL);
                         char charValue = getCharValue(valorIzq);
                         return (double)(charValue / (int)valorDer);
                     }

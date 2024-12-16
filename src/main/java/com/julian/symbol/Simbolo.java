@@ -22,7 +22,7 @@ public class Simbolo {
     private String tipoDato;
     private int linea;
     private int columna;
-    private boolean constante = false;
+    private boolean constante;
 
     /**
      * Constructor de la clase Simbolo.

@@ -71,21 +71,25 @@ public class For extends Instruccion {
             var tablaLocalFor = new tablaSimbolo(tablaLocal);
             // Se recorre las instrucciones del for.
             for (Instruccion instruccion : this.instrucciones) {
-                var resultado = instruccion.interpretar(arbol, tablaLocalFor);
-                if (resultado instanceof Errores) {
-                    arbol.addError((Errores) resultado);
-                }else if (resultado instanceof Break) {
-                    return null; // Termina la ejecución del switch
-                } else if (resultado instanceof Continue) {
-                    break; // Salta al siguiente caso
+                var result = instruccion.interpretar(arbol, tablaLocalFor);
+                if (result instanceof Errores) {
+                    arbol.addError((Errores) result);
                 }
-
-                // Actualizar la variable.
-                var resultado2 = this.actualizacion.interpretar(arbol, tablaLocalFor);
-                if (resultado2 instanceof Errores) {
-                    return resultado2;
+                // Se evalua si es un break en el Ciclo For.
+                if (result instanceof Break) {
+                    // Termina el Ciclo For.
+                    return null;
                 }
-
+                // Se evalua si es un continue en el Ciclo For.
+                if (result instanceof Continue) {
+                    // Salta al siguiente caso.
+                    break;
+                }
+            }
+            // Se actualiza la variable.
+            var resultado2 = this.actualizacion.interpretar(arbol, tablaLocal);
+            if (resultado2 instanceof Errores) {
+                return resultado2;
             }
         }
         return null;

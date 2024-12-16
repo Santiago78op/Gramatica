@@ -57,9 +57,11 @@ public class Incremento extends Instruccion {
 
                 // Actulizar el tipo de la variable.
                 this.tipo.setTipo(simbolo.getTipo().getTipo());
+                // Actulizar el valor de la variable.
+                simbolo.setValor(simbolo.getValor());
 
                 // Se retorna el valor de la variable.
-                return simbolo.getValor();
+                return null;
             }else{
                 // El if valida si lo que entro si es contante entonces no se actualiza el valor.
                 return addSemanticError(this.id, this.linea,  this.columna);

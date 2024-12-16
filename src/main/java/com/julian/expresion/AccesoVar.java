@@ -3,10 +3,7 @@ package com.julian.expresion;
 import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
-import com.julian.symbol.Arbol;
-import com.julian.symbol.Tipo;
-import com.julian.symbol.tablaSimbolo;
-import com.julian.symbol.tipoDato;
+import com.julian.symbol.*;
 
 /**
  * El acceso se da unicamente cuando venga el indentificador de la variable.
@@ -30,28 +27,17 @@ public class AccesoVar extends Instruccion {
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         // Buscar la variable en la tabla de simbolos
-        var simbolo = tablaDeSimbolos.getVariable(this.id);
+        var simbolo = tablaDeSimbolos.getVariable(id);
         // Si la variable no existe, se retorna un error
         if (simbolo == null) {
             return addSemanticError(this.id, this.linea,  this.columna);
         }
 
-        // Validaciones del tipo de varible -> let edad:int = (10 + 10) - 5; o const edad:int = (10 + 10) - 5;
-        if (!simbolo.isConstante()) {
-            // El if valida si lo que entro no es una constante se actualiza el valor.
-            // Actulizar el tipo de la variable
-            this.tipo.setTipo(simbolo.getTipo().getTipo());
 
-            // Se retorna el valor de la variable
-            return simbolo.getValor();
-        }else if(simbolo.isConstante()){
-            // Se mantiene el tipo de la variable
-            this.tipo.setTipo(simbolo.getTipo().getTipo());
-            // El if valida si lo que entro si es contante entonces no se actualiza el valor.
-            return simbolo.getValor();
-        }else {
-            return addSemanticError(this.id, this.linea,  this.columna);
-        }
+        // Actulizar el tipo de la variable
+        this.tipo.setTipo(simbolo.getTipo().getTipo());
+        // Se retorna el valor de la variable
+        return simbolo.getValor();
     }
 
     // Metodo para agregar el error Semantico

@@ -162,10 +162,10 @@ INSTRUCCION ::= IMPRESION:i  SEMICOLON    {: RESULT = i; :}
 IMPRESION ::= CONSOLE DOT LOG LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
 ;
 
-VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(t, tleft, tright, i, e, true); :}
-            | LET   ID:i COLON TIPO:t                      {: RESULT = new Declaracion(t, tleft, tright, i, true); :}
-            | CONST ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(t, tleft, tright, i, e, false); :}
-            | CONST ID:i COLON TIPO:t                      {: RESULT = new Declaracion(t, tleft, tright, i, false); :}
+VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(t, tleft, tright, i, e, 0); :}
+            | LET   ID:i COLON TIPO:t                      {: RESULT = new Declaracion(t, tleft, tright, i, 0); :}
+            | CONST ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(t, tleft, tright, i, e, 1); :}
+            | CONST ID:i COLON TIPO:t                      {: RESULT = new Declaracion(t, tleft, tright, i, 1); :}
 ;
 
 TIPO ::= INT:t       {: RESULT = new Tipo(tipoDato.ENTERO); :}
@@ -235,8 +235,7 @@ VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(ti
 ;
 
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
-EXPRESION ::= SUB VALOR:a                     {: RESULT = new Negacion(a, aleft, aright); :}     %prec USUB // La precedencia se aplicara.
-            | SUB ID:a                        {: RESULT = new NegacionId(a, aleft, aright); :}    %prec USUB // La precedencia se aplicara.
+EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft, aright); :}     %prec USUB // La precedencia se aplicara.// La precedencia se aplicara.
             | EXPRESION:a POW  EXPRESION:b    {: RESULT = new Potencia(a, b, aleft, aright); :}  %prec POW
             | EXPRESION:a ROOT EXPRESION:b    {: RESULT = new Raiz(a, b, aleft, aright); :}      %prec ROOT
             | EXPRESION:a MUL  EXPRESION:b    {: RESULT = new Multiplica(a, b, aleft, aright); :}%prec MUL

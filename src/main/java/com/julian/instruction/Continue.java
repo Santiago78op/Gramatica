@@ -17,6 +17,6 @@ public class Continue extends Instruccion {
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        return this.instruccion;
+        return this;
     }
 }

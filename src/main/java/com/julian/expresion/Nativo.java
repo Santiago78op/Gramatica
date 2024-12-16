@@ -37,7 +37,7 @@ public class Nativo extends Instruccion {
             cadena = cadena.replace("\\t", "\t");
             cadena = cadena.replace("\\r", "\r");
             cadena = cadena.replace("\\\"", "\"");
-            cadena = cadena.replace("\\\\'", "'");
+            cadena = cadena.replace("\\\'", "\'");
             cadena = cadena.replace("\\\\", "\\");
             this.valor = cadena;
         }

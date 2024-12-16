@@ -85,6 +85,9 @@ public class Gui {
         }
 
         try {
+            // Limpiar la consola, en este caso la textOutputArea
+            textOutputArea.clear();
+
             lexer = new Lexer(new StringReader(text));
             p = new parser(lexer);
             var resultado = p.parse();
@@ -98,15 +101,15 @@ public class Gui {
                 System.out.println(res);
             }
 
-            textOutputArea.setText(ast.getConsola());
-
             if (lexer.errors.size() > 0 || p.errors.size() > 0 || semanticErrorManager.getErrors().size() > 0) {
+                String dato = ast.getConsola();
+                textOutputArea.setText("\n" + dato + "\n");
 
-                textOutputArea.setText("\n Salida de Error: \n" + "Generando Salida de Errores...");
+                textOutputArea.appendText("\n Salida de Error: \n" + "Generando Salida de Errores...");
                 var erroresLexicos = lexer.errors;
                 var erroresSintacticos = p.errors;
                 var erroresSemantico =  semanticErrorManager.getErrors();
-                textOutputArea.setText("\n Salida de Errores Lexicos: \n" + "Generando Salida de Errores...");
+                textOutputArea.appendText("\n Salida de Errores Lexicos: \n" + "Generando Salida de Errores...");
                 for (var error : erroresLexicos) {
                     textOutputArea.appendText(error.toString() + "\n");
                 }
@@ -124,6 +127,7 @@ public class Gui {
                 showAlert(Alert.AlertType.ERROR, "Compilation Error", "There are errors in the code.");
             } else {
                 showAlert(Alert.AlertType.INFORMATION, "Compilation Successful", "The code was compiled successfully.");
+                textOutputArea.setText(ast.getConsola());
             }
 
         } catch (Exception e) {
@@ -381,7 +385,14 @@ public class Gui {
 
             // Verificar si el directorio existe, si no, crearlo
             File dir = new File(dirPath);
-            if (dir.exists() && dir.isDirectory()) {
+            if (!dir.exists()) {
+                if (dir.mkdirs()) {
+                    System.out.println("Folder Created: " + dirPath);
+                } else {
+                    System.out.println("Folder Creation Failed: " + dirPath);
+                }
+            } else {
+                // Limpiar los archivos existentes
                 File[] files = dir.listFiles();
                 if (files != null) {
                     for (File file : files) {

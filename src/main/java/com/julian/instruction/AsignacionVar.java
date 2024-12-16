@@ -63,12 +63,6 @@ public class AsignacionVar extends Instruccion {
             return new Errores("Semantico", "La variable " + this.id + " es constante y no puede ser modificada", this.linea, this.columna);
         }
 
-        // Validar si la variable es mutable
-        if (!simbolo.isMutable()) {
-            semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.id + " es inmutable y no puede ser modificada", this.linea, this.columna));
-            return new Errores("Semantico", "La variable " + this.id + " es inmutable y no puede ser modificada", this.linea, this.columna);
-        }
-
         // Interpretar la expresion
         var valor = this.expresion.interpretar(arbol, tablaDeSimbolos);
 
@@ -77,10 +71,14 @@ public class AsignacionVar extends Instruccion {
             return valor;
         }
 
-        // Actualizar el valor de la variable
-        simbolo.setValor(valor);
+        // tipos ->
+        if (simbolo.getTipo().getTipo() != this.expresion.tipo.getTipo()) {
+            return new Errores("SEMANTICO", "Tipos no compartibles",
+                    this.linea, this.columna);
+        }
 
-        // Se retorna el valor de la variable
-        return simbolo.getValor();
+        this.tipo.setTipo(simbolo.getTipo().getTipo());
+        simbolo.setValor(valor);
+        return null;
     }
 }

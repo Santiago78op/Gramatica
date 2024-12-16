@@ -47,7 +47,7 @@ public class doWhile extends Instruccion {
                 if (result instanceof Errores) {
                     arbol.addError((Errores) result);
                 }else if (result instanceof Break) {
-                    return null; // Termina la ejecución del switch
+                    return null; // Termina la ejecución del do while
                 } else if (result instanceof Continue) {
                     break; // Salta al siguiente caso
                 }
