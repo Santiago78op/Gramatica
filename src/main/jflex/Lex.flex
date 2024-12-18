@@ -194,6 +194,7 @@ consol = "console"
 log    = "log"
 conti  = "continue"
 print  = "print"
+stuct  = "struct"
 
 // Estados del analizador lexico.
 %state STRING_STATE
@@ -231,6 +232,7 @@ print  = "print"
 <YYINITIAL> { consol } { addToken("CONSOLE",  yytext()); return new Symbol(sym.CONSOLE, yyline, yycolumn, yytext()); }
 <YYINITIAL> { log }    { addToken("LOG",      yytext()); return new Symbol(sym.LOG, yyline, yycolumn, yytext()); }
 <YYINITIAL> { conti }  { addToken("CONTINUE", yytext()); return new Symbol(sym.CONTINUE, yyline, yycolumn, yytext()); }
+<YYINITIAL> { stuct } { addToken("STRUCT",   yytext()); return new Symbol(sym.STRUCT, yyline, yycolumn, yytext()); }
 
 <YYINITIAL>{
     /* number y boolean */
@@ -274,6 +276,8 @@ print  = "print"
     ":"    { addToken("COLON",     yytext()); return new Symbol(sym.COLON, yyline, yycolumn, yytext()); }
     "."    { addToken("DOT",       yytext()); return new Symbol(sym.DOT, yyline, yycolumn, yytext()); }
     "=>"   { addToken("ARROW",     yytext()); return new Symbol(sym.ARROW, yyline, yycolumn, yytext()); }
+    "["   { addToken("LBRACKET",   yytext()); return new Symbol(sym.LBRACKET, yyline, yycolumn, yytext()); }
+    "]"   { addToken("RBRACKET",   yytext()); return new Symbol(sym.RBRACKET, yyline, yycolumn, yytext()); }
 
 
     // Detectar cadenas entre comillas

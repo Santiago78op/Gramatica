@@ -90,6 +90,8 @@ terminal ARROW;
 terminal OR, AND, NOT;
 terminal INCREMENTO, DECREMENTO;
 terminal LPAREN, RPAREN, LBRACE, RBRACE, SEMICOLON, COLON, DOT, ASSIGN;
+terminal STRUCT;
+terminal LBRACKET, RBRACKET;
 
 
 /* ------------- Sección de no terminales ----------- */
@@ -116,6 +118,16 @@ nonterminal Instruccion CICLOFOR, ACTUALIZFOR;
 nonterminal Instruccion CICLOWHILE, CICLODO;
 nonterminal Instruccion CASTEO;
 nonterminal Tipo TIPO;
+
+/**
+* Simbolos no terminales de la Fase 2
+*/
+/* Vectores */
+nonterminal LinkedList<Vector> VECTORES;
+nonterminal Vector VECTOR;
+/* Estructura */
+nonterminal LinkedList<Declaracion> STRUCBODY;
+nonterminal Instruccion ESTRUCTURA;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -156,6 +168,7 @@ INSTRUCCION ::= IMPRESION:i  SEMICOLON    {: RESULT = i; :}
               | CICLOWHILE:w              {: RESULT = w; :}
               | CICLODO:d    SEMICOLON    {: RESULT = d; :}
               | CICLOFOR:f                {: RESULT = f; :}
+              | STRUCT:s                  {: RESULT = s; :}
               | error SEMICOLON           {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
@@ -167,6 +180,18 @@ VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Decla
             | CONST ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(t, tleft, tright, i, e, 1); :}
             | CONST ID:i COLON TIPO:t                      {: RESULT = new Declaracion(t, tleft, tright, i, 1); :}
 ;
+
+/*
+| LET   ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN LBRACE VECTORES:v RBRACE {: RESULT = new Vector(e, eleft, eright)(t, tleft, tright, i, v, 0); :}
+            | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN LBRACE VECTORES:v RBRACE {: RESULT = new Vector(e, eleft, eright)(t, tleft, tright, i, v, 1); :}
+
+VECTORES ::= VECTORES:v COMMA VECTOR:v {: RESULT = v; RESULT.add(v); :}
+           | VECTOR:v                  {: RESULT = new LinkedList<Vector>(); RESULT.add(v); :}
+;
+
+VECTOR ::= EXPRESION:e {: RESULT = e; :}
+;
+*/
 
 TIPO ::= INT:t       {: RESULT = new Tipo(tipoDato.ENTERO); :}
        | FLOAT:t     {: RESULT = new Tipo(tipoDato.DECIMAL); :}
@@ -259,4 +284,15 @@ EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft,
 ;
 
 CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t, eleft, eright); :}
+;
+
+/** GRAMATICA FASE 2 */
+ESTRUCTURA ::= STRUCT ID:i LBRACE STRUCBODY:s RBRACE {: RESULT = new Estructura(i, s, ileft, iright); :}
+;
+
+STRUCBODY ::= STRUCBODY:s STRUCTFIELD:a {: RESULT = s; RESULT.add(a); :}
+           | STRUCTFIELD:a              {: RESULT = new LinkedList<VarStruct>(); RESULT.add(a); :}
+;
+
+STRUCTFIELD ::= ID:i COLON TIPO:t SEMICOLON {: RESULT = new VarStruct(t, tleft, tright, i, 0); :}
 ;

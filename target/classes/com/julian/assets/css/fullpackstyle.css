@@ -117,10 +117,12 @@
 }
 /* Text area styling with purple shadow */
 .text-area {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #2088f0;
-    -fx-border-width: 2px;
-    -fx-effect: dropshadow(gaussian, #20b2f0, 10, 0.5, 0, 0);
+    -fx-font-family: "Monospaced";
+    -fx-font-size: 14px;
+    -fx-control-inner-background: #282626;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
 }
 
 /* Add more specific styles here if needed for other components */
