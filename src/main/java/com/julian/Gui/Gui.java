@@ -105,7 +105,7 @@ public class Gui {
                 String dato = ast.getConsola();
                 textOutputArea.setText("\n" + dato + "\n");
 
-                textOutputArea.appendText("\n Salida de Error: \n" + "Generando Salida de Errores...");
+                textOutputArea.appendText("\n Salida de Error: \n" + "Generando Salida de Errores...\n");
                 var erroresLexicos = lexer.errors;
                 var erroresSintacticos = p.errors;
                 var erroresSemantico =  semanticErrorManager.getErrors();
