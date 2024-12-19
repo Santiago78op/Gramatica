@@ -128,6 +128,7 @@ nonterminal Vector VECTOR;
 nonterminal LinkedList<Object> LISTA_VALORES;
 nonterminal LinkedList<Object> LISTA_VECTORES;
 nonterminal Instruccion ACCESO_VECTOR;
+nonterminal Instruccion ASIGNACION_VECTOR;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -169,6 +170,7 @@ INSTRUCCION ::= IMPRESION:i         SEMICOLON {: RESULT = i; :}
               | CICLODO:d           SEMICOLON {: RESULT = d; :}
               | CICLOFOR:f                    {: RESULT = f; :}
               | VECTORES:d          SEMICOLON {: RESULT = d; :}
+              | ASIGNACION_VECTOR:a SEMICOLON {: RESULT = a; :}
               | error               SEMICOLON {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
@@ -301,6 +303,9 @@ ACCESO_VECTOR ::= ID:i LBRACKET EXPRESION:e RBRACKET            {: RESULT = new 
 ;
 
 // ** ASIGNACION A VECTOR **
+ASIGNACION_VECTOR ::= ID:i LBRACKET EXPRESION:e RBRACKET ASSIGN EXPRESION:v                               {: RESULT = new AsignacionVector(i, e, v, ileft, vright); :}
+                    | ID:i LBRACKET EXPRESION:e RBRACKET LBRACKET EXPRESION:p RBRACKET ASSIGN EXPRESION:d {: RESULT = new AsignacionVector(i, e, p, d, ileft, dright); :}
+;
 
 /*
 VECTORES ::= LET   ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 0); :}
