@@ -3,6 +3,8 @@ package com.julian.instruction;
 import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
+import com.julian.expresion.AccesoVector;
+import com.julian.expresion.Nativo;
 import com.julian.symbol.Arbol;
 import com.julian.symbol.Simbolo;
 import com.julian.symbol.Tipo;
@@ -84,6 +86,7 @@ public class Declaracion extends Instruccion {
             // Validar la expresion recibida
             valueExpresion = this.expresion.interpretar(arbol, tablaDeSimbolos);
             if (valueExpresion instanceof Errores) return valueExpresion;
+
             // Validar que el tipo de la variable sea igual al tipo de la expresion.
             if(this.tipo.getTipo() != this.expresion.tipo.getTipo()){
                 return new Errores("Semantico", "Error de tipos en la declaración de la variable " + this.id + ".\n" +

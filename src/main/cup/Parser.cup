@@ -123,12 +123,11 @@ nonterminal Tipo TIPO;
 * Simbolos no terminales de la Fase 2
 */
 /* Vectores */
-nonterminal Instruccion DEFVECTOR;
-nonterminal LinkedList<Instruccion> VECTORES;
-nonterminal Instruccion VECTOR;
-/* Estructura */
-nonterminal LinkedList<Declaracion> STRUCBODY;
-nonterminal Instruccion ESTRUCTURA;
+nonterminal Instruccion VECTORES;
+nonterminal Vector VECTOR;
+nonterminal LinkedList<Object> LISTA_VALORES;
+nonterminal LinkedList<Object> LISTA_VECTORES;
+nonterminal Instruccion ACCESO_VECTOR;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -161,17 +160,16 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
                 | INSTRUCCION:a                   {: RESULT = new LinkedList<Instruccion>(); RESULT.add(a); :}
 ;
 
-INSTRUCCION ::= IMPRESION:i  SEMICOLON    {: RESULT = i; :}
-              | VARIABLE:v   SEMICOLON    {: RESULT = v; :}
-              | ASIGNACION:a SEMICOLON    {: RESULT = a; :}
-              | CONDICION:c               {: RESULT = c; :}
-              | SELECCION:s               {: RESULT = s; :}
-              | CICLOWHILE:w              {: RESULT = w; :}
-              | CICLODO:d    SEMICOLON    {: RESULT = d; :}
-              | CICLOFOR:f                {: RESULT = f; :}
-              | DEFVECTOR:v  SEMICOLON    {: RESULT = v; :}
-              | STRUCT:s                  {: RESULT = s; :}
-              | error SEMICOLON           {: RESULT = new instruccionError("Sintactico Error"); :}
+INSTRUCCION ::= IMPRESION:i         SEMICOLON {: RESULT = i; :}
+              | VARIABLE:v          SEMICOLON {: RESULT = v; :}
+              | ASIGNACION:a        SEMICOLON {: RESULT = a; :}
+              | CONDICION:c                   {: RESULT = c; :}
+              | SELECCION:s                   {: RESULT = s; :}
+              | CICLOWHILE:w                  {: RESULT = w; :}
+              | CICLODO:d           SEMICOLON {: RESULT = d; :}
+              | CICLOFOR:f                    {: RESULT = f; :}
+              | VECTORES:d          SEMICOLON {: RESULT = d; :}
+              | error               SEMICOLON {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
 IMPRESION ::= CONSOLE DOT LOG LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
@@ -241,18 +239,6 @@ CICLOWHILE ::= WHILE LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: 
 CICLODO ::= DO LBRACE INSTRUCCIONES:i RBRACE WHILE LPAREN EXPRESION:e RPAREN {: RESULT = new doWhile(i, e, eleft, eright); :}
 ;
 
-/** GRAMATICA FASE 2 */
-// ** VECTORES **
-DEFVECTOR ::= LET  ID:i COLON TIPO:t ASSIGN LBRACKET VECTORES:v RBRACKET {: RESULT = new DefVector(t, tleft, tright, i, v, 0); :}
-           | LET   ID:i COLON TIPO:t ASSIGN LBRACKET RBRACKET            {: RESULT = new DefVector(t, tleft, tright, i, 0); :}
-           | CONST ID:i COLON TIPO:t ASSIGN LBRACKET VECTORES:v RBRACKET {: RESULT = new DefVector(t, tleft, tright, i, v, 1); :}
-           | CONST ID:i COLON TIPO:t ASSIGN LBRACKET RBRACKET            {: RESULT = new DefVector(t, tleft, tright, i, 1); :}
-;
-
-VECTORES ::= VECTORES:v COMMA EXPRESION:s {: RESULT = v; RESULT.add(s); :}
-           | EXPRESION:v                 {: RESULT = new LinkedList<Instruccion>(); RESULT.add(v); :}
-;
-
 // public Nativo(Object valor, Tipo tipo, int linea, int columna)
 VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
           | DECIMAL:e    {: RESULT = new Nativo(Double.parseDouble(e), new Tipo(tipoDato.DECIMAL), eleft, eright); :}
@@ -282,15 +268,49 @@ EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft,
             | LPAREN EXPRESION:e RPAREN       {: RESULT = e; :}
             | CASTEO:c                        {: RESULT = c; :}
             | VALOR:e                         {: RESULT = e; :}
+            | ACCESO_VECTOR:a                 {: RESULT = a; :}
             | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
 ;
 
 CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t, eleft, eright); :}
 ;
 
+/** GRAMATICA FASE 2 */
+// ** VECTORES **
+VECTORES ::= LET   ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 0); :}
+           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 1); :}
+           | LET   ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 0); :}
+           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 1); :}
+;
 
+VECTOR ::= LBRACKET LISTA_VALORES:v RBRACKET  {: RESULT = new Vector(v, vleft, vright); :}
+         | LBRACKET LISTA_VECTORES:v RBRACKET {: RESULT = new MultiDimensionalVector(v, vleft, vright); :}
+;
+
+LISTA_VALORES ::= LISTA_VALORES:v COMMA EXPRESION:e {: v.add(e); RESULT = v; :}
+                | EXPRESION:e                       {: RESULT = new LinkedList<Object>(); RESULT.add(e); :}
+;
+
+LISTA_VECTORES ::= LISTA_VECTORES:v COMMA VECTOR:e {: v.add(e); RESULT = v; :}
+                 | VECTOR:e                        {: RESULT = new LinkedList<Object>(); RESULT.add(e); :}
+;
+
+// ** ACCESO A VECTOR **
+ACCESO_VECTOR ::= ID:i LBRACKET EXPRESION:e RBRACKET            {: RESULT = new AccesoVector(i, e, ileft, iright); :}
+                | ACCESO_VECTOR:a LBRACKET EXPRESION:e RBRACKET {: RESULT = new AccesoVector(a, e, aleft, aright); :}
+;
+
+// ** ASIGNACION A VECTOR **
 
 /*
+VECTORES ::= LET   ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 0); :}
+           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 1); :}
+;
+
+VECTOR ::= LBRACKET LISTA_VALORES:v RBRACKET  {: RESULT = new Vector(v, vleft, vright); :}
+         | LBRACKET LISTA_VECTORES:v RBRACKET {: RESULT = new MultiDimensionalVector(v, vleft, vright); :}
+;
+
 ESTRUCTURA ::= STRUCT ID:i LBRACE STRUCBODY:s RBRACE {: RESULT = new Estructura(i, s, ileft, iright); :}
 ;
 

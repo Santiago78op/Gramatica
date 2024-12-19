@@ -1,11 +1,9 @@
 package com.julian.instruction;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
-import com.julian.symbol.Arbol;
-import com.julian.symbol.Tipo;
-import com.julian.symbol.tablaSimbolo;
-import com.julian.symbol.tipoDato;
+import com.julian.symbol.*;
 
 import java.util.LinkedList;
 
@@ -19,34 +17,73 @@ import java.util.LinkedList;
 public class DefVector extends Instruccion {
 
     private String id;
-    private LinkedList<Instruccion> valores;
-    private int mutabilidad;
+    private Vector vector;
+    private int constante;
 
-    public DefVector(Tipo tipo, int linea, int columna, String id, LinkedList<Instruccion> valores, int mutabilidad) {
+    /**
+     * Constructor de la clase DefVector.
+     * @param tipo Tipo de dato.
+     * @param linea Linea en la que se encuentra la instrucción.
+     * @param columna Columna en la que se encuentra la instrucción.
+     * @param id Nombre del vector.
+     * @param vector Valores del vector.
+     * @param constante Si el vector es constante o no.
+     */
+    public DefVector(Tipo tipo, int linea, int columna, String id, Vector vector, int constante) {
         super(tipo, linea, columna);
         this.id = id;
-        this.valores = valores;
-        this.mutabilidad = mutabilidad;
+        this.vector = vector;
+        this.constante = constante;
     }
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        // Se crea una lista con los valores del vector,
-        LinkedList<Object> valoresInterpretados = new LinkedList<>();
-        // Se recorre la lista de valores del vector.
-        for (Instruccion valor : valores) {
-            // Se interpreta el valor. El valrInterpretado puede ser un valor primitivo o un error.
-            // En este caso el valorInterpretado es la Expresion.
-            Object valorInterpretado = valor.interpretar(arbol, tablaDeSimbolos);
-            // Se validan errores semánticos.
-            if (valorInterpretado instanceof Errores) return valorInterpretado;
-            // Se valida que cada valor sea del tipo correcto.
-            if (this.tipo.getTipo() != valorInterpretado.tipo.getTipo()) {
-                return new Errores(Errores.TipoError.SEMANTICO, "El valor del vector no es del tipo correcto.", linea, columna);
-            }
-            // Se agrega el valor interpretado a la lista de valores.
-            valoresInterpretados.add(valorInterpretado);
+        // Validamos el Vector recibido.
+        Object result = this.vector.interpretar(arbol, tablaDeSimbolos);
+        // Validamos los errores
+        if (result instanceof Errores) return result;
+
+        /**
+         * Validamos que el tipo de dato en las listas de vectores, sean
+         * del mismo tipo que el del arreglo declarado, sino error de
+         * tipo semantico.
+         */
+        LinkedList<Object> valores = (LinkedList<Object>) result;
+        if (!validarTipos(valores, this.tipo)) {
+            // Retornamos Error si el tipo de dato no coincide.
+            semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna));
+            return new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna);
         }
 
+        // Validamos si la variable ya existe en la tabla de simbolos, y la agregamos.
+        Simbolo simbolo = new Simbolo(this.tipo, this.id, valores, false, "Externo", "", this.linea, this.columna);
+        if (tablaDeSimbolos.setVariable(simbolo)) {
+            // 1 no es constante, 0 es constante
+            if (this.constante == 0) {
+                simbolo.setConstante(false);
+            } else {
+                simbolo.setConstante(true);
+            }
+            return null;
+        }
+
+        // Retornamos Error si la variable ya existe en la tabla de simbolos.
+        semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna));
+        return new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna);
+    }
+
+    private boolean validarTipos(LinkedList<Object> valores, Tipo tipoEsperado) {
+        for (Object valor : valores) {
+            if (valor instanceof Vector) {
+                if (!validarTipos(((Vector) valor).getValores(), tipoEsperado)) {
+                    return false;
+                }
+            } else {
+                if (tipoEsperado.getTipo() != tipoDato.getType(valor)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
