@@ -10,6 +10,7 @@ public interface sym {
   /* terminals */
   public static final int CAST = 13;
   public static final int POW = 32;
+  public static final int LBRACKET = 58;
   public static final int CONST = 15;
   public static final int CHAR = 11;
   public static final int GE = 41;
@@ -26,6 +27,7 @@ public interface sym {
   public static final int LT = 38;
   public static final int CARACTER = 7;
   public static final int OR = 43;
+  public static final int COMMA = 56;
   public static final int BOOL = 10;
   public static final int DIV = 31;
   public static final int INCREMENTO = 46;
@@ -36,6 +38,7 @@ public interface sym {
   public static final int LE = 39;
   public static final int EOF = 0;
   public static final int DECIMAL = 4;
+  public static final int RBRACKET = 59;
   public static final int DECREMENTO = 47;
   public static final int error = 1;
   public static final int MUL = 30;
@@ -60,6 +63,7 @@ public interface sym {
   public static final int ROOT = 33;
   public static final int STRING = 12;
   public static final int AS = 16;
+  public static final int STRUCT = 57;
   public static final int GT = 40;
   public static final int SUB = 29;
   public static final int DO = 21;
@@ -120,7 +124,11 @@ public interface sym {
   "SEMICOLON",
   "COLON",
   "DOT",
-  "ASSIGN"
+  "ASSIGN",
+  "COMMA",
+  "STRUCT",
+  "LBRACKET",
+  "RBRACKET"
   };
 }
 

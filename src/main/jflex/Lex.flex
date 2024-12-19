@@ -275,6 +275,7 @@ stuct  = "struct"
     ";"    { addToken("SEMICOLON", yytext()); return new Symbol(sym.SEMICOLON, yyline, yycolumn, yytext()); }
     ":"    { addToken("COLON",     yytext()); return new Symbol(sym.COLON, yyline, yycolumn, yytext()); }
     "."    { addToken("DOT",       yytext()); return new Symbol(sym.DOT, yyline, yycolumn, yytext()); }
+    ","    { addToken("COMMA",     yytext()); return new Symbol(sym.COMMA, yyline, yycolumn, yytext()); }
     "=>"   { addToken("ARROW",     yytext()); return new Symbol(sym.ARROW, yyline, yycolumn, yytext()); }
     "["   { addToken("LBRACKET",   yytext()); return new Symbol(sym.LBRACKET, yyline, yycolumn, yytext()); }
     "]"   { addToken("RBRACKET",   yytext()); return new Symbol(sym.RBRACKET, yyline, yycolumn, yytext()); }
