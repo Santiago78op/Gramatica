@@ -16,6 +16,7 @@ public enum tipoDato {
     VOID,
     STRUCT,
     VECTOR,
+    LISTA,
     ERROR;
 
     public static tipoDato getType(Object valor) {
@@ -32,6 +33,12 @@ public enum tipoDato {
                 return CADENA;
             } else if (((Nativo) valor).tipo.getTipo() == tipoDato.STRUCT) {
                 return STRUCT;
+            } else if (((Nativo) valor).tipo.getTipo() == tipoDato.VECTOR) {
+                return VECTOR;
+            } else if (((Nativo) valor).tipo.getTipo() == tipoDato.LISTA) {
+                return LISTA;
+            } else if (((Nativo) valor).tipo.getTipo() == tipoDato.VOID) {
+                return VOID;
             }
         }
         return ERROR;

@@ -91,6 +91,7 @@ terminal OR, AND, NOT;
 terminal INCREMENTO, DECREMENTO;
 terminal LPAREN, RPAREN, LBRACE, RBRACE, SEMICOLON, COLON, DOT, ASSIGN, COMMA;
 terminal STRUCT;
+terminal LIST, PUSH;
 terminal LBRACKET, RBRACKET;
 
 
@@ -129,6 +130,9 @@ nonterminal LinkedList<Object> LISTA_VALORES;
 nonterminal LinkedList<Object> LISTA_VECTORES;
 nonterminal Instruccion ACCESO_VECTOR;
 nonterminal Instruccion ASIGNACION_VECTOR;
+/* Listas */
+nonterminal Instruccion LISTA;
+nonterminal Instruccion PUSH_LISTA;
 
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
@@ -171,6 +175,8 @@ INSTRUCCION ::= IMPRESION:i         SEMICOLON {: RESULT = i; :}
               | CICLOFOR:f                    {: RESULT = f; :}
               | VECTORES:d          SEMICOLON {: RESULT = d; :}
               | ASIGNACION_VECTOR:a SEMICOLON {: RESULT = a; :}
+              | LISTA:l             SEMICOLON {: RESULT = l; :}
+              | PUSH_LISTA:p        SEMICOLON {: RESULT = p; :}
               | error               SEMICOLON {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
@@ -188,6 +194,7 @@ TIPO ::= INT:t       {: RESULT = new Tipo(tipoDato.ENTERO); :}
        | BOOL:t      {: RESULT = new Tipo(tipoDato.BOOLEANO); :}
        | CHAR:t      {: RESULT = new Tipo(tipoDato.CARACTER); :}
        | STRING:t    {: RESULT = new Tipo(tipoDato.CADENA); :}
+       | LIST:t      {: RESULT = new Tipo(tipoDato.LISTA); :}
 ;
 
 ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ileft, eright); :}
@@ -311,22 +318,11 @@ ASIGNACION_VECTOR ::= ID:i LBRACKET EXPRESION:e RBRACKET ASSIGN EXPRESION:v     
                     | ID:i LBRACKET EXPRESION:e RBRACKET LBRACKET EXPRESION:p RBRACKET ASSIGN EXPRESION:d {: RESULT = new AsignacionVector(i, e, p, d, ileft, dright); :}
 ;
 
-/*
-VECTORES ::= LET   ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 0); :}
-           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 1); :}
+// ** LISTAS **
+// DECLARACION LISTAS
+LISTA ::= LET ID:i COLON TIPO:t LT TIPO:o GT {: RESULT = new DeclaracionLista(i, t, o, ileft, iright); :}
 ;
 
-VECTOR ::= LBRACKET LISTA_VALORES:v RBRACKET  {: RESULT = new Vector(v, vleft, vright); :}
-         | LBRACKET LISTA_VECTORES:v RBRACKET {: RESULT = new MultiDimensionalVector(v, vleft, vright); :}
+// ** PUSH LISTAS **
+PUSH_LISTA ::= ID:i DOT PUSH LPAREN EXPRESION:e RPAREN {: RESULT = new PushLista(i, e, ileft, eright); :}
 ;
-
-ESTRUCTURA ::= STRUCT ID:i LBRACE STRUCBODY:s RBRACE {: RESULT = new Estructura(i, s, ileft, iright); :}
-;
-
-STRUCBODY ::= STRUCBODY:s STRUCTFIELD:a {: RESULT = s; RESULT.add(a); :}
-           | STRUCTFIELD:a              {: RESULT = new LinkedList<VarStruct>(); RESULT.add(a); :}
-;
-
-STRUCTFIELD ::= ID:i COLON TIPO:t SEMICOLON {: RESULT = new VarStruct(t, tleft, tright, i, 0); :}
-;
-*/

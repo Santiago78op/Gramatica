@@ -195,6 +195,8 @@ log    = "log"
 conti  = "continue"
 print  = "print"
 stuct  = "struct"
+list   = "list"
+push   = "push"
 
 // Estados del analizador lexico.
 %state STRING_STATE
@@ -233,6 +235,8 @@ stuct  = "struct"
 <YYINITIAL> { log }    { addToken("LOG",      yytext()); return new Symbol(sym.LOG, yyline, yycolumn, yytext()); }
 <YYINITIAL> { conti }  { addToken("CONTINUE", yytext()); return new Symbol(sym.CONTINUE, yyline, yycolumn, yytext()); }
 <YYINITIAL> { stuct } { addToken("STRUCT",   yytext()); return new Symbol(sym.STRUCT, yyline, yycolumn, yytext()); }
+<YYINITIAL> { list }  { addToken("LIST",     yytext()); return new Symbol(sym.LIST, yyline, yycolumn, yytext()); }
+<YYINITIAL> { push }  { addToken("PUSH",     yytext()); return new Symbol(sym.PUSH, yyline, yycolumn, yytext()); }
 
 <YYINITIAL>{
     /* number y boolean */

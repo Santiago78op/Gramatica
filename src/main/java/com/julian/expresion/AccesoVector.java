@@ -45,6 +45,7 @@ public class AccesoVector extends Instruccion {
         } else {
             vector = tablaDeSimbolos.getVariable(id);
             if (vector == null) {
+                semanticErrorManager.addError(new Errores("Semántico", "Variable no encontrada", linea, columna));
                 return new Errores("Semántico", "Variable no encontrada", linea, columna);
             }
             vector = ((Simbolo) vector).getValor();
@@ -56,6 +57,7 @@ public class AccesoVector extends Instruccion {
         if (indexValue instanceof Errores) return indexValue;
 
         if (!(indexValue instanceof Integer)) {
+            semanticErrorManager.addError(new Errores("Semántico", "El índice debe ser un entero", linea, columna));
             return new Errores("Semántico", "El índice debe ser un entero", linea, columna);
         }
 
@@ -63,6 +65,7 @@ public class AccesoVector extends Instruccion {
         if (vector instanceof Vector) {
             Vector vec = (Vector) vector;
             if (idx < 0 || idx >= vec.getValues().size()) {
+                semanticErrorManager.addError(new Errores("Semántico", "Índice fuera de rango", linea, columna));
                 return new Errores("Semántico", "Índice fuera de rango", linea, columna);
             }
             // Accede al valor del vector.
@@ -76,6 +79,7 @@ public class AccesoVector extends Instruccion {
         } else if (vector instanceof LinkedList) {
             LinkedList<Object> vec = (LinkedList<Object>) vector;
             if (idx < 0 || idx >= vec.size()) {
+                semanticErrorManager.addError(new Errores("Semántico", "Índice fuera de rango", linea, columna));
                 return new Errores("Semántico", "Índice fuera de rango", linea, columna);
             }
             // Accede al valor del vector.
@@ -89,6 +93,7 @@ public class AccesoVector extends Instruccion {
         } else if (vector instanceof MultiDimensionalVector) {
             MultiDimensionalVector vec = (MultiDimensionalVector) vector;
             if (idx < 0 || idx >= vec.getValues().size()) {
+                semanticErrorManager.addError(new Errores("Semántico", "Índice fuera de rango", linea, columna));
                 return new Errores("Semántico", "Índice fuera de rango", linea, columna);
             }
             // Accede al valor del vector.
@@ -99,6 +104,7 @@ public class AccesoVector extends Instruccion {
             }
             return value;
         } else {
+            semanticErrorManager.addError(new Errores("Semántico", "Acceso a un tipo no vector", linea, columna));
             return new Errores("Semántico", "Acceso a un tipo no vector", linea, columna);
         }
     }

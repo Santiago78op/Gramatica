@@ -10,11 +10,12 @@ public interface sym {
   /* terminals */
   public static final int CAST = 13;
   public static final int POW = 32;
-  public static final int LBRACKET = 58;
+  public static final int LBRACKET = 60;
   public static final int CONST = 15;
   public static final int CHAR = 11;
   public static final int GE = 41;
   public static final int ENTERO = 3;
+  public static final int PUSH = 59;
   public static final int LPAREN = 48;
   public static final int CONTINUE = 25;
   public static final int INT = 8;
@@ -38,7 +39,7 @@ public interface sym {
   public static final int LE = 39;
   public static final int EOF = 0;
   public static final int DECIMAL = 4;
-  public static final int RBRACKET = 59;
+  public static final int RBRACKET = 61;
   public static final int DECREMENTO = 47;
   public static final int error = 1;
   public static final int MUL = 30;
@@ -53,6 +54,7 @@ public interface sym {
   public static final int LBRACE = 50;
   public static final int ELSE = 18;
   public static final int WHILE = 22;
+  public static final int LIST = 58;
   public static final int DEFAULT = 20;
   public static final int LET = 14;
   public static final int FLOAT = 9;
@@ -127,6 +129,8 @@ public interface sym {
   "ASSIGN",
   "COMMA",
   "STRUCT",
+  "LIST",
+  "PUSH",
   "LBRACKET",
   "RBRACKET"
   };

@@ -63,6 +63,7 @@ public class AsignacionVector extends Instruccion {
             if (ValorIndice instanceof Errores) return ValorIndice;
             // Validamos que el indice sea un entero
             if (!(ValorIndice instanceof Integer)) {
+                semanticErrorManager.addError(new Errores("Semántico", "El índice debe ser un entero", linea, columna));
                 return new Errores("Semántico", "El índice debe ser un entero", linea, columna);
             }
 
@@ -85,6 +86,7 @@ public class AsignacionVector extends Instruccion {
             if (vector instanceof Vector) {
                 Vector vec = (Vector) vector;
                 if (idx < 0 || idx >= vec.getValues().size()) {
+                    semanticErrorManager.addError(new Errores("Semántico", "Índice fuera de rango", linea, columna));
                     return new Errores("Semántico", "Índice fuera de rango", linea, columna);
                 }
                 // Actualizo el valor
@@ -101,6 +103,7 @@ public class AsignacionVector extends Instruccion {
             if (ValorIndice instanceof Errores) return ValorIndice;
             // Validamos que el indice sea un entero
             if (!(ValorIndice instanceof Integer)) {
+                semanticErrorManager.addError(new Errores("Semántico", "El índice debe ser un entero", linea, columna));
                 return new Errores("Semántico", "El índice debe ser un entero", linea, columna);
             }
 
@@ -110,6 +113,7 @@ public class AsignacionVector extends Instruccion {
             if (ValorIndiceAnidado instanceof Errores) return ValorIndiceAnidado;
             // Validamos que el indice anidado sea un entero
             if (!(ValorIndiceAnidado instanceof Integer)) {
+                semanticErrorManager.addError(new Errores("Semántico", "El índice anidado debe ser un entero", linea, columna));
                 return new Errores("Semántico", "El índice anidado debe ser un entero", linea, columna);
             }
 
@@ -134,6 +138,7 @@ public class AsignacionVector extends Instruccion {
             if (vector instanceof MultiDimensionalVector) {
                 MultiDimensionalVector vec = (MultiDimensionalVector) vector;
                 if (idx < 0 || idx >= vec.getValues().size()) {
+                    semanticErrorManager.addError(new Errores("Semántico", "Índice fuera de rango", linea, columna));
                     return new Errores("Semántico", "Índice fuera de rango", linea, columna);
                 }
 
@@ -143,6 +148,7 @@ public class AsignacionVector extends Instruccion {
                 if (value instanceof Vector) {
                     Vector vec2 = (Vector) value;
                     if (idy < 0 || idy >= vec2.getValues().size()) {
+                        semanticErrorManager.addError(new Errores("Semántico", "Índice fuera de rango", linea, columna));
                         return new Errores("Semántico", "Índice fuera de rango", linea, columna);
                     }
                     // Actualizo el valor
