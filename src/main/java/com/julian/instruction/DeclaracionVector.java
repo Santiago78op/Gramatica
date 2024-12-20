@@ -38,11 +38,6 @@ public class DeclaracionVector extends Instruccion {
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        // Verificar si la variable ya existe en la tabla de simbolos
-        if (tablaDeSimbolos.getVariable(id) != null) {
-            return addSemanticError(this.id, this.linea, this.columna);
-        }
-
         // Validamos el Vector recibido.
         Object result = this.vector.interpretar(arbol, tablaDeSimbolos);
         // Validamos los errores
@@ -71,7 +66,9 @@ public class DeclaracionVector extends Instruccion {
             }
             return null;
         }
-        return null;
+        // Retornamos Error si la variable ya existe en la tabla de simbolos.
+        semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna));
+        return new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna);
     }
 
     private boolean validarTipos(LinkedList<Object> valores, Tipo tipoEsperado) {
@@ -89,11 +86,4 @@ public class DeclaracionVector extends Instruccion {
         return true;
     }
 
-    // Metodo para agregar el error Semantico
-    private Errores addSemanticError(String id, int linea, int columna) {
-        Errores error = new Errores("Semantico",
-                "Error en la declaración del vector " + id, linea, columna);
-        semanticErrorManager.addError(error);
-        return error;
-    }
 }

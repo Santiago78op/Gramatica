@@ -50,10 +50,6 @@ public class AsignacionVector extends Instruccion {
             return new Errores("Semantico", "La variable " + this.id + " es constante y no puede ser modificada", this.linea, this.columna);
         }
 
-        // Interpretamos value
-        Object valor = value.interpretar(arbol, tablaDeSimbolos);
-        if (valor instanceof Errores) return valor;
-
         // Validamos tipos
         if(simbolo.getTipo().getTipo() != this.value.getTipo().getTipo()) {
             return addSemanticError(this.id, this.linea, this.columna);
