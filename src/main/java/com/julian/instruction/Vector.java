@@ -51,4 +51,8 @@ public class Vector extends Instruccion {
     public List<Object> getValues() {
         return valores;
     }
+
+    public void setValores(LinkedList<Object> valores) {
+        this.valores = valores;
+    }
 }

@@ -91,14 +91,12 @@ public class AsignacionVector extends Instruccion {
                 if (idx < 0 || idx >= vec.getValues().size()) {
                     return new Errores("Semántico", "Índice fuera de rango", linea, columna);
                 }
-                // Accede al valor del vector.
-                var value = vec.getValues().get(idx);
+                // Actualizo el valor
+                vec.getValues().set(idx, value);
                 // Actualizamos el tipo
                 this.tipo.setTipo(tipoDato.getType(value));
                 this.tipo.setTipo(simbolo.getTipo().getTipo());
-                // Actualizamos el valor
-                var dato = vec.getValues().set(idx, ValorExpresion);
-                simbolo.setValor(dato);
+                simbolo.setValor(vec);
                 return null;
             }
             return null;
