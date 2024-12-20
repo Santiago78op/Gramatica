@@ -92,11 +92,7 @@ public class AsignacionVector extends Instruccion {
                     return new Errores("Semántico", "Índice fuera de rango", linea, columna);
                 }
                 // Actualizo el valor
-                vec.getValues().set(idx, value);
-                // Actualizamos el tipo
-                this.tipo.setTipo(tipoDato.getType(value));
-                this.tipo.setTipo(simbolo.getTipo().getTipo());
-                simbolo.setValor(vec);
+                vec.getValues().set(idx, this.value);
                 return null;
             }
             return null;
@@ -133,11 +129,32 @@ public class AsignacionVector extends Instruccion {
 
             // Actualizamos el tipo
             this.tipo.setTipo(simbolo.getTipo().getTipo());
-            LinkedList<Object> vector = (LinkedList<Object>) simbolo.getValor();
-            LinkedList<Object> vectorAnidado = (LinkedList<Object>) vector.get((int) ValorIndice);
-            vectorAnidado.set((int) ValorIndiceAnidado, ValorExpresion);
-            vector.set((int) ValorIndice, vectorAnidado);
-            simbolo.setValor(vector);
+
+            int idx = (Integer) ValorIndice;
+            int idy = (Integer) ValorIndiceAnidado;
+
+            // Actualizamos el valor
+            var vector = simbolo.getValor();
+            if (vector instanceof MultiDimensionalVector) {
+                MultiDimensionalVector vec = (MultiDimensionalVector) vector;
+                if (idx < 0 || idx >= vec.getValues().size()) {
+                    return new Errores("Semántico", "Índice fuera de rango", linea, columna);
+                }
+
+                // Acceder a la posicion de la fila con idx
+                var value = vec.getValues().get(idx);
+                // Actualizamos el valor
+                if (value instanceof Vector) {
+                    Vector vec2 = (Vector) value;
+                    if (idy < 0 || idy >= vec2.getValues().size()) {
+                        return new Errores("Semántico", "Índice fuera de rango", linea, columna);
+                    }
+                    // Actualizo el valor
+                    vec2.getValues().set(idy, this.value);
+                    return null;
+                }
+            }
+
             return null;
         }
 
