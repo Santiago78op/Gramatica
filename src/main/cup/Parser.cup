@@ -124,7 +124,7 @@ nonterminal Tipo TIPO;
 */
 /* Vectores */
 nonterminal Instruccion VECTORES;
-nonterminal Vector VECTOR;
+nonterminal Instruccion VECTOR;
 nonterminal LinkedList<Object> LISTA_VALORES;
 nonterminal LinkedList<Object> LISTA_VECTORES;
 nonterminal Instruccion ACCESO_VECTOR;
@@ -279,22 +279,26 @@ CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t,
 
 /** GRAMATICA FASE 2 */
 // ** VECTORES **
-VECTORES ::= LET   ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 0); :}
-           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 1); :}
-           | LET   ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 0); :}
-           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DefVector(t, ileft, iright, i, v, 1); :}
+// Declaración de vectores
+VECTORES ::= LET   ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
+           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
+           | LET   ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
+           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
 ;
 
+// Definición de un vector
 VECTOR ::= LBRACKET LISTA_VALORES:v RBRACKET  {: RESULT = new Vector(v, vleft, vright); :}
          | LBRACKET LISTA_VECTORES:v RBRACKET {: RESULT = new MultiDimensionalVector(v, vleft, vright); :}
 ;
 
-LISTA_VALORES ::= LISTA_VALORES:v COMMA EXPRESION:e {: v.add(e); RESULT = v; :}
-                | EXPRESION:e                       {: RESULT = new LinkedList<Object>(); RESULT.add(e); :}
+// Lista de valores para un vector
+LISTA_VALORES ::= LISTA_VALORES:a COMMA VALOR:b {: RESULT = a; RESULT.add(b); :}
+                | VALOR:a                       {: RESULT = new LinkedList<Object>(); RESULT.add(a); :}
 ;
 
-LISTA_VECTORES ::= LISTA_VECTORES:v COMMA VECTOR:e {: v.add(e); RESULT = v; :}
-                 | VECTOR:e                        {: RESULT = new LinkedList<Object>(); RESULT.add(e); :}
+// Lista de vectores para un vector multidimensional
+LISTA_VECTORES ::= LISTA_VECTORES:a COMMA VECTOR:b {: RESULT = a; RESULT.add(b); :}
+                 | VECTOR:a                        {: RESULT = new LinkedList<Object>(); RESULT.add(a); :}
 ;
 
 // ** ACCESO A VECTOR **

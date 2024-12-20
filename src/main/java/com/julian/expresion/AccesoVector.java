@@ -1,5 +1,6 @@
 package com.julian.expresion;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.instruction.MultiDimensionalVector;
@@ -37,6 +38,7 @@ public class AccesoVector extends Instruccion {
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
+        // validamos si nestedAccess es nulo, nestedAccess es para acceder a un vector dentro de otro vector.
         Object vector;
         if (nestedAccess != null) {
             vector = nestedAccess.interpretar(arbol, tablaDeSimbolos);
@@ -99,6 +101,14 @@ public class AccesoVector extends Instruccion {
         } else {
             return new Errores("Semántico", "Acceso a un tipo no vector", linea, columna);
         }
+    }
+
+    // Metodo para agregar el error Semantico
+    private Errores addSemanticError(String id, int linea, int columna) {
+        Errores error = new Errores("Semantico",
+                "El vector " + id + " no existe en la tabla de simbolos", linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 
 }

@@ -47,4 +47,8 @@ public class Nativo extends Instruccion {
         }
         return this.valor;
     }
+
+    public void setValor(Object valorExpresion) {
+        this.valor = valorExpresion;
+    }
 }

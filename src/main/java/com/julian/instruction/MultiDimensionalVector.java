@@ -1,35 +1,33 @@
 package com.julian.instruction;
 
+import com.julian.abstracto.Instruccion;
+import com.julian.symbol.Arbol;
+import com.julian.symbol.Tipo;
+import com.julian.symbol.tablaSimbolo;
+import com.julian.symbol.tipoDato;
+
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Esta clase esta diseñada para manejar vectores multidimensionales.
- * Ejemplo:
- * 1. Una dimencion    -> [1, 2, 3, 4, 5]
- * 2. Dos dimenciones  -> [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
- * 3. Tres dimenciones -> [[[1, 2, 3], [4, 5, 6], [7, 8, 9]], [[10, 11, 12], [13, 14, 15], [16, 17, 18]]]
- */
-public class MultiDimensionalVector extends Vector{
+public class MultiDimensionalVector extends Instruccion {
 
     private LinkedList<Object> valores;
 
     public MultiDimensionalVector(LinkedList<Object> valores, int linea, int columna) {
-        super(valores, linea, columna);
+        super(new Tipo(tipoDato.VECTOR), linea, columna);
         this.valores = valores;
     }
 
     @Override
+    public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
+        return valores;
+    }
+
     public LinkedList<Object> getValores() {
         return valores;
     }
 
-    @Override
-    public void setValores(LinkedList<Object> valores) {
-        this.valores = valores;
-    }
-
-    public List<Object> getVectors() {
+    public List<Object> getValues() {
         return valores;
     }
 }

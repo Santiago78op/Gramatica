@@ -4,10 +4,7 @@ import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.expresion.Nativo;
-import com.julian.symbol.Arbol;
-import com.julian.symbol.Tipo;
-import com.julian.symbol.tablaSimbolo;
-import com.julian.symbol.tipoDato;
+import com.julian.symbol.*;
 
 import java.util.LinkedList;
 
@@ -21,50 +18,30 @@ import java.util.LinkedList;
 public class AsignacionVector extends Instruccion {
 
     private String id;
-    private Instruccion index_1;
-    private Instruccion index_2;
-    private Instruccion expresion;
+    private Instruccion index;
+    private Instruccion nestedIndex;
+    private Instruccion value;
 
-    /**
-     * Constructor de la clase AsignacionVector.
-     * @param linea Linea en la que se encuentra la instrucción.
-     * @param columna Columna en la que se encuentra la instrucción.
-     * @param id Nombre del vector.
-     * @param index_1 Indice 1 del vector.
-     * @param expresion epresionm a asignar al vector.
-     */
-    public AsignacionVector(String id, Instruccion index_1, Instruccion expresion, int linea, int columna) {
+    public AsignacionVector(String id, Instruccion index, Instruccion value, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.id = id;
-        this.index_1 = index_1;
-        this.expresion = expresion;
+        this.index = index;
+        this.value = value;
     }
 
-    /**
-     * Constructor de la clase AsignacionVector.
-     * @param linea Linea en la que se encuentra la instrucción.
-     * @param columna Columna en la que se encuentra la instrucción.
-     * @param id Nombre del vector.
-     * @param index_1 Indice 1 del vector.
-     * @param index_2 Indice 2 del vector.
-     * @param expresion epresion a asignar al vector.
-     */
-    public AsignacionVector(String id, Instruccion index_1, Instruccion index_2, Instruccion expresion, int linea, int columna) {
+    public AsignacionVector(String id, Instruccion index, Instruccion nestedIndex, Instruccion value, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.id = id;
-        this.index_1 = index_1;
-        this.index_2 = index_2;
-        this.expresion = expresion;
+        this.index = index;
+        this.nestedIndex = nestedIndex;
+        this.value = value;
     }
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        // Buscamos el identificador en tabla de simbolos
-        var simbolo = tablaDeSimbolos.getVariable(this.id);
-        // Si la variable no existe, se retorna un error
+        Simbolo simbolo = tablaDeSimbolos.getVariable(id);
         if (simbolo == null) {
-            semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.id + " no existe en la tabla de simbolos", this.linea, this.columna));
-            return new Errores("Semantico", "La variable " + this.id + " no existe en la tabla de simbolos", this.linea, this.columna);
+            return addSemanticError(this.id, this.linea, this.columna);
         }
 
         // Validar si la variable es constante
@@ -73,23 +50,32 @@ public class AsignacionVector extends Instruccion {
             return new Errores("Semantico", "La variable " + this.id + " es constante y no puede ser modificada", this.linea, this.columna);
         }
 
-        // Validamos si es un Vector de 1 o 2 Dimenciones
-        if(this.index_1 != null && this.index_2 == null) {
-            // Interpretar la epresion
-            var valor = this.index_1.interpretar(arbol, tablaDeSimbolos);
+        // Interpretamos value
+        Object valor = value.interpretar(arbol, tablaDeSimbolos);
+        if (valor instanceof Errores) return valor;
+
+        // Validamos tipos
+        if(simbolo.getTipo().getTipo() != this.value.getTipo().getTipo()) {
+            return addSemanticError(this.id, this.linea, this.columna);
+        }
+
+        // Validamanos si es un vector de 1 dimension
+        if ( this.index != null && this.nestedIndex == null){
+            // Interpretar el indice
+            var ValorIndice = this.index.interpretar(arbol, tablaDeSimbolos);
             // Validamos el Error
-            if (valor instanceof Errores) return valor;
+            if (ValorIndice instanceof Errores) return ValorIndice;
             // Validamos que el indice sea un entero
-            if (!(valor instanceof Integer)) {
+            if (!(ValorIndice instanceof Integer)) {
                 return new Errores("Semántico", "El índice debe ser un entero", linea, columna);
             }
 
-            // Interpretamos la expresion a asignar
-            var valorExpresion = this.expresion.interpretar(arbol, tablaDeSimbolos);
+            // Interpretamos el valor
+            var ValorExpresion = this.value.interpretar(arbol, tablaDeSimbolos);
             // Validamos el Error
-            if (valorExpresion instanceof Errores) return valorExpresion;
+            if (ValorExpresion instanceof Errores) return ValorExpresion;
             // Validamos que el tipo de dato sea el mismo
-            if (simbolo.getTipo().getTipo() != this.expresion.tipo.getTipo()) {
+            if (simbolo.getTipo().getTipo() != this.value.tipo.getTipo()) {
                 semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato en la expresion no coincide con el tipo del vector", this.linea, this.columna));
                 return new Errores("Semantico", "El tipo de dato en la expresion no coincide con el tipo del vector", this.linea, this.columna);
             }
@@ -97,26 +83,72 @@ public class AsignacionVector extends Instruccion {
             // Actualizamos el tipo
             this.tipo.setTipo(simbolo.getTipo().getTipo());
 
-            // Actulizamos el Valor en la posicion que indica el index_1
-            if (simbolo.getValor() instanceof LinkedList) {
-                LinkedList<Object> vec = (LinkedList<Object>) simbolo.getValor();
-                int idx = (Integer) valor;
-                if (idx < 0 || idx >= vec.size()) {
+            int idx = (Integer) ValorIndice;
+            // Actualizamos el valor
+            var vector = simbolo.getValor();
+            if (vector instanceof Vector) {
+                Vector vec = (Vector) vector;
+                if (idx < 0 || idx >= vec.getValues().size()) {
                     return new Errores("Semántico", "Índice fuera de rango", linea, columna);
                 }
-
-                // Accede al valor del vector, para cambiarlo por el nuevo dato
-                vec.set(idx, valorExpresion);
                 // Accede al valor del vector.
-                var value = vec.get(idx);
-                // Accede al valor del dato extraido en el vector.
+                var value = vec.getValues().get(idx);
+                // Actualizamos el tipo
                 this.tipo.setTipo(tipoDato.getType(value));
                 this.tipo.setTipo(simbolo.getTipo().getTipo());
+                // Actualizamos el valor
+                var dato = vec.getValues().set(idx, ValorExpresion);
+                simbolo.setValor(dato);
                 return null;
             }
+            return null;
+
+        }else{
+            // Validamos si es un vector de 2 dimensiones
+            // Interpretar el indice
+            var ValorIndice = this.index.interpretar(arbol, tablaDeSimbolos);
+            // Validamos el Error
+            if (ValorIndice instanceof Errores) return ValorIndice;
+            // Validamos que el indice sea un entero
+            if (!(ValorIndice instanceof Integer)) {
+                return new Errores("Semántico", "El índice debe ser un entero", linea, columna);
+            }
+
+            // Interpretar el indice anidado
+            var ValorIndiceAnidado = this.nestedIndex.interpretar(arbol, tablaDeSimbolos);
+            // Validamos el Error
+            if (ValorIndiceAnidado instanceof Errores) return ValorIndiceAnidado;
+            // Validamos que el indice anidado sea un entero
+            if (!(ValorIndiceAnidado instanceof Integer)) {
+                return new Errores("Semántico", "El índice anidado debe ser un entero", linea, columna);
+            }
+
+            // Interpretamos el valor
+            var ValorExpresion = this.value.interpretar(arbol, tablaDeSimbolos);
+            // Validamos el Error
+            if (ValorExpresion instanceof Errores) return ValorExpresion;
+            // Validamos que el tipo de dato sea el mismo
+            if (simbolo.getTipo().getTipo() != this.value.tipo.getTipo()) {
+                semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato en la expresion no coincide con el tipo del vector", this.linea, this.columna));
+                return new Errores("Semantico", "El tipo de dato en la expresion no coincide con el tipo del vector", this.linea, this.columna);
+            }
+
+            // Actualizamos el tipo
+            this.tipo.setTipo(simbolo.getTipo().getTipo());
+            LinkedList<Object> vector = (LinkedList<Object>) simbolo.getValor();
+            LinkedList<Object> vectorAnidado = (LinkedList<Object>) vector.get((int) ValorIndice);
+            vectorAnidado.set((int) ValorIndiceAnidado, ValorExpresion);
+            vector.set((int) ValorIndice, vectorAnidado);
+            simbolo.setValor(vector);
+            return null;
         }
 
-        semanticErrorManager.addError(new Errores("Semantico", "La asignacion " + this.id + "fallo", this.linea, this.columna));
-        return new Errores("Semantico", "La asignacion " + this.id + " fallo", this.linea, this.columna);
+    }
+
+    private Errores addSemanticError(String id, int linea, int columna) {
+        Errores error = new Errores("Semantico",
+                "La variable " + id + " no existe en la tabla de simbolos", linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

@@ -14,10 +14,10 @@ import java.util.LinkedList;
  *  -> let    numeros : int []  = [1, 2, 3, 4, 5];
  *  -> const  letras  : char [] = ['a', 'b', 'c', 'd', 'e'];
  */
-public class DefVector extends Instruccion {
+public class DeclaracionVector extends Instruccion {
 
     private String id;
-    private Vector vector;
+    private Instruccion vector;
     private int constante;
 
     /**
@@ -29,7 +29,7 @@ public class DefVector extends Instruccion {
      * @param vector Valores del vector.
      * @param constante Si el vector es constante o no.
      */
-    public DefVector(Tipo tipo, int linea, int columna, String id, Vector vector, int constante) {
+    public DeclaracionVector(Tipo tipo, int linea, int columna, String id, Instruccion vector, int constante) {
         super(tipo, linea, columna);
         this.id = id;
         this.vector = vector;
@@ -38,6 +38,11 @@ public class DefVector extends Instruccion {
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
+        // Verificar si la variable ya existe en la tabla de simbolos
+        if (tablaDeSimbolos.getVariable(id) != null) {
+            return addSemanticError(this.id, this.linea, this.columna);
+        }
+
         // Validamos el Vector recibido.
         Object result = this.vector.interpretar(arbol, tablaDeSimbolos);
         // Validamos los errores
@@ -55,10 +60,10 @@ public class DefVector extends Instruccion {
             return new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna);
         }
 
-        // Validamos si la variable ya existe en la tabla de simbolos, y la agregamos.
-        Simbolo simbolo = new Simbolo(this.tipo, this.id, valores, false, "Externo", "", this.linea, this.columna);
+        // Agregar la variable a la tabla de simbolos
+        Simbolo simbolo = new Simbolo(this.tipo, this.id, this.vector, false, "Externo", "",this.linea, this.columna);
         if (tablaDeSimbolos.setVariable(simbolo)) {
-            // 1 no es constante, 0 es constante
+            // 0 no es constante, 1 es constante
             if (this.constante == 0) {
                 simbolo.setConstante(false);
             } else {
@@ -66,10 +71,7 @@ public class DefVector extends Instruccion {
             }
             return null;
         }
-
-        // Retornamos Error si la variable ya existe en la tabla de simbolos.
-        semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna));
-        return new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna);
+        return null;
     }
 
     private boolean validarTipos(LinkedList<Object> valores, Tipo tipoEsperado) {
@@ -85,5 +87,13 @@ public class DefVector extends Instruccion {
             }
         }
         return true;
+    }
+
+    // Metodo para agregar el error Semantico
+    private Errores addSemanticError(String id, int linea, int columna) {
+        Errores error = new Errores("Semantico",
+                "Error en la declaración del vector " + id, linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }

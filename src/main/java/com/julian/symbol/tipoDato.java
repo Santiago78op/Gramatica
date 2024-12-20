@@ -15,6 +15,7 @@ public enum tipoDato {
     CADENA,
     VOID,
     STRUCT,
+    VECTOR,
     ERROR;
 
     public static tipoDato getType(Object valor) {
