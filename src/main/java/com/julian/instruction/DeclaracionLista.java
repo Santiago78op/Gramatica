@@ -21,6 +21,14 @@ public class DeclaracionLista extends Instruccion {
     private Tipo tipoLista;
     private String id;
 
+    /**
+     * Constructor de la clase
+     * @param id Identificador de la lista
+     * @param tipoLista Tipo de la lista
+     * @param tipo Tipo de dato de la lista
+     * @param linea Linea donde se encuentra la instrucción
+     * @param columna Columna donde se encuentra la instrucción
+     */
     public DeclaracionLista(String id,Tipo tipoLista, Tipo tipo, int linea, int columna) {
         super(tipo, linea, columna);
         this.tipoLista = tipoLista;

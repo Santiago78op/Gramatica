@@ -197,6 +197,11 @@ print  = "print"
 stuct  = "struct"
 list   = "list"
 push   = "push"
+get    = "get"
+set    = "set"
+remove = "remove"
+pop    = "pop"
+reverse = "reverse"
 
 // Estados del analizador lexico.
 %state STRING_STATE
@@ -214,29 +219,34 @@ push   = "push"
 */
 
 /* keywords */
-<YYINITIAL> { int }    { addToken("INT",      yytext()); return new Symbol(sym.INT, yyline, yycolumn, yytext()); }
-<YYINITIAL> { double } { addToken("FLOAT",    yytext()); return new Symbol(sym.FLOAT, yyline, yycolumn, yytext()); }
-<YYINITIAL> { bool }   { addToken("BOOL",     yytext()); return new Symbol(sym.BOOL, yyline, yycolumn, yytext()); }
-<YYINITIAL> { char }   { addToken("CHAR",     yytext()); return new Symbol(sym.CHAR, yyline, yycolumn, yytext()); }
-<YYINITIAL> { string } { addToken("STRING",   yytext()); return new Symbol(sym.STRING, yyline, yycolumn, yytext()); }
-<YYINITIAL> { cast }   { addToken("CAST",     yytext()); return new Symbol(sym.CAST, yyline, yycolumn, yytext()); }
-<YYINITIAL> { let }    { addToken("LET",      yytext()); return new Symbol(sym.LET, yyline, yycolumn, yytext()); }
-<YYINITIAL> { const }  { addToken("CONST",    yytext()); return new Symbol(sym.CONST, yyline, yycolumn, yytext()); }
-<YYINITIAL> { as }     { addToken("AS",       yytext()); return new Symbol(sym.AS, yyline, yycolumn, yytext()); }
-<YYINITIAL> { if }     { addToken("IF",       yytext()); return new Symbol(sym.IF, yyline, yycolumn, yytext()); }
-<YYINITIAL> { else }   { addToken("ELSE",     yytext()); return new Symbol(sym.ELSE, yyline, yycolumn, yytext()); }
-<YYINITIAL> { match }  { addToken("MATCH",    yytext()); return new Symbol(sym.MATCH, yyline, yycolumn, yytext()); }
-<YYINITIAL> { def }    { addToken("DEFAULT",  yytext()); return new Symbol(sym.DEFAULT, yyline, yycolumn, yytext()); }
-<YYINITIAL> { while }  { addToken("WHILE",    yytext()); return new Symbol(sym.WHILE, yyline, yycolumn,  yytext()); }
-<YYINITIAL> { do }     { addToken("DO",       yytext()); return new Symbol(sym.DO, yyline, yycolumn, yytext()); }
-<YYINITIAL> { for }    { addToken("FOR",      yytext()); return new Symbol(sym.FOR, yyline, yycolumn, yytext()); }
-<YYINITIAL> { break }  { addToken("BREAK",    yytext()); return new Symbol(sym.BREAK, yyline, yycolumn, yytext()); }
-<YYINITIAL> { consol } { addToken("CONSOLE",  yytext()); return new Symbol(sym.CONSOLE, yyline, yycolumn, yytext()); }
-<YYINITIAL> { log }    { addToken("LOG",      yytext()); return new Symbol(sym.LOG, yyline, yycolumn, yytext()); }
-<YYINITIAL> { conti }  { addToken("CONTINUE", yytext()); return new Symbol(sym.CONTINUE, yyline, yycolumn, yytext()); }
-<YYINITIAL> { stuct } { addToken("STRUCT",   yytext()); return new Symbol(sym.STRUCT, yyline, yycolumn, yytext()); }
-<YYINITIAL> { list }  { addToken("LIST",     yytext()); return new Symbol(sym.LIST, yyline, yycolumn, yytext()); }
-<YYINITIAL> { push }  { addToken("PUSH",     yytext()); return new Symbol(sym.PUSH, yyline, yycolumn, yytext()); }
+<YYINITIAL> { int }     { addToken("INT",      yytext()); return new Symbol(sym.INT, yyline, yycolumn, yytext()); }
+<YYINITIAL> { double }  { addToken("FLOAT",    yytext()); return new Symbol(sym.FLOAT, yyline, yycolumn, yytext()); }
+<YYINITIAL> { bool }    { addToken("BOOL",     yytext()); return new Symbol(sym.BOOL, yyline, yycolumn, yytext()); }
+<YYINITIAL> { char }    { addToken("CHAR",     yytext()); return new Symbol(sym.CHAR, yyline, yycolumn, yytext()); }
+<YYINITIAL> { string }  { addToken("STRING",   yytext()); return new Symbol(sym.STRING, yyline, yycolumn, yytext()); }
+<YYINITIAL> { cast }    { addToken("CAST",     yytext()); return new Symbol(sym.CAST, yyline, yycolumn, yytext()); }
+<YYINITIAL> { let }     { addToken("LET",      yytext()); return new Symbol(sym.LET, yyline, yycolumn, yytext()); }
+<YYINITIAL> { const }   { addToken("CONST",    yytext()); return new Symbol(sym.CONST, yyline, yycolumn, yytext()); }
+<YYINITIAL> { as }      { addToken("AS",       yytext()); return new Symbol(sym.AS, yyline, yycolumn, yytext()); }
+<YYINITIAL> { if }      { addToken("IF",       yytext()); return new Symbol(sym.IF, yyline, yycolumn, yytext()); }
+<YYINITIAL> { else }    { addToken("ELSE",     yytext()); return new Symbol(sym.ELSE, yyline, yycolumn, yytext()); }
+<YYINITIAL> { match }   { addToken("MATCH",    yytext()); return new Symbol(sym.MATCH, yyline, yycolumn, yytext()); }
+<YYINITIAL> { def }     { addToken("DEFAULT",  yytext()); return new Symbol(sym.DEFAULT, yyline, yycolumn, yytext()); }
+<YYINITIAL> { while }   { addToken("WHILE",    yytext()); return new Symbol(sym.WHILE, yyline, yycolumn,  yytext()); }
+<YYINITIAL> { do }      { addToken("DO",       yytext()); return new Symbol(sym.DO, yyline, yycolumn, yytext()); }
+<YYINITIAL> { for }     { addToken("FOR",      yytext()); return new Symbol(sym.FOR, yyline, yycolumn, yytext()); }
+<YYINITIAL> { break }   { addToken("BREAK",    yytext()); return new Symbol(sym.BREAK, yyline, yycolumn, yytext()); }
+<YYINITIAL> { consol }  { addToken("CONSOLE",  yytext()); return new Symbol(sym.CONSOLE, yyline, yycolumn, yytext()); }
+<YYINITIAL> { log }     { addToken("LOG",      yytext()); return new Symbol(sym.LOG, yyline, yycolumn, yytext()); }
+<YYINITIAL> { conti }   { addToken("CONTINUE", yytext()); return new Symbol(sym.CONTINUE, yyline, yycolumn, yytext()); }
+<YYINITIAL> { stuct }   { addToken("STRUCT",   yytext()); return new Symbol(sym.STRUCT, yyline, yycolumn, yytext()); }
+<YYINITIAL> { list }    { addToken("LIST",     yytext()); return new Symbol(sym.LIST, yyline, yycolumn, yytext()); }
+<YYINITIAL> { push }    { addToken("PUSH",     yytext()); return new Symbol(sym.PUSH, yyline, yycolumn, yytext()); }
+<YYINITIAL> { get }     { addToken("GET",      yytext()); return new Symbol(sym.GET, yyline, yycolumn, yytext()); }
+<YYINITIAL> { set }     { addToken("SET",      yytext()); return new Symbol(sym.SET, yyline, yycolumn, yytext()); }
+<YYINITIAL> { remove }  { addToken("REMOVE",   yytext()); return new Symbol(sym.REMOVE, yyline, yycolumn, yytext()); }
+<YYINITIAL> { pop }     { addToken("POP",      yytext()); return new Symbol(sym.POP, yyline, yycolumn, yytext()); }
+<YYINITIAL> { reverse } { addToken("REVERSE",  yytext()); return new Symbol(sym.REVERSE, yyline, yycolumn, yytext()); }
 
 <YYINITIAL>{
     /* number y boolean */

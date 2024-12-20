@@ -7,11 +7,21 @@ import com.julian.symbol.*;
 
 import java.util.LinkedList;
 
+/**
+ * Clase que ejecuta la instrucción push a una lista
+ */
 public class PushLista extends Instruccion {
 
     private String id;
     private Instruccion expresion;
 
+    /**
+     * Constructor de la clase
+     * @param id Identificador de la lista
+     * @param expresion Expresión a agregar a la lista
+     * @param linea Linea donde se encuentra la instrucción
+     * @param columna Columna donde se encuentra la instrucción
+     */
     public PushLista(String id, Instruccion expresion, int linea, int columna) {
         super(new Tipo(tipoDato.LISTA), linea, columna);
         this.id = id;
@@ -40,7 +50,7 @@ public class PushLista extends Instruccion {
 
         // Agregar el valor a la lista
         LinkedList<Object> lista = (LinkedList<Object>) simbolo.getValor();
-        lista.add(valor);
+        lista.add(this.expresion);
 
         return null;
     }

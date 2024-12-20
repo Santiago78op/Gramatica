@@ -89,6 +89,8 @@ public class Declaracion extends Instruccion {
 
             // Validar que el tipo de la variable sea igual al tipo de la expresion.
             if(this.tipo.getTipo() != this.expresion.tipo.getTipo()){
+                semanticErrorManager.addError(new Errores("Semantico", "Error de tipos en la declaración de la variable " + this.id + ".\n" +
+                        "El tipo de la variable no coincide con el tipo de la expresión.", this.linea, this.columna));
                 return new Errores("Semantico", "Error de tipos en la declaración de la variable " + this.id + ".\n" +
                         "El tipo de la variable no coincide con el tipo de la expresión.", this.linea, this.columna);
             }

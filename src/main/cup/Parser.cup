@@ -91,7 +91,7 @@ terminal OR, AND, NOT;
 terminal INCREMENTO, DECREMENTO;
 terminal LPAREN, RPAREN, LBRACE, RBRACE, SEMICOLON, COLON, DOT, ASSIGN, COMMA;
 terminal STRUCT;
-terminal LIST, PUSH;
+terminal LIST, PUSH, GET, SET, REMOVE, POP, REVERSE;
 terminal LBRACKET, RBRACKET;
 
 
@@ -132,8 +132,8 @@ nonterminal Instruccion ACCESO_VECTOR;
 nonterminal Instruccion ASIGNACION_VECTOR;
 /* Listas */
 nonterminal Instruccion LISTA;
-nonterminal Instruccion PUSH_LISTA;
-
+nonterminal Instruccion PUSH_LISTA, GET_LISTA, SET_LISTA;
+nonterminal Instruccion REMOVE_LISTA, POP_LISTA, REVERSE_LISTA;
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
 /*
@@ -177,6 +177,7 @@ INSTRUCCION ::= IMPRESION:i         SEMICOLON {: RESULT = i; :}
               | ASIGNACION_VECTOR:a SEMICOLON {: RESULT = a; :}
               | LISTA:l             SEMICOLON {: RESULT = l; :}
               | PUSH_LISTA:p        SEMICOLON {: RESULT = p; :}
+              | SET_LISTA:s         SEMICOLON {: RESULT = s; :}
               | error               SEMICOLON {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
@@ -278,6 +279,7 @@ EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft,
             | CASTEO:c                        {: RESULT = c; :}
             | VALOR:e                         {: RESULT = e; :}
             | ACCESO_VECTOR:a                 {: RESULT = a; :}
+            | GET_LISTA:g                     {: RESULT = g; :}
             | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
 ;
 
@@ -325,4 +327,24 @@ LISTA ::= LET ID:i COLON TIPO:t LT TIPO:o GT {: RESULT = new DeclaracionLista(i,
 
 // ** PUSH LISTAS **
 PUSH_LISTA ::= ID:i DOT PUSH LPAREN EXPRESION:e RPAREN {: RESULT = new PushLista(i, e, ileft, eright); :}
+;
+
+// ** GET LISTAS **
+GET_LISTA ::= ID:i DOT GET LPAREN EXPRESION:e RPAREN {: RESULT = new GetLista(i, e, ileft, eright); :}
+;
+
+//  ** SET LISTAS **
+SET_LISTA ::= ID:i DOT SET LPAREN EXPRESION:e COMMA EXPRESION:p RPAREN {: RESULT = new SetLista(i, e, p, ileft, pright); :}
+;
+
+// ** REMOVE LISTAS **
+REMOVE_LISTA ::= ID:i DOT REMOVE LPAREN EXPRESION:e RPAREN {: RESULT = new RemoveLista(i, e, ileft, eright); :}
+;
+
+// ** POP LISTAS **
+POP_LISTA ::= ID:i DOT POP LPAREN RPAREN {: RESULT = new PopLista(i, ileft, iright); :}
+;
+
+// ** REVERSE LISTAS **
+REVERSE_LISTA ::= ID:i DOT REVERSE LPAREN RPAREN {: RESULT = new ReverseLista(i, ileft, iright); :}
 ;

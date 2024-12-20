@@ -10,10 +10,12 @@ public interface sym {
   /* terminals */
   public static final int CAST = 13;
   public static final int POW = 32;
-  public static final int LBRACKET = 60;
+  public static final int LBRACKET = 65;
   public static final int CONST = 15;
   public static final int CHAR = 11;
   public static final int GE = 41;
+  public static final int POP = 63;
+  public static final int REMOVE = 62;
   public static final int ENTERO = 3;
   public static final int PUSH = 59;
   public static final int LPAREN = 48;
@@ -21,6 +23,7 @@ public interface sym {
   public static final int INT = 8;
   public static final int FOR = 23;
   public static final int MATCH = 19;
+  public static final int REVERSE = 64;
   public static final int RPAREN = 49;
   public static final int SEMICOLON = 52;
   public static final int NOT = 45;
@@ -30,6 +33,7 @@ public interface sym {
   public static final int OR = 43;
   public static final int COMMA = 56;
   public static final int BOOL = 10;
+  public static final int GET = 60;
   public static final int DIV = 31;
   public static final int INCREMENTO = 46;
   public static final int ASSIGN = 55;
@@ -39,7 +43,7 @@ public interface sym {
   public static final int LE = 39;
   public static final int EOF = 0;
   public static final int DECIMAL = 4;
-  public static final int RBRACKET = 61;
+  public static final int RBRACKET = 66;
   public static final int DECREMENTO = 47;
   public static final int error = 1;
   public static final int MUL = 30;
@@ -70,6 +74,7 @@ public interface sym {
   public static final int SUB = 29;
   public static final int DO = 21;
   public static final int CONSOLE = 26;
+  public static final int SET = 61;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -131,6 +136,11 @@ public interface sym {
   "STRUCT",
   "LIST",
   "PUSH",
+  "GET",
+  "SET",
+  "REMOVE",
+  "POP",
+  "REVERSE",
   "LBRACKET",
   "RBRACKET"
   };

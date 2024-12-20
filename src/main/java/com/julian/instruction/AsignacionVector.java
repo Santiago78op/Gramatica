@@ -22,6 +22,14 @@ public class AsignacionVector extends Instruccion {
     private Instruccion nestedIndex;
     private Instruccion value;
 
+    /**
+     * Constructor de la clase
+     * @param id Identificador del vector
+     * @param index Indice del vector
+     * @param value Valor a asignar
+     * @param linea Linea donde se encuentra la instrucción
+     * @param columna Columna donde se encuentra la instrucción
+     */
     public AsignacionVector(String id, Instruccion index, Instruccion value, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.id = id;
@@ -29,6 +37,15 @@ public class AsignacionVector extends Instruccion {
         this.value = value;
     }
 
+    /**
+     * Constructor de la clase
+     * @param id Identificador del vector
+     * @param index Indice del vector
+     * @param nestedIndex Indice anidado del vector
+     * @param value Valor a asignar
+     * @param linea Linea donde se encuentra la instrucción
+     * @param columna Columna donde se encuentra la instrucción
+     */
     public AsignacionVector(String id, Instruccion index, Instruccion nestedIndex, Instruccion value, int linea, int columna) {
         super(new Tipo(tipoDato.VOID), linea, columna);
         this.id = id;
