@@ -6,6 +6,7 @@ import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.instruction.Declaracion;
 import com.julian.instruction.Metodo;
+import com.julian.instruction.RunMain;
 import com.julian.parser;
 import com.julian.reports.Reports;
 import com.julian.symbol.Arbol;
@@ -100,17 +101,16 @@ public class Gui {
             // Se almacena una tabla Global
             ast.setTablaSimbolosGlobal(tabla);
 
+            // Primer Recorrido
             for (var a : ast.getInstrucciones()) {
                 if (a == null) continue;
 
                 if (a instanceof Metodo){
                     ast.addFuncion(a);
                 }
-
-                var result = a.interpretar(ast, tabla);
-                System.out.println(result);
             }
 
+            // Segundo Recorrido
             for (var a : ast.getInstrucciones()) {
                 if (a == null) continue;
 
@@ -120,9 +120,18 @@ public class Gui {
                         ast.addError((Errores) res);
                     }
                 }
+            }
 
-                var result = a.interpretar(ast, tabla);
-                System.out.println(result);
+            // Tercer Recorrido
+            for (var a : ast.getInstrucciones()) {
+                if (a == null) continue;
+
+                if (a instanceof RunMain){
+                    var res = a.interpretar(ast, tabla);
+                    if (res instanceof Errores){
+                        ast.addError((Errores) res);
+                    }
+                }
             }
 
             if (lexer.errors.size() > 0 || p.errors.size() > 0 || semanticErrorManager.getErrors().size() > 0) {

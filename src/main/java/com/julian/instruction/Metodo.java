@@ -47,6 +47,26 @@ public class Metodo extends Instruccion {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public LinkedList<HashMap> getParametros() {
+        return parametros;
+    }
+
+    public void setParametros(LinkedList<HashMap> parametros) {
+        this.parametros = parametros;
+    }
+
+    public LinkedList<Instruccion> getInstrucciones() {
+        return instrucciones;
+    }
+
+    public void setInstrucciones(LinkedList<Instruccion> instrucciones) {
+        this.instrucciones = instrucciones;
+    }
+
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         // Interpretacion de una funcion

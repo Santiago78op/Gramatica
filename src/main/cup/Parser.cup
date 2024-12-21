@@ -12,6 +12,7 @@ import java_cup.runtime.*;
 
 // Se importa la clase LinkedList para poder usarla en la gramatica.
 import java.util.LinkedList;
+import java.util.HashMap;
 import com.julian.abstracto.Instruccion;
 import com.julian.symbol.*;
 import com.julian.exception.Errores;
@@ -140,7 +141,8 @@ nonterminal Instruccion PUSH_LISTA, GET_LISTA, SET_LISTA;
 nonterminal Instruccion REMOVE_LISTA, POP_LISTA, REVERSE_LISTA;
 /* Metodo */
 nonterminal Instruccion METODO;
-nonterminal Instruccion PARAMETRO, LISTA_PARAMETRO;
+nonterminal LinkedList<HashMap> LISTA_PARAMETRO, CALL_PARAMETRO;
+nonterminal HashMap<String, Object> PARAMETRO;
 /* Main */
 nonterminal Instruccion MAIN;
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
@@ -371,20 +373,43 @@ REVERSE_LISTA ::= ID:i DOT REVERSE LPAREN RPAREN {: RESULT = new ReverseLista(i,
 ;
 
 // ** METODO **
-METODO ::= TIPO:t ID:d LPAREN LISTA_PARAMETRO:l RPAREN LBRACE INSTRUCCIONES:i RBRACE  {: RESULT = new Metodo(t, d, l, i, tleft, tright); :}
+METODO ::= TIPO:t ID:d LPAREN RPAREN LBRACE LISTA_INSTRUCCION:i RBRACE  {: RESULT = new Metodo(t, d, new LinkedList<HashMap>(), i, tleft, tright); :}
+         | TIPO:t ID:d LPAREN LISTA_PARAMETRO:l RPAREN LBRACE LISTA_INSTRUCCION:i RBRACE {: RESULT = new Metodo(t, d, l, i, tleft, tright); :}
 ;
 
 // ** LISTA PARAMETRO **
  LISTA_PARAMETRO ::= LISTA_PARAMETRO:a COMMA PARAMETRO:b {: RESULT = a; RESULT.add(b); :}
-                    | PARAMETRO:a                        {: RESULT = new LinkedList<Instruccion>(); RESULT.add(a); :}
+                    | PARAMETRO:a                        {: RESULT = new LinkedList<HashMap>(); RESULT.add(a); :}
 ;
 
 // ** PARAMETRO **
-PARAMETRO ::= ID:i COLON TIPO:t ASSIGN EXPRESION:e {: RESULT = new Declaracion(t, tleft, tright, i, e, 0); :}
-            | ID:i COLON TIPO:t                    {: RESULT = new Declaracion(t, tleft, tright, i, 0); :}
+PARAMETRO ::= ID:i COLON TIPO:t ASSIGN EXPRESION:e {:var param = new HashMap<String,Object>();
+                                                      param.put("id",i);
+                                                      param.put("tipo",t);
+                                                      param.put("valor",e);
+                                                      RESULT = param;:}
+            | ID:i COLON TIPO:t                    {: var param = new HashMap<String,Object>();
+                                                      param.put("tipo",t);
+                                                      param.put("id",i);
+                                                      param.put("valor",null);
+                                                      RESULT = param; :}
 ;
 
 // ** RUN MAIN **
-MAIN ::= RUN_MAIN ID:i LPAREN RPAREN                   {: RESULT = new RunMain(i, ileft, iright); :}
-       | RUN_MAIN ID:i LPAREN LISTA_PARAMETRO:l RPAREN {: RESULT = new RunMain(i, l, ileft, iright); :}
+MAIN ::= RUN_MAIN ID:i LPAREN LISTA_PARAMETRO:l RPAREN {: RESULT = new RunMain(i, l, ileft, iright); :}
+       | RUN_MAIN ID:i LPAREN RPAREN                   {: RESULT = new RunMain(i, new LinkedList<HashMap>(),ileft, iright); :}
+;
+
+CALL_PARAMETRO ::= CALL_PARAMETRO:a COMMA ID:b COLON TIPO:t ASSIGN EXPRESION:c {: var param2 = new HashMap<String,Object>();
+                                                                           param2.put("id",b);
+                                                                           param2.put("tipo",t);
+                                                                           param2.put("valor",c);
+                                                                           RESULT = a;
+                                                                           RESULT.add(param2);:}
+            | ID:b COLON TIPO:t ASSIGN EXPRESION:c                     {:var param1 = new HashMap<String,Object>();
+                                                                           param1.put("id",b);
+                                                                           param1.put("tipo",t);
+                                                                           param1.put("valor",c);
+                                                                           RESULT = new LinkedList<HashMap>();
+                                                                           RESULT.add(param1);:}
 ;

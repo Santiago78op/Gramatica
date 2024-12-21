@@ -88,4 +88,5 @@ public class tablaSimbolo {
                     + " | Ambito: " + simbolo.getAmbito() + " | TipoDato: " + simbolo.getTipoDato() + " | Linea: " + simbolo.getLinea() + " | Columna: " + simbolo.getColumna());
         }
     }
+
 }
