@@ -1,7 +1,9 @@
 package com.julian.symbol;
 
+import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
+import com.julian.instruction.Metodo;
 
 import java.util.LinkedList;
 
@@ -47,12 +49,15 @@ public class Arbol {
     // Metodo para agregar funciones
     public void addFuncion(Instruccion funcion){
         // validamos que no exista la funcion
-        /**
         boolean existe = false;
+        String id = "";
         for (Instruccion f: this.funciones){
-            if (f.getId().equals(funcion.getId())){
-                existe = true;
-                break;
+            if (f instanceof Metodo metodo){
+                if (metodo.getId().equalsIgnoreCase(((Metodo) funcion).getId())){
+                    id = metodo.getId();
+                    existe = true;
+                    break;
+                }
             }
         }
 
@@ -60,22 +65,21 @@ public class Arbol {
             this.funciones.add(funcion);
         }else{
             // Error semantico
-            Errores error = new Errores("Semantico", "La funcion " + funcion.getId() + " ya existe", 0, 0);
+            semanticErrorManager.addError(new Errores("Semantico", "La funcion " + id + " ya existe", 0, 0));
+            Errores error = new Errores("Semantico", "La funcion " + id + " ya existe", 0, 0);
             this.errores.add(error);
         }
-*/
-        this.funciones.add(funcion);
     }
 
     // Metodo para obtener las funciones
     public Instruccion getFuncion(String id){
-        /**
-        for (Instruccion f: this.funciones){
-            if (f.getId().equals(id)){
-                return f;
+        for( var i: this.funciones){
+            if (i instanceof Metodo metodo){
+                if (metodo.getId().equalsIgnoreCase(id)){
+                    return i;
+                }
             }
         }
-         */
         return null;
     }
 

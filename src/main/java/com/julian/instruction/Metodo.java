@@ -1,8 +1,12 @@
 package com.julian.instruction;
 
 import com.julian.abstracto.Instruccion;
+import com.julian.exception.Errores;
+import com.julian.symbol.Arbol;
 import com.julian.symbol.Tipo;
+import com.julian.symbol.tablaSimbolo;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -20,14 +24,42 @@ import java.util.LinkedList;
 public class Metodo extends Instruccion {
 
     private String id;
-    private LinkedList<Instruccion> parametros;
+    private LinkedList<HashMap> parametros;
     private LinkedList<Instruccion> instrucciones;
 
-    public Metodo(Tipo tipo, int linea, int columna, String id, LinkedList<Instruccion> instrucciones) {
+    /**
+     * Metodo -> Constructor de la clase.
+     * @param tipo Tipo de dato que retorna el método.
+     * @param id Identificador del método.
+     * @param parametros Lista de parámetros del método.
+     * @param instrucciones Lista de instrucciones del método.
+     * @param linea Linea del método.
+     * @param columna Columna del método.
+     */
+    public Metodo(Tipo tipo, String id, LinkedList<HashMap> parametros, LinkedList<Instruccion> instrucciones, int linea, int columna) {
         super(tipo, linea, columna);
         this.id = id;
+        this.parametros = parametros;
         this.instrucciones = instrucciones;
     }
 
+    public String getId() {
+        return id;
+    }
 
+    @Override
+    public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
+        // Interpretacion de una funcion
+        for (var instruccion: this.instrucciones){
+            if ( instruccion == null){
+                continue;
+            }
+            var result = instruccion.interpretar(arbol, tablaDeSimbolos);
+            // Recuperacion de errores
+            if (result instanceof Errores) {
+                arbol.addError((Errores) result);
+            }
+        }
+        return null;
+    }
 }

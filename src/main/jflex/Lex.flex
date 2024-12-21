@@ -194,14 +194,17 @@ consol = "console"
 log    = "log"
 conti  = "continue"
 print  = "print"
-stuct  = "struct"
-list   = "list"
-push   = "push"
-get    = "get"
-set    = "set"
-remove = "remove"
-pop    = "pop"
+// LEXICO FASE 2
+stuct   = "struct"
+list    = "list"
+push    = "push"
+get     = "get"
+set     = "set"
+remove  = "remove"
+pop     = "pop"
 reverse = "reverse"
+void    = "void"
+main    = "run_main"
 
 // Estados del analizador lexico.
 %state STRING_STATE
@@ -247,6 +250,8 @@ reverse = "reverse"
 <YYINITIAL> { remove }  { addToken("REMOVE",   yytext()); return new Symbol(sym.REMOVE, yyline, yycolumn, yytext()); }
 <YYINITIAL> { pop }     { addToken("POP",      yytext()); return new Symbol(sym.POP, yyline, yycolumn, yytext()); }
 <YYINITIAL> { reverse } { addToken("REVERSE",  yytext()); return new Symbol(sym.REVERSE, yyline, yycolumn, yytext()); }
+<YYINITIAL> { void }    { addToken("VOID",     yytext()); return new Symbol(sym.VOID, yyline, yycolumn, yytext()); }
+<YYINITIAL> { main }    { addToken("MAIN",     yytext()); return new Symbol(sym.RUN_MAIN, yyline, yycolumn, yytext()); }
 
 <YYINITIAL>{
     /* number y boolean */
