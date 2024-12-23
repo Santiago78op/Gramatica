@@ -83,7 +83,7 @@ terminal String INT, FLOAT, BOOL, CHAR, STRING;
 terminal CAST, LET, CONST, AS;
 terminal IF, ELSE, MATCH, DEFAULT;
 terminal DO, WHILE, FOR;
-terminal BREAK, CONTINUE;
+terminal BREAK, CONTINUE, RETURN;
 terminal CONSOLE, LOG;
 terminal ADD, SUB, MUL, DIV, POW, ROOT, MOD, USUB;
 terminal EQ, NE, LT, LE, GT, GE;
@@ -145,6 +145,10 @@ nonterminal HashMap<String, Object> LISTA_STRUCT;
 nonterminal Instruccion DECLARACION_METODO;
 nonterminal LinkedList<HashMap> LISTA_PARAMETRO, CALL_PARAMETRO;
 nonterminal HashMap<String, Object> PARAMETRO;
+/* Funcion */
+nonterminal Instruccion DECLARACION_FUNCION;
+/* Llamada */
+nonterminal Instruccion LLAMADA;
 /* Main */
 nonterminal Instruccion DECLARACION_MAIN;
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
@@ -183,8 +187,8 @@ INSTRUCCIONES_GLOBALES ::= INSTRUCCIONES_GLOBALES:a INSTRUCCION_GLOBAL:b   {: RE
 INSTRUCCION_GLOBAL ::= DECLARACION_MAIN:m     SEMICOLON {: RESULT = m; :}
                      | DECLARACION_METODO:m             {: RESULT = m; :}
                      | DECLARACION_STRUCT:s             {: RESULT = s; :}
+                     | DECLARACION_FUNCION:f            {: RESULT = f; :}
                      | DECLARACION_VARIABLE:v SEMICOLON {: RESULT = v; :}
-                     | LISTA:l                SEMICOLON {: RESULT = l; :}
                      | DECLARACION_VECTORES:d SEMICOLON {: RESULT = d; :}
 ;
 
@@ -209,8 +213,13 @@ CALL_PARAMETRO ::= CALL_PARAMETRO:a COMMA ID:b COLON TIPO:t ASSIGN EXPRESION:c {
 ;
 
 // ** DECLARACION METODO **
-DECLARACION_METODO ::= TIPO:t ID:d LPAREN RPAREN LBRACE INSTRUCCIONES:i RBRACE                   {: RESULT = new Metodo(t, d, new LinkedList<HashMap>(), i, tleft, tright); :}
-                     | TIPO:t ID:d LPAREN LISTA_PARAMETRO:l RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Metodo(t, d, l, i, tleft, tright); :}
+DECLARACION_METODO ::= VOID:t ID:d LPAREN RPAREN LBRACE INSTRUCCIONES:i RBRACE                   {: RESULT = new Metodo(d, new LinkedList<HashMap>(), i, tleft, tright); :}
+                     | VOID:t ID:d LPAREN LISTA_PARAMETRO:l RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Metodo(d, l, i, tleft, tright); :}
+;
+
+// ** DECLARACION FUNCION **
+DECLARACION_FUNCION ::= TIPO:t ID:d LPAREN RPAREN LBRACE INSTRUCCIONES:i RBRACE                   {: RESULT = new Funcion(t, d, new LinkedList<HashMap>(), i, tleft, tright); :}
+                      | TIPO:t ID:d LPAREN LISTA_PARAMETRO:l RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Funcion(t, d, l, i, tleft, tright); :}
 ;
 
 // ** LISTA PARAMETRO **
@@ -231,6 +240,11 @@ PARAMETRO ::= ID:i COLON TIPO:t ASSIGN EXPRESION:e {: var param = new HashMap<St
                                                       RESULT = param; :}
 ;
 
+// ** LLAMADA DE METODO O FUNCION **
+LLAMADA ::= ID:i LPAREN CALL_PARAMETRO:l RPAREN  {: RESULT = new Llamada(i, l, ileft, iright); :}
+          | ID:i LPAREN RPAREN                   {: RESULT = new Llamada(i, new LinkedList<HashMap>(), ileft, iright); :}
+;
+
 // ** INSTRUCCIONES LOCALES **
 INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); :}
                 | INSTRUCCION:a                   {: RESULT = new LinkedList<Instruccion>(); RESULT.add(a); :}
@@ -240,6 +254,7 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
 INSTRUCCION ::= IMPRESION:i            SEMICOLON {: RESULT = i; :}
               | DECLARACION_VARIABLE:v SEMICOLON {: RESULT = v; :}
               | LISTA:l                SEMICOLON {: RESULT = l; :}
+              | LLAMADA:l              SEMICOLON {: RESULT = l; :}
               | DECLARACION_VECTORES:d SEMICOLON {: RESULT = d; :}
               | ASIGNACION:a           SEMICOLON {: RESULT = a; :}
               | CONDICION:c                      {: RESULT = c; :}
@@ -273,7 +288,6 @@ TIPO ::= INT:t       {: RESULT = new Tipo(tipoDato.ENTERO); :}
        | BOOL:t      {: RESULT = new Tipo(tipoDato.BOOLEANO); :}
        | CHAR:t      {: RESULT = new Tipo(tipoDato.CARACTER); :}
        | STRING:t    {: RESULT = new Tipo(tipoDato.CADENA); :}
-       | VOID        {: RESULT = new Tipo(tipoDato.VOID); :}
        | LIST:t      {: RESULT = new Tipo(tipoDato.LISTA); :}
        | STRUCT:t    {: RESULT = new Tipo(tipoDato.STRUCT); :}
 ;
@@ -286,8 +300,9 @@ ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ile
 ;
 
 // ** TRANSFERENCIA DE CONTROL **
-TRANSFERENCIA ::= BREAK:b    {: RESULT = new Break(b, bleft, bright); :}
-                | CONTINUE:c {: RESULT = new Continue(c, cleft, cright); :}
+TRANSFERENCIA ::= BREAK:b            {: RESULT = new Break(b, bleft, bright); :}
+                | CONTINUE:c         {: RESULT = new Continue(c, cleft, cright); :}
+                | RETURN EXPRESION:e {: RESULT = new Return(e, eleft, eright); :}
 ;
 
 // ** CONDICIONALES **
@@ -378,6 +393,7 @@ EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft,
             | GET_LISTA:g                     {: RESULT = g; :}
             | REMOVE_LISTA:r                  {: RESULT = r; :}
             | POP_LISTA:o                     {: RESULT = o; :}
+            | LLAMADA:l                       {: RESULT = l; :}
             | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
 ;
 
@@ -450,6 +466,7 @@ REVERSE_LISTA ::= ID:i DOT REVERSE LPAREN RPAREN {: RESULT = new ReverseLista(i,
 
 // ** ESTRUCTURAS **
 // ** DECLARACION DE ESTRUCTURAS **
+/**
 DECLARACION_STRUCT ::= TIPO ID:i LBRACE LISTA_STRUCTS:l RBRACE {: RESULT = new Struct(i, l, ileft, iright); :}
 ;
 
@@ -482,3 +499,4 @@ LISTA_STRUCT ::= ID:b COLON TIPO:t SEMICOLON              {: var struct = new Ha
                                                           RESULT = new LinkedList<HashMap>();
                                                           RESULT.add(struct); :}
 ;
+**/

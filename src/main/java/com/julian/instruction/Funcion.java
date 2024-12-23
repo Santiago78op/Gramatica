@@ -5,43 +5,30 @@ import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
 import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
-import com.julian.symbol.tipoDato;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 
-/**
- * Metodo -> Clase que representa un método.
- * Un método también es una subrutina de código que se
- * identifica un nombre y un conjunto de parámetros, aunque
- * a diferencia de las funciones estas subrutinas no deben
- * de retornar un valor.
- *
- * Ejemplo:
- * void <ID> ( <PARAMETROS> ) {
- *      <INSTRUCCIONES>
- * }
- */
-public class Metodo extends Instruccion {
+public class Funcion extends Instruccion {
 
     private String id;
     private LinkedList<HashMap> parametros;
-    private LinkedList<Instruccion> instrucciones;
+    private LinkedList<Instruccion> instruccions;
 
     /**
-     * Metodo -> Constructor de la clase.
+     * Funcion -> Constructor de la clase.
      * @param tipo Tipo de dato que retorna el método.
      * @param id Identificador del método.
      * @param parametros Lista de parámetros del método.
-     * @param instrucciones Lista de instrucciones del método.
+     * @param instruccions Lista de instrucciones del método.
      * @param linea Linea del método.
      * @param columna Columna del método.
      */
-    public Metodo(String id, LinkedList<HashMap> parametros, LinkedList<Instruccion> instrucciones, int linea, int columna) {
-        super(new Tipo(tipoDato.VOID), linea, columna);
+    public Funcion(Tipo tipo, String id, LinkedList<HashMap> parametros, LinkedList<Instruccion> instruccions, int linea, int columna) {
+        super(tipo, linea, columna);
         this.id = id;
         this.parametros = parametros;
-        this.instrucciones = instrucciones;
+        this.instruccions = instruccions;
     }
 
     public String getId() {
@@ -60,18 +47,18 @@ public class Metodo extends Instruccion {
         this.parametros = parametros;
     }
 
-    public LinkedList<Instruccion> getInstrucciones() {
-        return instrucciones;
+    public LinkedList<Instruccion> getInstruccions() {
+        return instruccions;
     }
 
-    public void setInstrucciones(LinkedList<Instruccion> instrucciones) {
-        this.instrucciones = instrucciones;
+    public void setInstruccions(LinkedList<Instruccion> instruccions) {
+        this.instruccions = instruccions;
     }
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         // Interpretacion de una funcion
-        for (var instruccion: this.instrucciones){
+        for (var instruccion: this.instruccions){
             if ( instruccion == null){
                 continue;
             }

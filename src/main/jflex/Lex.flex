@@ -205,6 +205,7 @@ pop      = "pop"
 reverse  = "reverse"
 void     = "void"
 run_main = "run_main"
+return   = "return"
 
 // Estados del analizador lexico.
 %state STRING_STATE
@@ -252,6 +253,7 @@ run_main = "run_main"
 <YYINITIAL> { reverse }  { addToken("REVERSE",  yytext()); return new Symbol(sym.REVERSE, yyline, yycolumn, yytext()); }
 <YYINITIAL> { void }     {  addToken("VOID",     yytext()); return new Symbol(sym.VOID, yyline, yycolumn, yytext()); }
 <YYINITIAL> { run_main } { addToken("RUN_MAIN",     yytext()); return new Symbol(sym.RUN_MAIN, yyline, yycolumn, yytext()); }
+<YYINITIAL> { return }   { addToken("RETURN",   yytext()); return new Symbol(sym.RETURN, yyline, yycolumn, yytext()); }
 
 <YYINITIAL>{
     /* number y boolean */

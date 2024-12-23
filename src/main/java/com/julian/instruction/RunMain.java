@@ -39,16 +39,16 @@ public class RunMain extends Instruccion {
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        // Validamos la existencia de la funcion en el arbol
-        var busquedaFuncion = arbol.getFuncion(this.id);
-        // Si la funcion no existe
-        if (busquedaFuncion == null){
-            semanticErrorManager.addError(new Errores("Semantico", "La Funcion " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna));
-            return new Errores("Semantico", "La Funcion " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna);
+        // Validamos la existencia del metodo Main en el arbol
+        var busquedaMetodo = arbol.getMetodo(this.id);
+        // Si el metodo no existe
+        if (busquedaMetodo == null){
+            semanticErrorManager.addError(new Errores("Semantico", "El metodo " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna));
+            return new Errores("Semantico", "El metodo " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna);
         }
-        // Si la funcion existe
+        // Si el metodo existe
         // Validamos que venga Metodo
-        if (busquedaFuncion instanceof Metodo metodo){
+        if (busquedaMetodo instanceof Metodo metodo){
             // Ejecutamos el metodo
             var newTabla = new tablaSimbolo(arbol.getTablaSimbolosGlobal());
             newTabla.setNombre(this.id);
