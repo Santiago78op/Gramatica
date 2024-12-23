@@ -7,10 +7,23 @@ import com.julian.symbol.*;
 import java.util.Collections;
 import java.util.LinkedList;
 
+/**
+ * Esta clase se encarga de invertir una lista.
+ * Ejemplo:
+ *      reverse <ID>;
+ *      // Ejemplo
+ *      reverse miLista;
+ */
 public class ReverseLista extends Instruccion {
 
     private String id;
 
+    /**
+     * Constructor de la clase
+     * @param id Identificador de la lista
+     * @param linea Linea donde se encuentra la instrucción
+     * @param columna Columna donde se encuentra la instrucción
+     */
     public ReverseLista(String id, int linea, int columna) {
         super(new Tipo(tipoDato.LISTA), linea, columna);
         this.id = id;

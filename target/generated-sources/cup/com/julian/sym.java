@@ -17,7 +17,6 @@ public interface sym {
   public static final int POP = 63;
   public static final int REMOVE = 62;
   public static final int ENTERO = 3;
-  public static final int PUSH = 59;
   public static final int LPAREN = 48;
   public static final int CONTINUE = 25;
   public static final int INT = 8;
@@ -29,6 +28,7 @@ public interface sym {
   public static final int NOT = 45;
   public static final int AND = 44;
   public static final int RUN_MAIN = 66;
+  public static final int APPEND = 59;
   public static final int LT = 38;
   public static final int CARACTER = 7;
   public static final int OR = 43;
@@ -137,7 +137,7 @@ public interface sym {
   "COMMA",
   "STRUCT",
   "LIST",
-  "PUSH",
+  "APPEND",
   "GET",
   "SET",
   "REMOVE",

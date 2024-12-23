@@ -4,9 +4,7 @@ import com.julian.Lexer;
 import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
-import com.julian.instruction.Declaracion;
-import com.julian.instruction.Metodo;
-import com.julian.instruction.RunMain;
+import com.julian.instruction.*;
 import com.julian.parser;
 import com.julian.reports.Reports;
 import com.julian.symbol.Arbol;
@@ -115,6 +113,16 @@ public class Gui {
                 if (a == null) continue;
 
                 if (a instanceof Declaracion){
+                    var res = a.interpretar(ast, tabla);
+                    if (res instanceof Errores){
+                        ast.addError((Errores) res);
+                    }
+                } else if (a instanceof DeclaracionVector){
+                    var res = a.interpretar(ast, tabla);
+                    if (res instanceof Errores){
+                        ast.addError((Errores) res);
+                    }
+                } else if (a instanceof DeclaracionLista) {
                     var res = a.interpretar(ast, tabla);
                     if (res instanceof Errores){
                         ast.addError((Errores) res);

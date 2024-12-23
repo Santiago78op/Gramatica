@@ -2,6 +2,7 @@ package com.julian.instruction;
 
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
+import com.julian.expresion.Nativo;
 import com.julian.symbol.*;
 
 import java.util.LinkedList;
@@ -57,9 +58,16 @@ public class RemoveLista extends Instruccion {
             return new Errores("Semantico", "Índice fuera de rango", linea, columna);
         }
 
-        // Remover el valor de la lista en el índice especificado
+        var value = lista.get(index);
+        // Actulizar el tipo de la variable
+        this.tipo.setTipo(simbolo.getTipo().getTipo());
+        // Se remueve el valor de la lista
         lista.remove(index);
-
-        return null;
+        // Se retorna el valor de la variable
+        if (value instanceof Nativo) {
+            return ((Nativo) value).getValor();
+        } else {
+            return value;
+        }
     }
 }

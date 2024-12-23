@@ -5,6 +5,7 @@ import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.*;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -17,10 +18,11 @@ public class PushLista extends Instruccion {
 
     /**
      * Constructor de la clase
-     * @param id Identificador de la lista
-     * @param expresion Expresión a agregar a la lista
+     * @param tipo Tipo de dato de la lista
      * @param linea Linea donde se encuentra la instrucción
      * @param columna Columna donde se encuentra la instrucción
+     * @param id Identificador de la lista
+     * @param expresion Expresión a agregar a la lista
      */
     public PushLista(String id, Instruccion expresion, int linea, int columna) {
         super(new Tipo(tipoDato.LISTA), linea, columna);
@@ -30,27 +32,26 @@ public class PushLista extends Instruccion {
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        // Obtener la lista de la tabla de simbolos
+        // Obtener la lista de la tabla de símbolos.
         Simbolo simbolo = tablaDeSimbolos.getVariable(id);
-        if (simbolo == null){
-            semanticErrorManager.addError(new Errores("Semántico", "La lista '" + id + "' no existe", linea, columna));
-            return new Errores("Semántico", "La lista '" + id + "' no existe", linea, columna);
+        if (simbolo == null) {
+            semanticErrorManager.addError(new Errores("Semantico", "La lista " + id + " no existe", linea, columna));
+            return new Errores("Semantico", "La lista " + id + " no existe", linea, columna);
         }
 
         // Verificar que el símbolo sea una lista
         if (!(simbolo.getValor() instanceof LinkedList)) {
+            semanticErrorManager.addError(new Errores("Semantico", id + " no es una lista", linea, columna));
             return new Errores("Semantico", id + " no es una lista", linea, columna);
         }
 
-        // Interpretar la expresión a agregar
-        Object valor = expresion.interpretar(arbol, tablaDeSimbolos);
-        if (valor instanceof Errores) {
-            return valor;
+        Object valorExpresion = expresion.interpretar(arbol, tablaDeSimbolos);
+        if (valorExpresion instanceof Errores) {
+            return valorExpresion;
         }
 
-        // Agregar el valor a la lista
         LinkedList<Object> lista = (LinkedList<Object>) simbolo.getValor();
-        lista.add(this.expresion);
+        lista.add(valorExpresion);
 
         return null;
     }

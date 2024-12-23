@@ -92,7 +92,7 @@ terminal OR, AND, NOT;
 terminal INCREMENTO, DECREMENTO;
 terminal LPAREN, RPAREN, LBRACE, RBRACE, SEMICOLON, COLON, DOT, ASSIGN, COMMA;
 terminal STRUCT;
-terminal LIST, PUSH, GET, SET, REMOVE, POP, REVERSE;
+terminal LIST, APPEND, GET, SET, REMOVE, POP, REVERSE;
 terminal VOID;
 terminal RUN_MAIN;
 terminal LBRACKET, RBRACKET;
@@ -107,11 +107,11 @@ terminal LBRACKET, RBRACKET;
    que no tienen tipo, pudiendo ser entero o String.
 */
 
-nonterminal LinkedList<Instruccion> INICIO, INSTRUCCIONES, LISTA_INSTRUCCION;
-nonterminal Instruccion INSTRUCCION, IMPRESION, ASIGNACION;
+nonterminal LinkedList<Instruccion> INICIO, INSTRUCCIONES, INSTRUCCIONES_GLOBALES;
+nonterminal Instruccion INSTRUCCION, INSTRUCCION_GLOBAL, IMPRESION, ASIGNACION;
 nonterminal Instruccion EXPRESION;
 nonterminal Instruccion VALOR;
-nonterminal Instruccion VARIABLE;
+nonterminal Instruccion DECLARACION_VARIABLE;
 nonterminal Instruccion CONDICION, CONDIF, CONDELSE, CONDELSEIF;
 nonterminal Instruccion SELECCION;
 nonterminal LinkedList<Case> CASELIST;
@@ -126,10 +126,8 @@ nonterminal Tipo TIPO;
 /**
 * Simbolos no terminales de la Fase 2
 */
-nonterminal LinkedList<Instruccion> INSTRUCCIONES_METODOS;
-nonterminal Instruccion INSTRUCCION_METODO;
 /* Vectores */
-nonterminal Instruccion VECTORES;
+nonterminal Instruccion DECLARACION_VECTORES;
 nonterminal Instruccion VECTOR;
 nonterminal LinkedList<Object> LISTA_VALORES;
 nonterminal LinkedList<Object> LISTA_VECTORES;
@@ -140,11 +138,11 @@ nonterminal Instruccion LISTA;
 nonterminal Instruccion PUSH_LISTA, GET_LISTA, SET_LISTA;
 nonterminal Instruccion REMOVE_LISTA, POP_LISTA, REVERSE_LISTA;
 /* Metodo */
-nonterminal Instruccion METODO;
+nonterminal Instruccion DECLARACION_METODO;
 nonterminal LinkedList<HashMap> LISTA_PARAMETRO, CALL_PARAMETRO;
 nonterminal HashMap<String, Object> PARAMETRO;
 /* Main */
-nonterminal Instruccion MAIN;
+nonterminal Instruccion DECLARACION_MAIN;
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
 
 /*
@@ -169,49 +167,102 @@ start with INICIO;
 
 /* ------------------- Sección de la gramática ------------------------ */
 // ESCRIBIR LA GRAMATICA
-INICIO ::= LISTA_INSTRUCCION:a         {: RESULT = a; :}
+INICIO ::= INSTRUCCIONES_GLOBALES:a         {: RESULT = a; :}
 ;
 
-LISTA_INSTRUCCION ::= INSTRUCCIONES:a {: RESULT = a; :}
-                    | INSTRUCCIONES_METODOS:a {: RESULT = a; :}
+// ** INSTRUCCIONES GLOBALES **
+INSTRUCCIONES_GLOBALES ::= INSTRUCCIONES_GLOBALES:a INSTRUCCION_GLOBAL:b   {: RESULT = a; RESULT.add(b); :}
+                          | INSTRUCCION_GLOBAL:b                           {: RESULT = new LinkedList<Instruccion>(); RESULT.add(b); :}
 ;
 
+// ** INSTRUCCION GLOBAL **
+INSTRUCCION_GLOBAL ::= DECLARACION_MAIN:m     SEMICOLON {: RESULT = m; :}
+                     | DECLARACION_METODO:m             {: RESULT = m; :}
+                     | DECLARACION_VARIABLE:v SEMICOLON {: RESULT = v; :}
+                     | LISTA:l                SEMICOLON {: RESULT = l; :}
+                     | DECLARACION_VECTORES:d SEMICOLON {: RESULT = d; :}
+;
+
+// ** DECLARACION DEL METODO MAIN **
+DECLARACION_MAIN ::= RUN_MAIN ID:i LPAREN CALL_PARAMETRO:l RPAREN  {: RESULT = new RunMain(i, l, ileft, iright); :}
+                   | RUN_MAIN ID:i LPAREN RPAREN                   {: RESULT = new RunMain(i, new LinkedList<HashMap>(),ileft, iright); :}
+;
+
+// ** LLAMADA DE PARAMETROS MAIN **
+CALL_PARAMETRO ::= CALL_PARAMETRO:a COMMA ID:b COLON TIPO:t ASSIGN EXPRESION:c {: var param2 = new HashMap<String,Object>();
+                                                                           param2.put("id",b);
+                                                                           param2.put("tipo",t);
+                                                                           param2.put("valor",c);
+                                                                           RESULT = a;
+                                                                           RESULT.add(param2);:}
+            | ID:b COLON TIPO:t ASSIGN EXPRESION:c                     {: var param1 = new HashMap<String,Object>();
+                                                                           param1.put("id",b);
+                                                                           param1.put("tipo",t);
+                                                                           param1.put("valor",c);
+                                                                           RESULT = new LinkedList<HashMap>();
+                                                                           RESULT.add(param1);:}
+;
+
+// ** DECLARACION METODO **
+DECLARACION_METODO ::= TIPO:t ID:d LPAREN RPAREN LBRACE INSTRUCCIONES:i RBRACE                   {: RESULT = new Metodo(t, d, new LinkedList<HashMap>(), i, tleft, tright); :}
+                     | TIPO:t ID:d LPAREN LISTA_PARAMETRO:l RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Metodo(t, d, l, i, tleft, tright); :}
+;
+
+// ** LISTA PARAMETRO **
+LISTA_PARAMETRO ::= LISTA_PARAMETRO:a COMMA PARAMETRO:b  {: RESULT = a; RESULT.add(b); :}
+                    | PARAMETRO:a                        {: RESULT = new LinkedList<HashMap>(); RESULT.add(a); :}
+;
+
+// ** PARAMETRO **
+PARAMETRO ::= ID:i COLON TIPO:t ASSIGN EXPRESION:e {: var param = new HashMap<String,Object>();
+                                                      param.put("id",i);
+                                                      param.put("tipo",t);
+                                                      param.put("valor",e);
+                                                      RESULT = param;:}
+            | ID:i COLON TIPO:t                    {: var param = new HashMap<String,Object>();
+                                                      param.put("tipo",t);
+                                                      param.put("id",i);
+                                                      param.put("valor",null);
+                                                      RESULT = param; :}
+;
+
+// ** INSTRUCCIONES LOCALES **
 INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); :}
                 | INSTRUCCION:a                   {: RESULT = new LinkedList<Instruccion>(); RESULT.add(a); :}
 ;
 
-INSTRUCCION ::= IMPRESION:i         SEMICOLON {: RESULT = i; :}
-              | VARIABLE:v          SEMICOLON {: RESULT = v; :}
-              | ASIGNACION:a        SEMICOLON {: RESULT = a; :}
-              | CONDICION:c                   {: RESULT = c; :}
-              | SELECCION:s                   {: RESULT = s; :}
-              | CICLOWHILE:w                  {: RESULT = w; :}
-              | CICLODO:d           SEMICOLON {: RESULT = d; :}
-              | CICLOFOR:f                    {: RESULT = f; :}
-              | error               SEMICOLON {: RESULT = new instruccionError("Sintactico Error"); :}
+// ** INSTRUCCION  LOCAL **
+INSTRUCCION ::= IMPRESION:i            SEMICOLON {: RESULT = i; :}
+              | DECLARACION_VARIABLE:v SEMICOLON {: RESULT = v; :}
+              | LISTA:l                SEMICOLON {: RESULT = l; :}
+              | DECLARACION_VECTORES:d SEMICOLON {: RESULT = d; :}
+              | ASIGNACION:a           SEMICOLON {: RESULT = a; :}
+              | CONDICION:c                      {: RESULT = c; :}
+              | SELECCION:s                      {: RESULT = s; :}
+              | CICLOWHILE:w                     {: RESULT = w; :}
+              | CICLODO:d              SEMICOLON {: RESULT = d; :}
+              | CICLOFOR:f                       {: RESULT = f; :}
+              | ASIGNACION_VECTOR:a    SEMICOLON {: RESULT = a; :}
+              | PUSH_LISTA:p           SEMICOLON {: RESULT = p; :}
+              | SET_LISTA:s            SEMICOLON {: RESULT = s; :}
+              | REMOVE_LISTA:r         SEMICOLON {: RESULT = r; :}
+              | POP_LISTA:o            SEMICOLON {: RESULT = o; :}
+              | REVERSE_LISTA:e        SEMICOLON {: RESULT = e; :}
+              | error                  SEMICOLON {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
-INSTRUCCIONES_METODOS ::= INSTRUCCIONES_METODOS:a INSTRUCCION_METODO:b   {: RESULT = a; RESULT.add(b); :}
-                        | INSTRUCCION_METODO:a                           {: RESULT = new LinkedList<Instruccion>(); RESULT.add(a); :}
-;
-
-INSTRUCCION_METODO ::= METODO:m                      {: RESULT = m; :}
-                     | VECTORES:d          SEMICOLON {: RESULT = d; :}
-                     | ASIGNACION_VECTOR:a SEMICOLON {: RESULT = a; :}
-                     | LISTA:l             SEMICOLON {: RESULT = l; :}
-                     | PUSH_LISTA:p        SEMICOLON {: RESULT = p; :}
-                     | SET_LISTA:s         SEMICOLON {: RESULT = s; :}
-;
-
+// ** IMPRESION EN CONSOLA **
 IMPRESION ::= CONSOLE DOT LOG LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
 ;
 
-VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(t, tleft, tright, i, e, 0); :}
-            | LET   ID:i COLON TIPO:t                      {: RESULT = new Declaracion(t, tleft, tright, i, 0); :}
-            | CONST ID:i COLON TIPO:t ASSIGN EXPRESION:e   {: RESULT = new Declaracion(t, tleft, tright, i, e, 1); :}
-            | CONST ID:i COLON TIPO:t                      {: RESULT = new Declaracion(t, tleft, tright, i, 1); :}
+// ** DECLARACION DE VARIABLES **
+DECLARACION_VARIABLE ::=  LET   ID:i COLON TIPO:t ASSIGN EXPRESION:e  {: RESULT = new Declaracion(t, tleft, tright, i, e, 0); :}
+            | LET   ID:i COLON TIPO:t                                 {: RESULT = new Declaracion(t, tleft, tright, i, 0); :}
+            | CONST ID:i COLON TIPO:t ASSIGN EXPRESION:e              {: RESULT = new Declaracion(t, tleft, tright, i, e, 1); :}
+            | CONST ID:i COLON TIPO:t                                 {: RESULT = new Declaracion(t, tleft, tright, i, 1); :}
 ;
 
+// ** TIPO DE DATO -> INT, DOUBLE, BOOL, etc. **
 TIPO ::= INT:t       {: RESULT = new Tipo(tipoDato.ENTERO); :}
        | FLOAT:t     {: RESULT = new Tipo(tipoDato.DECIMAL); :}
        | BOOL:t      {: RESULT = new Tipo(tipoDato.BOOLEANO); :}
@@ -221,57 +272,72 @@ TIPO ::= INT:t       {: RESULT = new Tipo(tipoDato.ENTERO); :}
        | LIST:t      {: RESULT = new Tipo(tipoDato.LISTA); :}
 ;
 
+// ** ASIGNACION DE VARIABLES **
 ASIGNACION ::= ID:i ASSIGN EXPRESION:e   {: RESULT = new AsignacionVar(i, e, ileft, eright); :}
             | ID:i INCREMENTO            {: RESULT = new Incremento(i, ileft, iright); :}
             | ID:i DECREMENTO            {: RESULT = new Decremento(i, ileft, iright); :}
             | TRANSFERENCIA:t            {: RESULT = t; :}
 ;
 
+// ** TRANSFERENCIA DE CONTROL **
 TRANSFERENCIA ::= BREAK:b    {: RESULT = new Break(b, bleft, bright); :}
                 | CONTINUE:c {: RESULT = new Continue(c, cleft, cright); :}
 ;
 
+// ** CONDICIONALES **
 CONDICION ::= CONDIF:c     {: RESULT = c; :}
             | CONDELSE:c   {: RESULT = c; :}
             | CONDELSEIF:c {: RESULT = c; :}
 ;
 
+// ** CONDICIONALES IF **
 CONDIF ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new If(e, i, eleft, eright); :}
 ;
 
+// ** CONDICIONALES IF ELSE **
 CONDELSE ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE ELSE LBRACE INSTRUCCIONES:j RBRACE {: RESULT = new Else(e, i, j, eleft, eright); :}
 ;
 
+// ** CONDICIONALES IF ELSE IF **
 CONDELSEIF ::= IF LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE ELSE CONDICION:c {: RESULT = new IfElseIf(e, i, c, eleft, eright); :}
 ;
 
+// ** CICLOS FOR **
 CICLOFOR ::= FOR LPAREN ASIGNACION:a SEMICOLON EXPRESION:e SEMICOLON ACTUALIZFOR:u RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new For(a, e, u, i, aleft, iright); :}
 ;
 
+// ** ACTUALIZACION DE FOR **
 ACTUALIZFOR ::= ASIGNACION:a {: RESULT = a; :}
 ;
 
+// ** SELECCION **
 SELECCION ::= MATCH  EXPRESION:e  LBRACE CASELIST:c DEFAULTCASE:d RBRACE {: RESULT = new Switch(e, c, d, eleft, eright); :}
             | MATCH  EXPRESION:e  LBRACE CASELIST:c RBRACE               {: RESULT = new Switch(e, c, eleft, eright); :}
             | MATCH  EXPRESION:e  LBRACE DEFAULTCASE:d RBRACE            {: RESULT = new Switch(e, d, eleft, eright); :}
 ;
 
+// ** LISTA DE CASOS **
 CASELIST ::= CASELIST:a CASE:b {: RESULT = a; RESULT.add(b); :}
            | CASE:a          {: RESULT = new LinkedList<Case>(); RESULT.add(a); :}
 ;
 
+// ** CASO **
 CASE ::= EXPRESION:e ARROW LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Case(e, i, eleft, eright); :}
 ;
 
+// ** CASO POR DEFECTO **
 DEFAULTCASE ::= DEFAULT ARROW LBRACE INSTRUCCIONES:i RBRACE   {: RESULT = new DefaultCase(i, ileft, iright); :}
 ;
 
+// ** CICLOS WHILE **
 CICLOWHILE ::= WHILE LPAREN EXPRESION:e RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new While(e, i, eleft, eright); :}
 ;
 
+// ** CICLOS DO WHILE **
 CICLODO ::= DO LBRACE INSTRUCCIONES:i RBRACE WHILE LPAREN EXPRESION:e RPAREN {: RESULT = new doWhile(i, e, eleft, eright); :}
 ;
 
+// ** VALORES **
 // public Nativo(Object valor, Tipo tipo, int linea, int columna)
 VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(tipoDato.ENTERO), eleft, eright); :}
           | DECIMAL:e    {: RESULT = new Nativo(Double.parseDouble(e), new Tipo(tipoDato.DECIMAL), eleft, eright); :}
@@ -280,6 +346,7 @@ VALOR ::= | ENTERO:e     {: RESULT = new Nativo(Integer.parseInt(e), new Tipo(ti
           | CARACTER:e   {: RESULT = new Nativo(e, new Tipo(tipoDato.CARACTER), eleft, eright); :}
 ;
 
+// ** EXPRESIONES **
 // public Suma(Instruccion operIzq, Instruccion operDer, int linea, int columna)
 EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft, aright); :}     %prec USUB // La precedencia se aplicara.// La precedencia se aplicara.
             | EXPRESION:a POW  EXPRESION:b    {: RESULT = new Potencia(a, b, aleft, aright); :}  %prec POW
@@ -303,17 +370,20 @@ EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft,
             | VALOR:e                         {: RESULT = e; :}
             | ACCESO_VECTOR:a                 {: RESULT = a; :}
             | GET_LISTA:g                     {: RESULT = g; :}
+            | REMOVE_LISTA:r                  {: RESULT = r; :}
+            | POP_LISTA:o                     {: RESULT = o; :}
             | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
 ;
 
+// ** CASTEO DE TIPOS **
 CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t, eleft, eright); :}
 ;
 
 /** GRAMATICA FASE 2 */
 // ** VECTORES **
-// Declaración de vectores
-VECTORES ::= LET   ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
-           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
+// ** DECLARACION DE VECTORES **
+DECLARACION_VECTORES ::= LET   ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v        {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
+           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v                    {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
            | LET   ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
            | CONST ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
 ;
@@ -349,7 +419,7 @@ LISTA ::= LET ID:i COLON TIPO:t LT TIPO:o GT {: RESULT = new DeclaracionLista(i,
 ;
 
 // ** PUSH LISTAS **
-PUSH_LISTA ::= ID:i DOT PUSH LPAREN EXPRESION:e RPAREN {: RESULT = new PushLista(i, e, ileft, eright); :}
+PUSH_LISTA ::= ID:i DOT APPEND LPAREN EXPRESION:e RPAREN {: RESULT = new PushLista(i, e, ileft, eright); :}
 ;
 
 // ** GET LISTAS **
@@ -370,46 +440,4 @@ POP_LISTA ::= ID:i DOT POP LPAREN RPAREN {: RESULT = new PopLista(i, ileft, irig
 
 // ** REVERSE LISTAS **
 REVERSE_LISTA ::= ID:i DOT REVERSE LPAREN RPAREN {: RESULT = new ReverseLista(i, ileft, iright); :}
-;
-
-// ** METODO **
-METODO ::= TIPO:t ID:d LPAREN RPAREN LBRACE LISTA_INSTRUCCION:i RBRACE  {: RESULT = new Metodo(t, d, new LinkedList<HashMap>(), i, tleft, tright); :}
-         | TIPO:t ID:d LPAREN LISTA_PARAMETRO:l RPAREN LBRACE LISTA_INSTRUCCION:i RBRACE {: RESULT = new Metodo(t, d, l, i, tleft, tright); :}
-;
-
-// ** LISTA PARAMETRO **
- LISTA_PARAMETRO ::= LISTA_PARAMETRO:a COMMA PARAMETRO:b {: RESULT = a; RESULT.add(b); :}
-                    | PARAMETRO:a                        {: RESULT = new LinkedList<HashMap>(); RESULT.add(a); :}
-;
-
-// ** PARAMETRO **
-PARAMETRO ::= ID:i COLON TIPO:t ASSIGN EXPRESION:e {:var param = new HashMap<String,Object>();
-                                                      param.put("id",i);
-                                                      param.put("tipo",t);
-                                                      param.put("valor",e);
-                                                      RESULT = param;:}
-            | ID:i COLON TIPO:t                    {: var param = new HashMap<String,Object>();
-                                                      param.put("tipo",t);
-                                                      param.put("id",i);
-                                                      param.put("valor",null);
-                                                      RESULT = param; :}
-;
-
-// ** RUN MAIN **
-MAIN ::= RUN_MAIN ID:i LPAREN LISTA_PARAMETRO:l RPAREN {: RESULT = new RunMain(i, l, ileft, iright); :}
-       | RUN_MAIN ID:i LPAREN RPAREN                   {: RESULT = new RunMain(i, new LinkedList<HashMap>(),ileft, iright); :}
-;
-
-CALL_PARAMETRO ::= CALL_PARAMETRO:a COMMA ID:b COLON TIPO:t ASSIGN EXPRESION:c {: var param2 = new HashMap<String,Object>();
-                                                                           param2.put("id",b);
-                                                                           param2.put("tipo",t);
-                                                                           param2.put("valor",c);
-                                                                           RESULT = a;
-                                                                           RESULT.add(param2);:}
-            | ID:b COLON TIPO:t ASSIGN EXPRESION:c                     {:var param1 = new HashMap<String,Object>();
-                                                                           param1.put("id",b);
-                                                                           param1.put("tipo",t);
-                                                                           param1.put("valor",c);
-                                                                           RESULT = new LinkedList<HashMap>();
-                                                                           RESULT.add(param1);:}
 ;

@@ -2,6 +2,7 @@ package com.julian.instruction;
 
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
+import com.julian.expresion.Nativo;
 import com.julian.symbol.*;
 
 import java.util.LinkedList;
@@ -35,9 +36,13 @@ public class PopLista extends Instruccion {
             return new Errores("Semantico", "La lista " + id + " está vacía", linea, columna);
         }
 
+
+        // Obtenemos el ultimo elemento de la lista
+        Object valor = lista.getLast();
+        // Actulizar el tipo de la variable
+        this.tipo.setTipo(simbolo.getTipo().getTipo());
         // Remover el último elemento de la lista
         lista.removeLast();
-
-        return null;
+        return valor;
     }
 }

@@ -53,6 +53,11 @@ public class RunMain extends Instruccion {
             var newTabla = new tablaSimbolo(arbol.getTablaSimbolosGlobal());
             newTabla.setNombre(this.id);
 
+             /*En un lenguaje convencional aqui se deberia validar que la cantidad
+        de parametros coincida, pero en el proyecto los parametros pueden tener
+        un valor por defecto, por lo tanto no es 100 obligatorio que la cantidad
+        de parametros de la funcion y de su llamada coincidan*/
+
             // for para recorrer los parametros
             for (int i = 0; i < metodo.getParametros().size(); i++) {
                 // Obtenemos el identificador
@@ -71,9 +76,9 @@ public class RunMain extends Instruccion {
             }
 
             // Registramos el valor
-            for (int i = 0; i < metodo.getParametros().size(); i++){
+            for (int i = 0; i < this.parametros.size(); i++){
                 // Obtenemos el identificador
-                var identificador = newTabla.getVariable(metodo.getParametros().get(i).get("id").toString());
+                var identificador = newTabla.getVariable(this.parametros.get(i).get("id").toString());
                 if (identificador == null){
                     semanticErrorManager.addError(new Errores("Semantico", "El identificador de la variable " + identificador + " no puede ser nulo", this.linea, this.columna));
                     return new Errores("Semantico", "El identificador de la variable " + identificador + " no puede ser nulo", this.linea, this.columna);
@@ -101,23 +106,24 @@ public class RunMain extends Instruccion {
 
             // Validar parametros vacios o null
             // recorremos los parametros del metodo
-            for (int i = 0; i < metodo.getParametros().size(); i++){
+            for (int i = 0; i < metodo.getParametros().size(); i++) {
                 var identificar = metodo.getParametros().get(i).get("id").toString();
                 var resultado = newTabla.getVariable(identificar);
-                if (resultado == null){
+                if (resultado == null) {
                     semanticErrorManager.addError(new Errores("Semantico", "El parametro " + identificar + " no puede ser nulo", this.linea, this.columna));
                     return new Errores("Semantico", "El parametro " + identificar + " no puede ser nulo", this.linea, this.columna);
                 }
 
-                if (resultado.getValor() == null){
+                if (resultado.getValor() == null) {
                     semanticErrorManager.addError(new Errores("Semantico", "El parametro " + identificar + " no puede ser nulo", this.linea, this.columna));
                     return new Errores("Semantico", "El parametro " + identificar + " no puede ser nulo", this.linea, this.columna);
                 }
-
-                var resultadoMetodo = metodo.interpretar(arbol, newTabla);
-                if (resultadoMetodo instanceof Errores) return resultadoMetodo;
             }
+            var resultadoMetodo = metodo.interpretar(arbol, newTabla);
+            if (resultadoMetodo instanceof Errores) return resultadoMetodo;
         }
         return null;
     }
 }
+
+

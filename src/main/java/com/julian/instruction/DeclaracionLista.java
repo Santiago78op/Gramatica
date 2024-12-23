@@ -5,6 +5,7 @@ import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.symbol.*;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -51,8 +52,8 @@ public class DeclaracionLista extends Instruccion {
             return new Errores("Semantico", "El tipo de dato de la lista " + this.id + " no es correcto", this.linea, this.columna);
         }
 
-        // Se instancia el simbolo
-        Simbolo simbolo = new Simbolo(this.tipo, this.id, new LinkedList<>(), false, "Externo", "",this.linea, this.columna);
+        // Se instancia el simbolo  de la lista
+        Simbolo simbolo = new Simbolo(this.tipo, this.id, new LinkedList<HashMap>(), false, "Externo", "",this.linea, this.columna);
         // Se agrega el simbolo a la tabla de simbolos
         if (tablaDeSimbolos.setVariable(simbolo)) {
             return null;

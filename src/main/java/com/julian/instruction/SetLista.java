@@ -19,6 +19,14 @@ public class SetLista extends Instruccion {
     private Instruccion index;
     private Instruccion expresion;
 
+    /**
+     * Constructor de la clase
+     * @param id Identificador de la lista
+     * @param index Indice de la lista
+     * @param expresion Expresion a asignar
+     * @param linea Linea donde se encuentra la instrucción
+     * @param columna Columna donde se encuentra la instrucción
+     */
     public SetLista(String id, Instruccion index, Instruccion expresion, int linea, int columna) {
         super(new Tipo(tipoDato.LISTA), linea, columna);
         this.id = id;
