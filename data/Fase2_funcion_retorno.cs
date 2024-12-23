@@ -4,7 +4,8 @@ void main(){
     let var1: int = 20;
     let var2: int = 30;
     
-    let ResultadoConversion :double = conversion (a:int = var1, tipo:string = "metro");
+    let ResultadoConversion :double = conversion (size:int = 10, tipo:string = "metro");
+    
 }
 
 
@@ -12,7 +13,7 @@ double conversion (size:int, tipo:string="metro"){
     if(tipo=="metro"){
        return size/3*3.281;
     } else{
-       return -1; 
+       return -1.0; 
     }
 }
 

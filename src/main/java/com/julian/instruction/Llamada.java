@@ -189,6 +189,8 @@ public class Llamada extends Instruccion {
             }
 
             var resultadoFuncion = funcion.interpretar(arbol, newTabla);
+            // Actualizar tipo
+            this.tipo = funcion.getTipo();
             if (resultadoFuncion instanceof Errores) return resultadoFuncion;
             return resultadoFuncion; // Return the result of the function
         }

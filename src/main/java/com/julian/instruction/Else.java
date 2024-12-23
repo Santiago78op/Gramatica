@@ -68,6 +68,9 @@ public class Else extends Instruccion {
                     return null; // Termina la ejecución del switch
                 } else if (result instanceof Continue) {
                     break; // Salta al siguiente caso
+                }else if (result instanceof Return) {
+                    this.tipo.setTipo(((Return) result).tipo.getTipo());
+                    return result; // Retorna el objeto Return completo
                 }
             }
         } else {
@@ -80,6 +83,9 @@ public class Else extends Instruccion {
                     return result; // Termina la ejecución del switch
                 } else if (result instanceof Continue) {
                     return result; // Salta al siguiente caso
+                }else if (result instanceof Return) {
+                    this.tipo.setTipo(((Return) result).tipo.getTipo());
+                    return result; // Retorna el objeto Return completo
                 }
             }
         }

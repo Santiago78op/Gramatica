@@ -19,11 +19,9 @@ public class Return extends Instruccion {
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         if (expresion != null) {
-            Object resultado = expresion.interpretar(arbol, tablaDeSimbolos);
-            if (resultado instanceof Errores) {
-                return resultado;
-            }
-            return resultado;
+            // actulizar tipo
+            this.tipo = expresion.getTipo();
+            return this;
         }
         return null;
     }
