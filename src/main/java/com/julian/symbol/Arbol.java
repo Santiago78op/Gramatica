@@ -4,6 +4,7 @@ import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.instruction.Metodo;
+import com.julian.instruction.Struct;
 
 import java.util.LinkedList;
 
@@ -20,6 +21,8 @@ public class Arbol {
     private tablaSimbolo tablaSimbolosGlobal;
     // A nivel global tambien se puede tener las funciones
     private LinkedList<Instruccion> funciones;
+    // A nivel global tambien se puede tener las estructuras
+    private LinkedList<Instruccion> estructuras;
 
 
     public Arbol(LinkedList<Instruccion> instrucciones) {
@@ -101,5 +104,43 @@ public class Arbol {
 
     public void addError(Errores error){
         this.errores.add(error);
+    }
+
+    public void addStruct(Instruccion estructura){
+        // validamos que no exista la funcion
+        boolean existe = false;
+        String id = "";
+        for (Instruccion f: this.estructuras){
+            if (f instanceof Struct struct){
+                if (struct.getId().equalsIgnoreCase(((Struct) struct).getId())){
+                    id = struct.getId();
+                    existe = true;
+                    break;
+                }
+            }
+        }
+
+        if (!existe){
+            this.estructuras.add(estructura);
+        }else{
+            // Error semantico
+            semanticErrorManager.addError(new Errores("Semantico", "La estructura " + id + " ya existe", 0, 0));
+            Errores error = new Errores("Semantico", "La estructura " + id + " ya existe", 0, 0);
+            this.errores.add(error);
+        }
+        this.estructuras.add(estructura);
+    }
+
+    public Instruccion getEstructuras(String id) {
+        {
+            for (var i : this.estructuras) {
+                if (i instanceof Struct struct) {
+                    if (struct.getId().equalsIgnoreCase(id)) {
+                        return i;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

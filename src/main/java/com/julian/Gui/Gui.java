@@ -105,6 +105,8 @@ public class Gui {
 
                 if (a instanceof Metodo){
                     ast.addFuncion(a);
+                } else if (a instanceof Struct) {
+                    ast.addStruct(a);
                 }
             }
 

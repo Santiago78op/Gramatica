@@ -137,6 +137,10 @@ nonterminal Instruccion ASIGNACION_VECTOR;
 nonterminal Instruccion LISTA;
 nonterminal Instruccion PUSH_LISTA, GET_LISTA, SET_LISTA;
 nonterminal Instruccion REMOVE_LISTA, POP_LISTA, REVERSE_LISTA;
+/* Estructs */
+nonterminal Instruccion DECLARACION_STRUCT;
+nonterminal LinkedList<HashMap> LISTA_STRUCTS;
+nonterminal HashMap<String, Object> LISTA_STRUCT;
 /* Metodo */
 nonterminal Instruccion DECLARACION_METODO;
 nonterminal LinkedList<HashMap> LISTA_PARAMETRO, CALL_PARAMETRO;
@@ -178,6 +182,7 @@ INSTRUCCIONES_GLOBALES ::= INSTRUCCIONES_GLOBALES:a INSTRUCCION_GLOBAL:b   {: RE
 // ** INSTRUCCION GLOBAL **
 INSTRUCCION_GLOBAL ::= DECLARACION_MAIN:m     SEMICOLON {: RESULT = m; :}
                      | DECLARACION_METODO:m             {: RESULT = m; :}
+                     | DECLARACION_STRUCT:s             {: RESULT = s; :}
                      | DECLARACION_VARIABLE:v SEMICOLON {: RESULT = v; :}
                      | LISTA:l                SEMICOLON {: RESULT = l; :}
                      | DECLARACION_VECTORES:d SEMICOLON {: RESULT = d; :}
@@ -270,6 +275,7 @@ TIPO ::= INT:t       {: RESULT = new Tipo(tipoDato.ENTERO); :}
        | STRING:t    {: RESULT = new Tipo(tipoDato.CADENA); :}
        | VOID        {: RESULT = new Tipo(tipoDato.VOID); :}
        | LIST:t      {: RESULT = new Tipo(tipoDato.LISTA); :}
+       | STRUCT:t    {: RESULT = new Tipo(tipoDato.STRUCT); :}
 ;
 
 // ** ASIGNACION DE VARIABLES **
@@ -440,4 +446,39 @@ POP_LISTA ::= ID:i DOT POP LPAREN RPAREN {: RESULT = new PopLista(i, ileft, irig
 
 // ** REVERSE LISTAS **
 REVERSE_LISTA ::= ID:i DOT REVERSE LPAREN RPAREN {: RESULT = new ReverseLista(i, ileft, iright); :}
+;
+
+// ** ESTRUCTURAS **
+// ** DECLARACION DE ESTRUCTURAS **
+DECLARACION_STRUCT ::= TIPO ID:i LBRACE LISTA_STRUCTS:l RBRACE {: RESULT = new Struct(i, l, ileft, iright); :}
+;
+
+// ** LISTA DE ESTRUCTURAS **
+LISTA_STRUCTS ::= LISTA_STRUCTS LISTA_STRUCT:l {: RESULT = l; RESULT.add(l); :}
+                | LISTA_STRUCT:l               {: RESULT = new LinkedList<HashMap>(); RESULT.add(l); :}
+
+;
+
+LISTA_STRUCT ::= ID:b COLON TIPO:t SEMICOLON              {: var struct = new HashMap<String,Object>();
+                                                          struct.put("id",b);
+                                                          struct.put("tipo",t);
+                                                          RESULT = new LinkedList<HashMap>();
+                                                          RESULT.add(struct); :}
+             | ID:b COLON LIST LT TIPO:t GT SEMICOLON     {: var struct = new HashMap<String,Object>();
+                                                          struct.put("id",b);
+                                                          struct.put("tipo",t);
+                                                          RESULT = new LinkedList<HashMap>();
+                                                          RESULT.add(struct); :}
+             | ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v SEMICOLON {: var struct = new HashMap<String,Object>();
+                                                          struct.put("id",i);
+                                                          struct.put("tipo",t);
+                                                          struct.put("vector",v);
+                                                          RESULT = new LinkedList<HashMap>();
+                                                          RESULT.add(struct); :}
+             | ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v SEMICOLON {: var struct = new HashMap<String,Object>();
+                                                          struct.put("id",i);
+                                                          struct.put("tipo",t);
+                                                          struct.put("vector",v);
+                                                          RESULT = new LinkedList<HashMap>();
+                                                          RESULT.add(struct); :}
 ;
