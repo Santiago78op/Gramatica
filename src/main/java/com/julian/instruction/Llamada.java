@@ -83,13 +83,10 @@ public class Llamada extends Instruccion {
                 }
                 // Obtenemos el valor
                 var valor = (Instruccion) this.parametros.get(i).get("valor");
-                if ( valor == null){
-                    semanticErrorManager.addError(new Errores("Semantico", "El valor de la variable " + identificador + " no puede ser nulo", this.linea, this.columna));
-                    return new Errores("Semantico", "El valor de la variable " + identificador + " no puede ser nulo", this.linea, this.columna);
+                var resValor = valor.interpretar(arbol, tablaDeSimbolos);
+                if (resValor instanceof Errores) {
+                    return resValor;
                 }
-
-                var resValor = valor.interpretar(arbol, newTabla);
-                if (resValor instanceof Errores) return resValor;
 
                 // Validamos tipos
                 if (valor.tipo.getTipo() != identificador.getTipo().getTipo()){
@@ -158,7 +155,7 @@ public class Llamada extends Instruccion {
                     return new Errores("Semantico", "El valor de la variable " + identificador + " no puede ser nulo", this.linea, this.columna);
                 }
 
-                var resValor = valor.interpretar(arbol, newTabla);
+                var resValor = valor.interpretar(arbol, tablaDeSimbolos);
                 if (resValor instanceof Errores) return resValor;
 
                 // Validamos tipos

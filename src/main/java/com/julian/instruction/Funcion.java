@@ -58,18 +58,16 @@ public class Funcion extends Instruccion {
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         // Interpretacion de una funcion
-        for (var instruccion: this.instruccions){
-            if (instruccion == null){
+        for (var instruccion: this.instruccions) {
+            if (instruccion == null) {
                 continue;
             }
             var result = instruccion.interpretar(arbol, tablaDeSimbolos);
             // Recuperacion de errores
             if (result instanceof Errores) {
                 arbol.addError((Errores) result);
-            } else if (result instanceof Return) {
-                this.tipo.setTipo(((Return) result).tipo.getTipo());
-                return result;
             }
+            return result;
         }
         return null;
     }

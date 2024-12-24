@@ -10,7 +10,7 @@ public interface sym {
   /* terminals */
   public static final int CAST = 13;
   public static final int POW = 33;
-  public static final int LBRACKET = 68;
+  public static final int LBRACKET = 69;
   public static final int CONST = 15;
   public static final int CHAR = 11;
   public static final int GE = 42;
@@ -45,7 +45,7 @@ public interface sym {
   public static final int EOF = 0;
   public static final int DECIMAL = 4;
   public static final int RETURN = 26;
-  public static final int RBRACKET = 69;
+  public static final int RBRACKET = 70;
   public static final int DECREMENTO = 48;
   public static final int error = 1;
   public static final int MUL = 31;
@@ -75,6 +75,7 @@ public interface sym {
   public static final int STRUCT = 58;
   public static final int GT = 41;
   public static final int SUB = 30;
+  public static final int ROUND = 68;
   public static final int DO = 21;
   public static final int CONSOLE = 27;
   public static final int SET = 62;
@@ -147,6 +148,7 @@ public interface sym {
   "REVERSE",
   "VOID",
   "RUN_MAIN",
+  "ROUND",
   "LBRACKET",
   "RBRACKET"
   };

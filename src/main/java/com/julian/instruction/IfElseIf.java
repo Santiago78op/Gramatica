@@ -51,6 +51,11 @@ public class IfElseIf extends Instruccion {
                     return result; // Termina la ejecución del switch
                 } else if (result instanceof Continue) {
                     return result; // Salta al siguiente caso
+                }else if (result instanceof Return) {
+                    var valorRetorno = ((Return) result).getExpression();
+                    if (valorRetorno != null) {
+                        return valorRetorno.interpretar(arbol, nuevaTabla);
+                    }
                 }
             }
         } else {
@@ -61,6 +66,11 @@ public class IfElseIf extends Instruccion {
                 return result; // Termina la ejecución del switch
             } else if (result instanceof Continue) {
                 return result; // Salta al siguiente caso
+            }else if (result instanceof Return) {
+                var valorRetorno = ((Return) result).getExpression();
+                if (valorRetorno != null) {
+                    return valorRetorno.interpretar(arbol, nuevaTabla);
+                }
             }
         }
         return null;

@@ -79,6 +79,8 @@ public class Metodo extends Instruccion {
             // Recuperacion de errores
             if (result instanceof Errores) {
                 arbol.addError((Errores) result);
+            } else if (result instanceof Break) {
+                break;
             }
         }
         return null;
