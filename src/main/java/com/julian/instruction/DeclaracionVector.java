@@ -39,46 +39,53 @@ public class DeclaracionVector extends Instruccion {
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        // Validamos el Vector recibido.
+        // Se obtienen los valores del vector.
         Object result = this.vector.interpretar(arbol, tablaDeSimbolos);
-        // Validamos los errores
-        if (result instanceof Errores) return result;
+        // Validamos Errores
+        if(result instanceof Errores) return result;
 
-        /**
-         * Validamos que el tipo de dato en las listas de vectores, sean
-         * del mismo tipo que el del arreglo declarado, sino error de
-         * tipo semantico.
-         */
-        LinkedList<Object> valores = (LinkedList<Object>) result;
-        if (!validarTipos(valores, this.tipoVector)) {
-            // Retornamos Error si el tipo de dato no coincide.
-            semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna));
-            return new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna);
+        if(result instanceof LinkedList){
+            LinkedList<Object> valores = (LinkedList<Object>) result;
+            // Se valida que los valores del vector sean del tipo esperado.
+            if(!validarTipos(valores, this.tipoVector)){
+                semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna));
+                return new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna);
+            }
+        } else if (result instanceof MultiDimensionalVector) {
+            LinkedList<LinkedList<Object>> valores = ((MultiDimensionalVector) result).getValores();
+            for (LinkedList<Object> sublist : valores) {
+                if (!validarTipos(sublist, this.tipoVector)) {
+                    semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna));
+                    return new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna);
+                }
+            }
+        } else {
+            LinkedList<LinkedList<Object>> valores = ((MultiDimensionalVector) result).getValores();
+            for (LinkedList<Object> sublist : valores) {
+                if (!validarTipos(sublist, this.tipoVector)) {
+                    semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna));
+                    return new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna);
+                }
+            }
         }
 
-        // Agregar la variable a la tabla de simbolos
-        Simbolo simbolo = new Simbolo(this.tipo, this.id, result, false, "Externo", "",this.linea, this.columna);
+        Simbolo simbolo = new Simbolo(this.tipo, this.id, result, false, "Externo", "", this.linea, this.columna);
         if (tablaDeSimbolos.setVariable(simbolo)) {
-            // 0 no es constante, 1 es constante
-            if (this.constante == 0) {
-                simbolo.setConstante(false);
-            } else {
-                simbolo.setConstante(true);
-            }
+            simbolo.setConstante(this.constante == 1);
             return null;
         }
-        // Retornamos Error si la variable ya existe en la tabla de simbolos.
+
         semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna));
         return new Errores("Semantico", "La variable " + this.id + " ya existe en la tabla de simbolos", this.linea, this.columna);
     }
 
     private boolean validarTipos(LinkedList<Object> valores, Tipo tipoEsperado) {
         for (Object valor : valores) {
-            if (valor instanceof Vector) {
-                if (!validarTipos(((Vector) valor).getValores(), tipoEsperado)) {
+            if (valor instanceof LinkedList) {
+                if (!validarTipos((LinkedList<Object>) valor, tipoEsperado)) {
                     return false;
                 }
-            } else {
+            }else {
                 if (tipoEsperado.getTipo() != tipoDato.getType(valor)) {
                     return false;
                 }

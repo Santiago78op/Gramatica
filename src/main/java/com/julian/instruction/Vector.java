@@ -43,16 +43,13 @@ public class Vector extends Instruccion {
         return valores;
     }
 
-    @Override
-    public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        return this.valores;
-    }
-
-    public List<Object> getValues() {
-        return valores;
-    }
-
     public void setValores(LinkedList<Object> valores) {
         this.valores = valores;
+    }
+
+
+    @Override
+    public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
+        return valores;
     }
 }

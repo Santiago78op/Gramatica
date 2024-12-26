@@ -11,23 +11,23 @@ import java.util.List;
 
 public class MultiDimensionalVector extends Instruccion {
 
-    private LinkedList<Object> valores;
+    private LinkedList<LinkedList<Object>> valores;
 
-    public MultiDimensionalVector(LinkedList<Object> valores, int linea, int columna) {
+    public MultiDimensionalVector(LinkedList<LinkedList<Object>> valores, int linea, int columna) {
         super(new Tipo(tipoDato.VECTOR), linea, columna);
+        this.valores = valores;
+    }
+
+    public LinkedList<LinkedList<Object>> getValores() {
+        return valores;
+    }
+
+    public void setValores(LinkedList<LinkedList<Object>> valores) {
         this.valores = valores;
     }
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        return valores;
-    }
-
-    public LinkedList<Object> getValores() {
-        return valores;
-    }
-
-    public List<Object> getValues() {
         return valores;
     }
 }

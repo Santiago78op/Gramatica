@@ -5,13 +5,14 @@ import com.julian.exception.Errores;
 import com.julian.symbol.Arbol;
 import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
+import com.julian.symbol.tipoDato;
 
 public class ToString extends Instruccion {
 
     private final Instruccion expression;
 
-    public ToString(Tipo tipo, int linea, int columna, Instruccion expression) {
-        super(tipo, linea, columna);
+    public ToString(Instruccion expression, int linea, int columna) {
+        super(new Tipo(tipoDato.VOID), linea, columna);
         this.expression = expression;
     }
 

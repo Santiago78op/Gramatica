@@ -14,6 +14,7 @@ public interface sym {
   public static final int ARROW = 43;
   public static final int APPEND = 60;
   public static final int CONST = 15;
+  public static final int TOSTRING = 70;
   public static final int GE = 42;
   public static final int RUN_MAIN = 67;
   public static final int GET = 61;
@@ -71,12 +72,12 @@ public interface sym {
   public static final int ID = 2;
   public static final int CAST = 13;
   public static final int COLON = 54;
-  public static final int RBRACKET = 71;
+  public static final int RBRACKET = 72;
   public static final int CADENA = 6;
   public static final int STRING = 12;
   public static final int ROUND = 68;
   public static final int AND = 45;
-  public static final int LBRACKET = 70;
+  public static final int LBRACKET = 71;
   public static final int LET = 14;
   public static final int REMOVE = 63;
   public static final int NE = 38;
@@ -151,6 +152,7 @@ public interface sym {
   "RUN_MAIN",
   "ROUND",
   "LENGTH",
+  "TOSTRING",
   "LBRACKET",
   "RBRACKET"
   };
