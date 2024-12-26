@@ -53,7 +53,7 @@ public class DeclaracionLista extends Instruccion {
         }
 
         // Se instancia el simbolo  de la lista
-        Simbolo simbolo = new Simbolo(this.tipo, this.id, new LinkedList<HashMap>(), false, "Externo", "",this.linea, this.columna);
+        Simbolo simbolo = new Simbolo(this.tipoLista, this.id, new LinkedList<HashMap>(), false, "Externo", "",this.linea, this.columna);
         // Se agrega el simbolo a la tabla de simbolos
         if (tablaDeSimbolos.setVariable(simbolo)) {
             return null;

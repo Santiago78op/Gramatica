@@ -95,7 +95,7 @@ terminal STRUCT;
 terminal LIST, APPEND, GET, SET, REMOVE, POP, REVERSE;
 terminal VOID;
 terminal RUN_MAIN;
-terminal ROUND;
+terminal ROUND, LENGTH;
 terminal LBRACKET, RBRACKET;
 
 
@@ -152,6 +152,10 @@ nonterminal Instruccion DECLARACION_FUNCION;
 nonterminal Instruccion LLAMADA;
 /* Round */
 nonterminal Instruccion DECRACION_ROUND;
+/* Length */
+nonterminal Instruccion LENGTH_FUNC;
+/* toString */
+nonterminal Instruccion TOSTRING_FUNC;
 /* Main */
 nonterminal Instruccion DECLARACION_MAIN;
 /* ------------- Precedencia y Asociatividad de Terminales ----------- */
@@ -247,10 +251,6 @@ LLAMADA ::= ID:i LPAREN CALL_PARAMETRO:l RPAREN  {: RESULT = new Llamada(i, l, i
           | ID:i LPAREN RPAREN                   {: RESULT = new Llamada(i, new LinkedList<HashMap>(), ileft, iright); :}
 ;
 
-// ** REDONDEO **
-DECRACION_ROUND ::= ROUND LPAREN EXPRESION:e RPAREN {: RESULT = new Round(e, eleft, eright); :}
-;
-
 // ** INSTRUCCIONES LOCALES **
 INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); :}
                 | INSTRUCCION:a                   {: RESULT = new LinkedList<Instruccion>(); RESULT.add(a); :}
@@ -276,11 +276,24 @@ INSTRUCCION ::= IMPRESION:i            SEMICOLON {: RESULT = i; :}
               | REVERSE_LISTA:e        SEMICOLON {: RESULT = e; :}
               | RETURN EXPRESION:e     SEMICOLON {: RESULT = new Return(e, eleft, eright); :}
               | DECRACION_ROUND:r      SEMICOLON {: RESULT = r; :}
+              | LENGTH_FUNC:l          SEMICOLON {: RESULT = l; :}
               | error                  SEMICOLON {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
 // ** IMPRESION EN CONSOLA **
 IMPRESION ::= CONSOLE DOT LOG LPAREN EXPRESION:e RPAREN  {: RESULT = new Print(e, eleft, eright); :}
+;
+
+// ** REDONDEO **
+DECRACION_ROUND ::= ROUND LPAREN EXPRESION:e RPAREN {: RESULT = new Round(e, eleft, eright); :}
+;
+
+// ** LONGITUD DE VECTOR, LISTA O CADENA **
+LENGTH_FUNC ::= LENGTH LPAREN EXPRESION:e RPAREN {: RESULT = new Length(e, eleft, eright); :}
+;
+
+// ** FUNCION TOSTRING **
+TOSTRING_FUNC ::= TOSTRING LPAREN EXPRESION:e RPAREN {: RESULT = new ToString(e, eleft, eright); :}
 ;
 
 // ** DECLARACION DE VARIABLES **
@@ -401,8 +414,10 @@ EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft,
             | REMOVE_LISTA:r                  {: RESULT = r; :}
             | POP_LISTA:o                     {: RESULT = o; :}
             | LLAMADA:l                       {: RESULT = l; :}
-            | DECRACION_ROUND:r               {: RESULT = r; :}
             | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
+            | DECRACION_ROUND:r               {: RESULT = r; :}
+            | LENGTH_FUNC:l                   {: RESULT = l; :}
+            | TOSTRING_FUNC:t                 {: RESULT = t; :}
 ;
 
 // ** CASTEO DE TIPOS **

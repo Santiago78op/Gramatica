@@ -137,8 +137,7 @@ public class Gui {
                     if (res instanceof Errores){
                         ast.addError((Errores) res);
                     }
-                }
-                else if (a instanceof AsignacionVector) {
+                } else if (a instanceof AsignacionVector) {
                     var res = a.interpretar(ast, tabla);
                     if (res instanceof Errores){
                         ast.addError((Errores) res);

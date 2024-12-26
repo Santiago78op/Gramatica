@@ -207,6 +207,7 @@ void     = "void"
 run_main = "run_main"
 return   = "return"
 round    = "round"
+length   = "length"
 
 // Estados del analizador lexico.
 %state STRING_STATE
@@ -256,6 +257,7 @@ round    = "round"
 <YYINITIAL> { run_main } { addToken("RUN_MAIN",     yytext()); return new Symbol(sym.RUN_MAIN, yyline, yycolumn, yytext()); }
 <YYINITIAL> { return }   { addToken("RETURN",   yytext()); return new Symbol(sym.RETURN, yyline, yycolumn, yytext()); }
 <YYINITIAL> { round }    { addToken("ROUND",    yytext()); return new Symbol(sym.ROUND, yyline, yycolumn, yytext()); }
+<YYINITIAL> { length }   { addToken("LENGTH",   yytext()); return new Symbol(sym.LENGTH, yyline, yycolumn, yytext()); }
 
 <YYINITIAL>{
     /* number y boolean */

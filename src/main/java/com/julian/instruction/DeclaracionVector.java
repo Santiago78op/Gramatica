@@ -19,18 +19,19 @@ public class DeclaracionVector extends Instruccion {
     private String id;
     private Instruccion vector;
     private int constante;
+    private Tipo tipoVector;
 
     /**
      * Constructor de la clase DefVector.
-     * @param tipo Tipo de dato.
      * @param linea Linea en la que se encuentra la instrucción.
      * @param columna Columna en la que se encuentra la instrucción.
      * @param id Nombre del vector.
      * @param vector Valores del vector.
      * @param constante Si el vector es constante o no.
      */
-    public DeclaracionVector(Tipo tipo, int linea, int columna, String id, Instruccion vector, int constante) {
-        super(tipo, linea, columna);
+    public DeclaracionVector(Tipo tipoVector, int linea, int columna, String id, Instruccion vector, int constante) {
+        super(new Tipo(tipoDato.VECTOR), linea, columna);
+        this.tipoVector = tipoVector;
         this.id = id;
         this.vector = vector;
         this.constante = constante;
@@ -49,14 +50,14 @@ public class DeclaracionVector extends Instruccion {
          * tipo semantico.
          */
         LinkedList<Object> valores = (LinkedList<Object>) result;
-        if (!validarTipos(valores, this.tipo)) {
+        if (!validarTipos(valores, this.tipoVector)) {
             // Retornamos Error si el tipo de dato no coincide.
             semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna));
             return new Errores("Semantico", "El tipo de dato en el vector no coincide con el tipo del vector", this.linea, this.columna);
         }
 
         // Agregar la variable a la tabla de simbolos
-        Simbolo simbolo = new Simbolo(this.tipo, this.id, this.vector, false, "Externo", "",this.linea, this.columna);
+        Simbolo simbolo = new Simbolo(this.tipo, this.id, result, false, "Externo", "",this.linea, this.columna);
         if (tablaDeSimbolos.setVariable(simbolo)) {
             // 0 no es constante, 1 es constante
             if (this.constante == 0) {
