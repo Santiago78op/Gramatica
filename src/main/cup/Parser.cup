@@ -517,10 +517,8 @@ POP_LISTA ::= ID:i DOT POP LPAREN RPAREN {: RESULT = new PopLista(i, ileft, irig
 REVERSE_LISTA ::= ID:i DOT REVERSE LPAREN RPAREN {: RESULT = new ReverseLista(i, ileft, iright); :}
 ;
 
-
 // ** ESTRUCTURAS **
 // ** DECLARACION DE ESTRUCTURAS **
-/**
 DECLARACION_STRUCT ::= TIPO ID:i LBRACE LISTA_STRUCTS:l RBRACE {: RESULT = new Struct(i, l, ileft, iright); :}
 ;
 
@@ -530,6 +528,7 @@ LISTA_STRUCTS ::= LISTA_STRUCTS LISTA_STRUCT:l {: RESULT = l; RESULT.add(l); :}
 
 ;
 
+// ** ESTRUCTURA **
 LISTA_STRUCT ::= ID:b COLON TIPO:t SEMICOLON              {: var struct = new HashMap<String,Object>();
                                                           struct.put("id",b);
                                                           struct.put("tipo",t);
@@ -553,4 +552,3 @@ LISTA_STRUCT ::= ID:b COLON TIPO:t SEMICOLON              {: var struct = new Ha
                                                           RESULT = new LinkedList<HashMap>();
                                                           RESULT.add(struct); :}
 ;
-**/
