@@ -28,6 +28,10 @@ public class MultiDimensionalVector extends Instruccion {
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        return valores;
+        return this;
+    }
+
+    public void setTipo(Tipo tipoVector) {
+        this.tipo = tipoVector;
     }
 }

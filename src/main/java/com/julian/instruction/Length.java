@@ -43,7 +43,15 @@ public class Length extends Instruccion {
             case CADENA:
                 return ((String) valor).length();
             case VECTOR:
-                return ((List<?>) valor).size();
+                // validar si es 1 dimencion o 2 dimenciones
+                if (valor instanceof Vector) {
+                    return ((Vector) valor).getValores().size();
+                } else {
+                    if(valor instanceof MultiDimensionalVector){
+                        return ((MultiDimensionalVector) valor).getValores().size();
+                    }
+                    return ((List<?>) valor).size();
+                }
             case LISTA:
                 return ((List<?>) valor).size();
             default:

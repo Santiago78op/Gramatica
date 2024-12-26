@@ -129,7 +129,7 @@ nonterminal Tipo TIPO;
 */
 /* Vectores */
 nonterminal Instruccion DECLARACION_VECTORES;
-nonterminal Instruccion VECTOR;
+nonterminal Instruccion VECTOR, VECTOR2D;
 nonterminal LinkedList<Object> LISTA_VALORES;
 nonterminal LinkedList<Object> LISTA_VECTORES;
 nonterminal Instruccion ACCESO_VECTOR;
@@ -425,48 +425,67 @@ CASTEO ::= CAST LPAREN EXPRESION:e AS TIPO:t RPAREN {: RESULT = new Casteo(e, t,
 ;
 
 /** GRAMATICA FASE 2 */
+
 // ** VECTORES **
 // ** DECLARACION DE VECTORES **
-DECLARACION_VECTORES ::= LET   ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v        {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
-           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v                    {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
-           | LET   ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
-           | CONST ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v  {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
+DECLARACION_VECTORES ::= LET ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v
+    {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
+    | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v
+    {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
+    | LET ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR2D:v
+    {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
+    | CONST ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR2D:v
+    {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
 ;
 
 // Definición de un vector
-VECTOR ::= LBRACKET LISTA_VALORES:v RBRACKET  {: RESULT = new Vector(v, vleft, vright); :}
-         | LBRACKET LISTA_VECTORES:v RBRACKET {: LinkedList<LinkedList<Object>> multiDimensionalList = new LinkedList<>();
-                                                 for (Object item : v) {
-                                                     if (item instanceof LinkedList) {
-                                                         multiDimensionalList.add((LinkedList<Object>) item);
-                                                     } else {
-                                                         LinkedList<Object> list = new LinkedList<>();
-                                                         list.add(item);
-                                                         multiDimensionalList.add(list);
-                                                     }
-                                                 }
-                                                 RESULT = new MultiDimensionalVector(multiDimensionalList, vleft, vright); :}
+VECTOR ::= LBRACKET LISTA_VALORES:v RBRACKET
+    {: RESULT = new Vector(v, vleft, vright); :}
+;
+
+// Definición de un vector multidimensional
+VECTOR2D ::= LBRACKET LISTA_VECTORES:v RBRACKET
+    {:
+        LinkedList<LinkedList<Object>> multiDimensionalList = new LinkedList<>();
+        for (Object item : v) {
+            if (item instanceof LinkedList) {
+                multiDimensionalList.add((LinkedList<Object>) item);
+            } else {
+                LinkedList<Object> list = new LinkedList<>();
+                list.add(item);
+                multiDimensionalList.add(list);
+            }
+        }
+        RESULT = new MultiDimensionalVector(multiDimensionalList, vleft, vright);
+    :}
 ;
 
 // Lista de valores para un vector
-LISTA_VALORES ::= LISTA_VALORES:a COMMA VALOR:b {: RESULT = a; RESULT.add(b); :}
-                | VALOR:a                       {: RESULT = new LinkedList<Object>(); RESULT.add(a); :}
+LISTA_VALORES ::= LISTA_VALORES:a COMMA VALOR:b
+    {: RESULT = a; RESULT.add(b); :}
+    | VALOR:a
+    {: RESULT = new LinkedList<Object>(); RESULT.add(a); :}
 ;
 
 // Lista de vectores para un vector multidimensional
-LISTA_VECTORES ::= LISTA_VECTORES:a COMMA VECTOR:b {: RESULT = a; RESULT.add(b); :}
-                 | VECTOR:a                        {: RESULT = new LinkedList<Object>(); RESULT.add(a); :}
+LISTA_VECTORES ::= LISTA_VECTORES:a COMMA VECTOR:b
+    {: RESULT = a; RESULT.add(b); :}
+    | VECTOR:a
+    {: RESULT = new LinkedList<Object>(); RESULT.add(a); :}
 ;
 
-// ** ACCESO A VECTOR **
 // ** ACCESO A VECTORES **
-ACCESO_VECTOR ::= ID:i LBRACKET EXPRESION:e RBRACKET {: RESULT = new AccesoVector(i, e, null, eleft, eright); :}
-                | ID:i LBRACKET EXPRESION:e RBRACKET LBRACKET EXPRESION:e2 RBRACKET {: RESULT = new AccesoVector(i, e, e2, eleft, eright); :}
+ACCESO_VECTOR ::= ID:i LBRACKET EXPRESION:e RBRACKET
+    {: RESULT = new AccesoVector(i, e, null, eleft, eright); :}
+    | ID:i LBRACKET EXPRESION:e RBRACKET LBRACKET EXPRESION:e2 RBRACKET
+    {: RESULT = new AccesoVector(i, e, e2, eleft, eright); :}
 ;
 
-// ** ASIGNACION A VECTOR **
-ASIGNACION_VECTOR ::= ID:i LBRACKET EXPRESION:e RBRACKET ASSIGN EXPRESION:v {: RESULT = new AsignacionVector(i, e, v, eleft, eright); :}
-                    | ID:i LBRACKET EXPRESION:e RBRACKET LBRACKET EXPRESION:e2 RBRACKET ASSIGN EXPRESION:v {: RESULT = new AsignacionVector(i, e, e2, v, eleft, eright); :}
+// ** ASIGNACION A VECTORES **
+ASIGNACION_VECTOR ::= ID:i LBRACKET EXPRESION:e RBRACKET ASSIGN EXPRESION:v
+    {: RESULT = new AsignacionVector(i, e, v, eleft, eright); :}
+    | ID:i LBRACKET EXPRESION:e RBRACKET LBRACKET EXPRESION:e2 RBRACKET ASSIGN EXPRESION:v
+    {: RESULT = new AsignacionVector(i, e, e2, v, eleft, eright); :}
 ;
 
 // ** LISTAS **

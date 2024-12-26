@@ -47,9 +47,12 @@ public class Vector extends Instruccion {
         this.valores = valores;
     }
 
-
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        return valores;
+        return this;
+    }
+
+    public void setTipo(Tipo tipoVector) {
+        this.tipo = tipoVector;
     }
 }

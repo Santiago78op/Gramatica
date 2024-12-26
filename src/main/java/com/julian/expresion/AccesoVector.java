@@ -9,6 +9,7 @@ import com.julian.symbol.*;
 
 import java.util.LinkedList;
 
+
 public class AccesoVector extends Instruccion {
 
     private final String id;
@@ -50,45 +51,91 @@ public class AccesoVector extends Instruccion {
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         var simbolo = tablaDeSimbolos.getVariable(this.id);
         if (simbolo == null) {
-            return new Errores("Semantico", "El vector " + this.id + " no existe", this.linea, this.columna);
+            return addSemanticError(this.id, this.linea, this.columna);
         }
 
         var valor = simbolo.getValor();
-        if (valor instanceof LinkedList) {
-            var indexValue = this.index.interpretar(arbol, tablaDeSimbolos);
-            if (indexValue instanceof Errores) return indexValue;
-            if (!(indexValue instanceof Integer)) {
-                return new Errores("Semantico", "El índice debe ser un entero", this.linea, this.columna);
-            }
-
-            int idx = (int) indexValue;
-            if (idx < 0 || idx >= ((LinkedList<?>) valor).size()) {
-                return new Errores("Semantico", "Índice fuera de rango", this.linea, this.columna);
-            }
-
-            if (this.nestedAccess == null) {
-                return ((LinkedList<?>) valor).get(idx);
-            } else {
-                var sublist = ((LinkedList<?>) valor).get(idx);
-                if (!(sublist instanceof LinkedList)) {
-                    return new Errores("Semantico", "El valor no es un vector multidimensional", this.linea, this.columna);
-                }
-
-                var index2Value = this.nestedAccess.interpretar(arbol, tablaDeSimbolos);
-                if (index2Value instanceof Errores) return index2Value;
-                if (!(index2Value instanceof Integer)) {
-                    return new Errores("Semantico", "El segundo índice debe ser un entero", this.linea, this.columna);
-                }
-
-                int idx2 = (int) index2Value;
-                if (idx2 < 0 || idx2 >= ((LinkedList<?>) sublist).size()) {
-                    return new Errores("Semantico", "Índice fuera de rango", this.linea, this.columna);
-                }
-
-                return ((LinkedList<?>) sublist).get(idx2);
-            }
+        if (valor instanceof Vector) {
+            return interpretarVector(arbol, tablaDeSimbolos, (Vector) valor);
+        } else if (valor instanceof MultiDimensionalVector) {
+            return interpretarMultiDimensionalVector(arbol, tablaDeSimbolos, (MultiDimensionalVector) valor);
         }
 
-        return new Errores("Semantico", "El valor no es un vector", this.linea, this.columna);
+        return addSemanticError(this.id, this.linea, this.columna);
+    }
+
+    private Object interpretarVector(Arbol arbol, tablaSimbolo tablaDeSimbolos, Vector vector) {
+        var indice = this.index.interpretar(arbol, tablaDeSimbolos);
+        if (indice instanceof Errores) {
+            return indice;
+        }
+        if (!(indice instanceof Integer)) {
+            return new Errores("Semantico", "El indice del vector debe ser de tipo entero", this.linea, this.columna);
+        }
+        var index = (int) indice;
+        if (index < 0 || index >= vector.getValores().size()) {
+            return new Errores("Semantico", "El indice del vector esta fuera de rango", this.linea, this.columna);
+        }
+        var valorVector = vector.getValores().get(index);
+        if (valorVector instanceof Vector) {
+            if (this.nestedAccess != null) {
+                return this.nestedAccess.interpretar(arbol, tablaDeSimbolos);
+            }
+            return valorVector;
+        }
+        this.tipo.setTipo(tipoDato.getType(valorVector));
+        if (valorVector instanceof Nativo) {
+            valorVector = ((Nativo) valorVector).getValor();
+        }
+        return valorVector;
+    }
+
+    private Object interpretarMultiDimensionalVector(Arbol arbol, tablaSimbolo tablaDeSimbolos, MultiDimensionalVector vector) {
+        var indice = this.index.interpretar(arbol, tablaDeSimbolos);
+        if (indice instanceof Errores) {
+            return indice;
+        }
+        if (!(indice instanceof Integer)) {
+            return new Errores("Semantico", "El indice del vector debe ser de tipo entero", this.linea, this.columna);
+        }
+        var index = (int) indice;
+        if (index < 0 || index >= vector.getValores().size()) {
+            return new Errores("Semantico", "El indice del vector esta fuera de rango", this.linea, this.columna);
+        }
+        var valorVector = vector.getValores().get(index);
+        if (valorVector instanceof LinkedList) {
+            // Acceso a la lista
+            var lista = (LinkedList<Object>) valorVector;
+            // Si en la lista hay un vector
+            if (lista.get(0) instanceof Vector) {
+                // Ya que el vector es de una sola dimension, se puede acceder directamente a los valores.
+                var valor = lista.get(0);
+                var nuevoValor = (Vector) valor;
+                var nestedAccess2 = this.nestedAccess.interpretar(arbol, tablaDeSimbolos);
+                if (nestedAccess2 instanceof Errores) {
+                    return nestedAccess2;
+                }
+                if (!(nestedAccess2 instanceof Integer)) {
+                    return new Errores("Semantico", "El indice del vector debe ser de tipo entero", this.linea, this.columna);
+                }
+                var index2 = (int) nestedAccess2;
+                if (index2 < 0 || index2 >= vector.getValores().size()) {
+                    return new Errores("Semantico", "El indice del vector esta fuera de rango", this.linea, this.columna);
+                }
+                var valorNuevo = nuevoValor.getValores().get(index2);
+                this.tipo.setTipo(tipoDato.getType(valorNuevo));
+                if (valorNuevo instanceof Nativo) {
+                    valorNuevo = ((Nativo) valorNuevo).getValor();
+                }
+                return valorNuevo;
+            }
+        }
+        return null;
+    }
+
+    private Errores addSemanticError(String id, int linea, int columna) {
+        Errores error = new Errores("Semantico", "La variable " + id + " no existe en la tabla de simbolos", linea, columna);
+        semanticErrorManager.addError(error);
+        return error;
     }
 }
