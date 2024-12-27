@@ -106,24 +106,38 @@ public class AsignacionVector extends Instruccion {
         }
         var valorVector = vector.getValores().get(index);
         if (valorVector instanceof LinkedList) {
+            // Acceso a la lista
             var lista = (LinkedList<Object>) valorVector;
-            var nestedIndice = this.nestedIndex.interpretar(arbol, tablaDeSimbolos);
-            if (nestedIndice instanceof Errores) {
-                return nestedIndice;
+            // Verificar si hay un indice anidado
+            if (lista.get(0) instanceof Vector) {
+                if (this.nestedIndex != null) {
+                    var nestedIndex = this.nestedIndex.interpretar(arbol, tablaDeSimbolos);
+                    if (nestedIndex instanceof Errores) {
+                        return nestedIndex;
+                    }
+                    if (!(nestedIndex instanceof Integer)) {
+                        return new Errores("Semantico", "El indice del vector debe ser de tipo entero", this.linea, this.columna);
+                    }
+                    var nested = (int) nestedIndex;
+                    if (nested < 0 || nested >= lista.size()) {
+                        return new Errores("Semantico", "El indice del vector esta fuera de rango", this.linea, this.columna);
+                    }
+                    var valor = lista.get(0);
+                    var nuevoValor = (Vector) valor;
+                    var valorNuevo = nuevoValor.interpretar(arbol, tablaDeSimbolos);
+                    if (valorNuevo instanceof Errores) {
+                        return valorNuevo;
+                    }
+
+                    var valorAsignar = this.value.interpretar(arbol, tablaDeSimbolos);
+                    if (valorAsignar instanceof Errores) {
+                        return valorAsignar;
+                    }
+                    nuevoValor.getValores().set(nested, valorAsignar);
+                    return null;
+                }
+                return new Errores("Semantico", "El valor no es un vector multidimensional", this.linea, this.columna);
             }
-            if (!(nestedIndice instanceof Integer)) {
-                return new Errores("Semantico", "El indice del vector debe ser de tipo entero", this.linea, this.columna);
-            }
-            var nestedIndex = (int) nestedIndice;
-            if (nestedIndex < 0 || nestedIndex >= lista.size()) {
-                return new Errores("Semantico", "El indice del vector esta fuera de rango", this.linea, this.columna);
-            }
-            var valorAsignar = this.value.interpretar(arbol, tablaDeSimbolos);
-            if (valorAsignar instanceof Errores) {
-                return valorAsignar;
-            }
-            lista.set(nestedIndex, valorAsignar);
-            return null;
         }
         return new Errores("Semantico", "El valor no es un vector multidimensional", this.linea, this.columna);
     }
