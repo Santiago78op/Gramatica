@@ -15,6 +15,13 @@ public class Struct extends Instruccion {
     // Lista de la estructura HashMap
     private HashMap<String, Instruccion> lista;
 
+    /**
+     * Constructor de la estructura
+     * @param id Identificador de la estructura
+     * @param lista Lista de la estructura
+     * @param linea Linea del archivo
+     * @param columna Columna del archivo
+     */
     public Struct(String id, HashMap<String, Instruccion> lista, int linea, int columna) {
         super(new Tipo(tipoDato.STRUCT), linea, columna);
         this.id = id;
