@@ -10,6 +10,8 @@ void main(){
     console.log("Si sale compi1");
 
     let var1: int = 10;
+    let a: int = 10;
+    let b: int = 10;
 
     if (var1 == 0) {
         console.log("Manejo de ambitos erroneo :'(");
@@ -26,6 +28,9 @@ void main(){
     // arreglos
     AnalizarArreglo();
 
+    //Suma
+    const resultado: int = suma(a=7, b=10);
+    console.log(resultado);
     console.log("Fin de la prueba");
 }
 
@@ -77,6 +82,10 @@ void AnalizarArreglo(){
     }
     console.log("La suma de los elementos del arreglo es: " + suma);
     console.log("La cantidad de ceros en el arreglo es: " + ceros);
+}
+
+int suma(a:int, b:int){
+    return a + b;
 }
 
 // Salida de archivo de prueba

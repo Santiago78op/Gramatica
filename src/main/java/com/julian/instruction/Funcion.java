@@ -66,6 +66,11 @@ public class Funcion extends Instruccion {
             // Recuperacion de errores
             if (result instanceof Errores) {
                 arbol.addError((Errores) result);
+            }else if (result instanceof Return) {
+                var valorRetorno = ((Return) result).getExpression();
+                if (valorRetorno != null) {
+                    return valorRetorno.interpretar(arbol, tablaDeSimbolos);
+                }
             }
             return result;
         }
