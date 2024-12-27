@@ -119,7 +119,7 @@ public class AccesoVector extends Instruccion {
                     return new Errores("Semantico", "El indice del vector debe ser de tipo entero", this.linea, this.columna);
                 }
                 var index2 = (int) nestedAccess2;
-                if (index2 < 0 || index2 >= vector.getValores().size()) {
+                if (index2 < 0 || index2 >= nuevoValor.getValores().size()) {
                     return new Errores("Semantico", "El indice del vector esta fuera de rango", this.linea, this.columna);
                 }
                 var valorNuevo = nuevoValor.getValores().get(index2);
