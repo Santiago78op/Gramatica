@@ -36,9 +36,14 @@ void miMetodo(){
     console.log("La persona " + p1.nombre + " tiene " + p1.edad + " años");
     console.log("La persona " + p2.nombre + " tiene " + p2.edad + " años");
 
+    let id1: identificacion = { cui: "3548265470101", p: p1 };
+    
 }
 
-
+Struct identificacion{
+    cui: string;
+    p: persona;
+};
 
 // Salida esperada
 /*

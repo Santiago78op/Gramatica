@@ -38,6 +38,12 @@ public class AccesoStruct extends Instruccion {
             return new Errores("Semantico", "El campo " + atributoStruct + " no está definido en la estructura", this.linea, this.columna);
         }
 
+        if (valorCampo instanceof Simbolo) {
+            Simbolo campoStruct = (Simbolo) valorCampo;
+            this.tipo = campoStruct.getTipo();
+            return campoStruct.getValor();
+        }
+
         // Actuliza el tipo de la instruccion
         this.tipo = new Tipo(tipoDato.getType(valorCampo));
         // Retorna el valor del campo

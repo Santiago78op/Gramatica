@@ -159,12 +159,12 @@ public class Arbol {
     }
 
     public void addStruct(Instruccion estructura){
-        // validamos que no exista la funcion
+        // validamos que no exista la estructura y validamos tambien si dentro de la estructura existe una variable de tipo estructura
         boolean existe = false;
         String id = "";
         for (Instruccion f: this.estructuras){
             if (f instanceof Struct struct){
-                if (struct.getId().equalsIgnoreCase(((Struct) struct).getId())){
+                if (struct.getId().equalsIgnoreCase(((Struct) estructura).getId())){
                     id = struct.getId();
                     existe = true;
                     break;
@@ -180,6 +180,7 @@ public class Arbol {
             Errores error = new Errores("Semantico", "La estructura " + id + " ya existe", 0, 0);
             this.errores.add(error);
         }
+
     }
 
     public Instruccion getStruct(String id) {

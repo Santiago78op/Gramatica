@@ -152,7 +152,7 @@ public class Gui {
                 }
             }
 
-            if (lexer.errors.size() > 0 || p.errors.size() > 0 || semanticErrorManager.getErrors().size() > 0) {
+            if (lexer.errors.size() > 0 || p.errors.size() > 0 || !semanticErrorManager.getErrors().isEmpty()) {
                 String dato = ast.getConsola();
                 textOutputArea.setText("\n" + dato + "\n");
 

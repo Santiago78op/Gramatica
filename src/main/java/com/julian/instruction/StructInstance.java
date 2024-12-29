@@ -36,6 +36,8 @@ public class StructInstance extends Instruccion {
         // Set el valor de cada campo de la estructura
         for (HashMap<String, Object> campo : structDef.getLista()) {
             String nombreCampo = (String) campo.get("id");
+            // Valido el tipo, si es un tipo nativo o es de tipo struct
+
             Tipo tipoCampo = (Tipo) campo.get("tipo");
             Object valorCampo = null;
 
