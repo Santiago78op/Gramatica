@@ -69,15 +69,13 @@ public class Else extends Instruccion {
                 } else if (result instanceof Continue) {
                     break; // Salta al siguiente caso
                 } else if (result instanceof Return) {
-                    var valorRetorno = ((Return) result).getExpression();
-                    if (valorRetorno != null) {
-                        return valorRetorno.interpretar(arbol, nuevaTabla);
-                    }
+                    return result;
                 }
             }
         } else {
             // Si la condicionIf es falsa se ejecutan las instrucciones del else
             for (Instruccion instruccion : instruccionesElse) {
+                // Paso al return fibonacci(n=n - 1) + fibonacci(n=n - 2);
                 var result = instruccion.interpretar(arbol, nuevaTabla);
                 if (result instanceof Errores) {
                     arbol.addError((Errores) result);
@@ -86,10 +84,7 @@ public class Else extends Instruccion {
                 } else if (result instanceof Continue) {
                     return result; // Salta al siguiente caso
                 } else if (result instanceof Return) {
-                    var valorRetorno = ((Return) result).getExpression();
-                    if (valorRetorno != null) {
-                        return valorRetorno.interpretar(arbol, nuevaTabla);
-                    }
+                    return result;
                 }
             }
         }

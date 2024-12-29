@@ -36,6 +36,8 @@ public class Arbol {
         this.funciones = new LinkedList<>();
         // Inicializamos una lista que tiene metodos
         this.metodos = new LinkedList<>();
+        // Inicializamos una lista que tiene estructuras
+        this.estructuras = new LinkedList<>();
     }
 
     public tablaSimbolo getTablaSimbolosGlobal() {
@@ -52,6 +54,14 @@ public class Arbol {
 
     public void setFunciones(LinkedList<Instruccion> funciones) {
         this.funciones = funciones;
+    }
+
+    public LinkedList<Instruccion> getEstructuras() {
+        return estructuras;
+    }
+
+    public void setEstructuras(LinkedList<Instruccion> estructuras) {
+        this.estructuras = estructuras;
     }
 
     // Metodo para agregar metodos
@@ -170,10 +180,9 @@ public class Arbol {
             Errores error = new Errores("Semantico", "La estructura " + id + " ya existe", 0, 0);
             this.errores.add(error);
         }
-        this.estructuras.add(estructura);
     }
 
-    public Instruccion getEstructuras(String id) {
+    public Instruccion getStruct(String id) {
         {
             for (var i : this.estructuras) {
                 if (i instanceof Struct struct) {

@@ -68,10 +68,7 @@ public class If extends Instruccion {
                 } else if (result instanceof Continue) {
                     return result; // Salta al siguiente caso
                 }else if (result instanceof Return) {
-                    var valorRetorno = ((Return) result).getExpression();
-                    if (valorRetorno != null) {
-                        return valorRetorno.interpretar(arbol, nuevaTabla);
-                    }
+                    return result;
                 }
             }
         }

@@ -7,36 +7,41 @@ import com.julian.symbol.tablaSimbolo;
 import com.julian.symbol.tipoDato;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Struct extends Instruccion {
 
-    // Identificador de la estructura
-    private String id;
-    // Lista de la estructura HashMap
-    private HashMap<String, Instruccion> lista;
+    // Nombre de la estructura
+    private final String nombre;
+    // Campos de la estructura
+    private final LinkedList<HashMap> lista;
 
-    /**
-     * Constructor de la estructura
-     * @param id Identificador de la estructura
-     * @param lista Lista de la estructura
-     * @param linea Linea del archivo
-     * @param columna Columna del archivo
-     */
-    public Struct(String id, HashMap<String, Instruccion> lista, int linea, int columna) {
+    public Struct(String nombre, LinkedList<HashMap> lista, int linea, int columna) {
         super(new Tipo(tipoDato.STRUCT), linea, columna);
-        this.id = id;
+        this.nombre = nombre;
         this.lista = lista;
     }
-
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         // Crear la estructura
+        for (HashMap<String, Object> campo : lista) {
+            String nombreCampo = (String) campo.get("id");
+            Tipo tipoCampo = (Tipo) campo.get("tipo");
+            Object valorCampo = campo.get("vector");
 
+            VarStruct varStruct = new VarStruct(tipoCampo, this.linea, this.columna, nombreCampo, 0);
+            varStruct.setExpresion(tipoCampo);
+            varStruct.interpretar(arbol, tablaDeSimbolos);
+        }
         return null;
     }
 
     public String getId() {
-        return id;
+        return nombre;
+    }
+
+    public LinkedList<HashMap> getLista() {
+        return lista;
     }
 }

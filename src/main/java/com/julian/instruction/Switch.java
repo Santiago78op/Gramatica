@@ -95,6 +95,8 @@ public class Switch extends Instruccion {
                                         return null; // Termina la ejecución del switch
                                     } else if (result instanceof Continue) {
                                         break; // Salta al siguiente caso
+                                    } else if (result instanceof Return) {
+                                        return result; // Retorna el valor de la expresion
                                     }
                                 }
                             }

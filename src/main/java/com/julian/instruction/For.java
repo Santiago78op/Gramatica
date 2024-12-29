@@ -84,6 +84,8 @@ public class For extends Instruccion {
                 if (result instanceof Continue) {
                     // Salta al siguiente caso.
                     break;
+                } else if (result instanceof Return) {
+                    return result;
                 }
             }
             // Se actualiza la variable.

@@ -138,10 +138,16 @@ nonterminal Instruccion ASIGNACION_VECTOR;
 nonterminal Instruccion LISTA;
 nonterminal Instruccion PUSH_LISTA, GET_LISTA, SET_LISTA;
 nonterminal Instruccion REMOVE_LISTA, POP_LISTA, REVERSE_LISTA;
-/* Estructs */
+/* Structs */
 nonterminal Instruccion DECLARACION_STRUCT;
 nonterminal LinkedList<HashMap> LISTA_STRUCTS;
 nonterminal HashMap<String, Object> LISTA_STRUCT;
+/* Instancia de Struct */
+nonterminal Instruccion DECLARACION_STRUCT_INST;
+nonterminal LinkedList<HashMap> LISTA_VALORES_STRUCT;
+nonterminal HashMap<String, Object> VALOR_STRUCT;
+/* Acceso a Struct */
+nonterminal Instruccion ACCESO_STRUCT;
 /* Metodo */
 nonterminal Instruccion DECLARACION_METODO;
 nonterminal LinkedList<HashMap> LISTA_PARAMETRO, CALL_PARAMETRO;
@@ -191,13 +197,14 @@ INSTRUCCIONES_GLOBALES ::= INSTRUCCIONES_GLOBALES:a INSTRUCCION_GLOBAL:b   {: RE
 ;
 
 // ** INSTRUCCION GLOBAL **
-INSTRUCCION_GLOBAL ::= DECLARACION_MAIN:m     SEMICOLON {: RESULT = m; :}
-                     | DECLARACION_METODO:m             {: RESULT = m; :}
-                     | DECLARACION_STRUCT:s             {: RESULT = s; :}
-                     | DECLARACION_FUNCION:f            {: RESULT = f; :}
-                     | DECLARACION_VARIABLE:v SEMICOLON {: RESULT = v; :}
-                     | DECLARACION_VECTORES:d SEMICOLON {: RESULT = d; :}
-                     | LISTA:l                SEMICOLON {: RESULT = l; :}
+INSTRUCCION_GLOBAL ::= DECLARACION_MAIN:m        SEMICOLON {: RESULT = m; :}
+                     | DECLARACION_METODO:m                {: RESULT = m; :}
+                     | DECLARACION_STRUCT:s      SEMICOLON {: RESULT = s; :}
+                     | DECLARACION_FUNCION:f               {: RESULT = f; :}
+                     | DECLARACION_VARIABLE:v    SEMICOLON {: RESULT = v; :}
+                     | DECLARACION_VECTORES:d    SEMICOLON {: RESULT = d; :}
+                     | DECLARACION_STRUCT_INST:s SEMICOLON {: RESULT = s; :}
+                     | LISTA:l                   SEMICOLON {: RESULT = l; :}
 ;
 
 // ** DECLARACION DEL METODO MAIN **
@@ -226,6 +233,7 @@ DECLARACION_METODO ::= VOID:t ID:d LPAREN RPAREN LBRACE INSTRUCCIONES:i RBRACE  
 // ** DECLARACION FUNCION **
 DECLARACION_FUNCION ::= TIPO:t ID:d LPAREN RPAREN LBRACE INSTRUCCIONES:i RBRACE                   {: RESULT = new Funcion(t, d, new LinkedList<HashMap>(), i, tleft, tright); :}
                       | TIPO:t ID:d LPAREN LISTA_PARAMETRO:l RPAREN LBRACE INSTRUCCIONES:i RBRACE {: RESULT = new Funcion(t, d, l, i, tleft, tright); :}
+
 ;
 
 // ** LISTA PARAMETRO **
@@ -257,27 +265,28 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
 ;
 
 // ** INSTRUCCION  LOCAL **
-INSTRUCCION ::= IMPRESION:i            SEMICOLON {: RESULT = i; :}
-              | DECLARACION_VARIABLE:v SEMICOLON {: RESULT = v; :}
-              | LISTA:l                SEMICOLON {: RESULT = l; :}
-              | LLAMADA:l              SEMICOLON {: RESULT = l; :}
-              | DECLARACION_VECTORES:d SEMICOLON {: RESULT = d; :}
-              | ASIGNACION:a           SEMICOLON {: RESULT = a; :}
-              | CONDICION:c                      {: RESULT = c; :}
-              | SELECCION:s                      {: RESULT = s; :}
-              | CICLOWHILE:w                     {: RESULT = w; :}
-              | CICLODO:d              SEMICOLON {: RESULT = d; :}
-              | CICLOFOR:f                       {: RESULT = f; :}
-              | ASIGNACION_VECTOR:a    SEMICOLON {: RESULT = a; :}
-              | PUSH_LISTA:p           SEMICOLON {: RESULT = p; :}
-              | SET_LISTA:s            SEMICOLON {: RESULT = s; :}
-              | REMOVE_LISTA:r         SEMICOLON {: RESULT = r; :}
-              | POP_LISTA:o            SEMICOLON {: RESULT = o; :}
-              | REVERSE_LISTA:e        SEMICOLON {: RESULT = e; :}
-              | RETURN EXPRESION:e     SEMICOLON {: RESULT = new Return(e, eleft, eright); :}
-              | DECRACION_ROUND:r      SEMICOLON {: RESULT = r; :}
-              | LENGTH_FUNC:l          SEMICOLON {: RESULT = l; :}
-              | error                  SEMICOLON {: RESULT = new instruccionError("Sintactico Error"); :}
+INSTRUCCION ::= IMPRESION:i               SEMICOLON {: RESULT = i; :}
+              | DECLARACION_VARIABLE:v    SEMICOLON {: RESULT = v; :}
+              | LISTA:l                   SEMICOLON {: RESULT = l; :}
+              | LLAMADA:l                 SEMICOLON {: RESULT = l; :}
+              | DECLARACION_VECTORES:d    SEMICOLON {: RESULT = d; :}
+              | ASIGNACION:a              SEMICOLON {: RESULT = a; :}
+              | CONDICION:c                         {: RESULT = c; :}
+              | SELECCION:s                         {: RESULT = s; :}
+              | CICLOWHILE:w                        {: RESULT = w; :}
+              | CICLODO:d                 SEMICOLON {: RESULT = d; :}
+              | CICLOFOR:f                          {: RESULT = f; :}
+              | ASIGNACION_VECTOR:a       SEMICOLON {: RESULT = a; :}
+              | PUSH_LISTA:p              SEMICOLON {: RESULT = p; :}
+              | SET_LISTA:s               SEMICOLON {: RESULT = s; :}
+              | REMOVE_LISTA:r            SEMICOLON {: RESULT = r; :}
+              | POP_LISTA:o               SEMICOLON {: RESULT = o; :}
+              | REVERSE_LISTA:e           SEMICOLON {: RESULT = e; :}
+              | RETURN EXPRESION:e        SEMICOLON {: RESULT = new Return(e, eleft, eright); :}
+              | DECRACION_ROUND:r         SEMICOLON {: RESULT = r; :}
+              | LENGTH_FUNC:l             SEMICOLON {: RESULT = l; :}
+              | DECLARACION_STRUCT_INST:s SEMICOLON {: RESULT = s; :}
+              | error                     SEMICOLON {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 
 // ** IMPRESION EN CONSOLA **
@@ -411,6 +420,7 @@ EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft,
             | VALOR:e                         {: RESULT = e; :}
             | ACCESO_VECTOR:a                 {: RESULT = a; :}
             | GET_LISTA:g                     {: RESULT = g; :}
+            | ACCESO_STRUCT:s                 {: RESULT = s; :}
             | REMOVE_LISTA:r                  {: RESULT = r; :}
             | POP_LISTA:o                     {: RESULT = o; :}
             | LLAMADA:l                       {: RESULT = l; :}
@@ -517,38 +527,57 @@ POP_LISTA ::= ID:i DOT POP LPAREN RPAREN {: RESULT = new PopLista(i, ileft, irig
 REVERSE_LISTA ::= ID:i DOT REVERSE LPAREN RPAREN {: RESULT = new ReverseLista(i, ileft, iright); :}
 ;
 
-// ** ESTRUCTURAS **
 // ** DECLARACION DE ESTRUCTURAS **
 DECLARACION_STRUCT ::= TIPO ID:i LBRACE LISTA_STRUCTS:l RBRACE {: RESULT = new Struct(i, l, ileft, iright); :}
 ;
 
 // ** LISTA DE ESTRUCTURAS **
-LISTA_STRUCTS ::= LISTA_STRUCTS LISTA_STRUCT:l {: RESULT = l; RESULT.add(l); :}
-                | LISTA_STRUCT:l               {: RESULT = new LinkedList<HashMap>(); RESULT.add(l); :}
-
+LISTA_STRUCTS ::= LISTA_STRUCTS:a LISTA_STRUCT:l {: RESULT = a; RESULT.add(l); :}
+                | LISTA_STRUCT:l                 {: RESULT = new LinkedList<HashMap>(); RESULT.add(l); :}
 ;
 
 // ** ESTRUCTURA **
-LISTA_STRUCT ::= ID:b COLON TIPO:t SEMICOLON              {: var struct = new HashMap<String,Object>();
+LISTA_STRUCT ::= ID:b COLON ID:t SEMICOLON                {: var struct = new HashMap<String,Object>();
                                                           struct.put("id",b);
                                                           struct.put("tipo",t);
-                                                          RESULT = new LinkedList<HashMap>();
-                                                          RESULT.add(struct); :}
+                                                          RESULT = struct; :}
+             | ID:b COLON TIPO:t SEMICOLON                {: var struct = new HashMap<String,Object>();
+                                                          struct.put("id",b);
+                                                          struct.put("tipo",t);
+                                                          RESULT = struct; :}
              | ID:b COLON LIST LT TIPO:t GT SEMICOLON     {: var struct = new HashMap<String,Object>();
                                                           struct.put("id",b);
                                                           struct.put("tipo",t);
-                                                          RESULT = new LinkedList<HashMap>();
-                                                          RESULT.add(struct); :}
+                                                          RESULT = struct; :}
              | ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v SEMICOLON {: var struct = new HashMap<String,Object>();
                                                           struct.put("id",i);
                                                           struct.put("tipo",t);
                                                           struct.put("vector",v);
-                                                          RESULT = new LinkedList<HashMap>();
-                                                          RESULT.add(struct); :}
-             | ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR:v SEMICOLON {: var struct = new HashMap<String,Object>();
+                                                          RESULT = struct; :}
+             | ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR2D:v SEMICOLON {: var struct = new HashMap<String,Object>();
                                                           struct.put("id",i);
                                                           struct.put("tipo",t);
                                                           struct.put("vector",v);
-                                                          RESULT = new LinkedList<HashMap>();
-                                                          RESULT.add(struct); :}
+                                                          RESULT = struct; :}
+;
+
+// ** INSTANCIA DE ESTRUCTURA **
+DECLARACION_STRUCT_INST ::= LET ID:i COLON ID:t ASSIGN LBRACE LISTA_VALORES_STRUCT:l RBRACE {: RESULT = new StructInstance(i, t, l, 0, ileft, iright); :}
+                        | CONST ID:i COLON ID:t ASSIGN LBRACE LISTA_VALORES_STRUCT:l RBRACE {: RESULT = new StructInstance(i, t, l, 1, ileft, iright); :}
+;
+
+// Define the grammar rule for the list of struct values
+LISTA_VALORES_STRUCT ::= LISTA_VALORES_STRUCT:a COMMA VALOR_STRUCT:b {: RESULT = a; RESULT.add(b); :}
+                        | VALOR_STRUCT:a {: RESULT = new LinkedList<HashMap>(); RESULT.add(a); :}
+;
+
+// Define the grammar rule for a single struct value
+VALOR_STRUCT ::= ID:i COLON EXPRESION:e {: var valor = new HashMap<String, Object>();
+                                          valor.put("id", i);
+                                          valor.put("valor", e);
+                                          RESULT = valor; :}
+;
+
+// ** ACCESO A ESTRUCTURAS **
+ACCESO_STRUCT ::= ID:i DOT ID:t {: RESULT = new AccesoStruct(i, t, ileft, iright); :}
 ;

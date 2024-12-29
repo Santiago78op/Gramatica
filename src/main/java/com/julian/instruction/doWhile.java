@@ -50,6 +50,8 @@ public class doWhile extends Instruccion {
                     return null; // Termina la ejecución del do while
                 } else if (result instanceof Continue) {
                     break; // Salta al siguiente caso
+                }else if (result instanceof Return) {
+                    return result;
                 }
                 // Se evalua la condicion del do while, por si cambia en el transcurso de las instrucciones
                 condicion = this.condicion.interpretar(arbol, tablaDeSimbolos);

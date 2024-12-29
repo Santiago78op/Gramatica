@@ -52,6 +52,8 @@ public class While extends Instruccion {
                     return null; // Termina la ejecución del switch
                 } else if (result instanceof Continue) {
                     break; // Salta al siguiente caso
+                } else if (result instanceof Return) {
+                    return result;
                 }
                 // Se evalua la condicion del while, por si cambia en el transcurso de las instrucciones
                 condicion = this.condicion.interpretar(arbol, tablaDeSimbolos);

@@ -18,8 +18,11 @@ import com.julian.symbol.tablaSimbolo;
  */
 public class VarStruct extends Instruccion {
 
+    // Nombre del campo
     private String nombre;
+    // Tipo variable de dato del campo
     private int mutable;
+    // Valor de la expresion
     private Object valueExpresion;
 
     public VarStruct(Tipo tipo, int linea, int columna, String nombre, int mutable) {
@@ -30,36 +33,20 @@ public class VarStruct extends Instruccion {
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        // Se le asigna un valor a la variable dependiendo del tipo de dato.
         setExpresion(this.tipo);
 
-        // Validamos la existencia de la variable en la tabla de simbolos y la agregamos
-        Simbolo newVar = new Simbolo(this.tipo, this.nombre, valueExpresion, false, "Externo", "",this.linea, this.columna);
+        Simbolo newVar = new Simbolo(this.tipo, this.nombre, valueExpresion, false, "Externo", "", this.linea, this.columna);
         if (tablaDeSimbolos.setVariable(newVar)) {
-            // 0 no es constante, 1 es constante
-            if (this.mutable == 0) {
-                newVar.setConstante(false);
-            } else {
-                newVar.setConstante(true);
-            }
+            newVar.setConstante(this.mutable == 1);
             return null;
         }
 
-        // Retornamos Error si la variable ya existe en la tabla de simbolos.
         semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.nombre + " ya existe en la tabla de simbolos", this.linea, this.columna));
         return new Errores("Semantico", "La variable " + this.nombre + " ya existe en la tabla de simbolos", this.linea, this.columna);
     }
 
-    /**
-     * La siguiente funcion setExpresion, tiene como funcion asignar una expresion a la variable.
-     * ya que esta se declara sin expresion, entonces se le debe dar un por defecto dependioendo
-     * del tipo que tenga su delaracion.
-     *
-     * Formato: -> id : tipo;
-     *        :numero : int;
-     */
     public void setExpresion(Tipo tipo) {
-        switch (tipo.getTipo()){
+        switch (tipo.getTipo()) {
             case ENTERO:
                 valueExpresion = 0;
                 break;
@@ -77,5 +64,4 @@ public class VarStruct extends Instruccion {
                 break;
         }
     }
-
 }

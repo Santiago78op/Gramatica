@@ -17,7 +17,7 @@ void main(){
     // Saludar
     saludar();
     
-    let ResultadoConversion :double = conversion (a:int = var1, tipo:string = "metro");
+    let ResultadoConversion :double = conversion (size = var1, tipo= "metro");
 }
 
 void declaracion(){

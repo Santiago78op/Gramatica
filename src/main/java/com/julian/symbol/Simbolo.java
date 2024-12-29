@@ -1,5 +1,7 @@
 package com.julian.symbol;
 
+import java.util.HashMap;
+
 /**
  * Simbolo -> Clase que representa un simbolo en la tabla de simbolos.
  * Ejemplo: nombreVariable -> Simbolo -> {id: nombreVariable, tipo: int, valor: 10}
@@ -23,6 +25,7 @@ public class Simbolo {
     private int linea;
     private int columna;
     private boolean constante;
+    private HashMap<String, Object> camposStruct;
 
     /**
      * Constructor de la clase Simbolo.
@@ -40,6 +43,19 @@ public class Simbolo {
         this.tipoDato = tipoDato;
         this.linea = linea;
         this.columna = columna;
+        this.camposStruct = new HashMap<>();
+    }
+
+    public void setValorCampo(String campo, Object valor) {
+        this.camposStruct.put(campo, valor);
+    }
+
+    public Object getValorCampo(String campo) {
+        return this.camposStruct.get(campo);
+    }
+
+    public Tipo getTipoCampo(String campo) {
+        return (Tipo) this.camposStruct.get(campo);
     }
 
     public Tipo getTipo() {
