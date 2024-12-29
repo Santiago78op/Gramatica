@@ -18,50 +18,36 @@ import com.julian.symbol.tablaSimbolo;
  */
 public class VarStruct extends Instruccion {
 
-    // Nombre del campo
-    private String nombre;
-    // Tipo variable de dato del campo
-    private int mutable;
-    // Valor de la expresion
-    private Object valueExpresion;
+    private final Tipo tipo;
+    private final String id;
+    private Object expresion;
 
-    public VarStruct(Tipo tipo, int linea, int columna, String nombre, int mutable) {
+    public VarStruct(Tipo tipo, int linea, int columna, Tipo tipo1, String id, Object expresion) {
         super(tipo, linea, columna);
-        this.nombre = nombre;
-        this.mutable = mutable;
+        this.tipo = tipo1;
+        this.id = id;
+        this.expresion = expresion;
+    }
+
+    @Override
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Object getExpresion() {
+        return expresion;
+    }
+
+    public void setExpresion(Object expresion) {
+        this.expresion = expresion;
     }
 
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
-        setExpresion(this.tipo);
-
-        Simbolo newVar = new Simbolo(this.tipo, this.nombre, valueExpresion, false, "Externo", "", this.linea, this.columna);
-        if (tablaDeSimbolos.setVariable(newVar)) {
-            newVar.setConstante(this.mutable == 1);
-            return null;
-        }
-
-        semanticErrorManager.addError(new Errores("Semantico", "La variable " + this.nombre + " ya existe en la tabla de simbolos", this.linea, this.columna));
-        return new Errores("Semantico", "La variable " + this.nombre + " ya existe en la tabla de simbolos", this.linea, this.columna);
-    }
-
-    public void setExpresion(Tipo tipo) {
-        switch (tipo.getTipo()) {
-            case ENTERO:
-                valueExpresion = 0;
-                break;
-            case DECIMAL:
-                valueExpresion = 0.0;
-                break;
-            case CADENA:
-                valueExpresion = "";
-                break;
-            case CARACTER:
-                valueExpresion = '\u0000';
-                break;
-            case BOOLEANO:
-                valueExpresion = true;
-                break;
-        }
+        return expresion;
     }
 }

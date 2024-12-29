@@ -109,6 +109,7 @@ public class Gui {
                     ast.addFuncion(a);
                 }
                 else if (a instanceof Struct) {
+                    var res = a.interpretar(ast, tabla);
                     ast.addStruct(a);
                 }
             }

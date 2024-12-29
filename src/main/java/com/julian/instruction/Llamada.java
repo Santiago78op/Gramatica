@@ -208,21 +208,4 @@ public class Llamada extends Instruccion {
         return resultadoFuncion; // Return the result of the function
     }
 
-    private Object ejecutarStruct(Arbol arbol, tablaSimbolo tablaDeSimbolos, Struct struct) {
-        var newTabla = new tablaSimbolo(arbol.getTablaSimbolosGlobal());
-        newTabla.setNombre(this.id);
-
-        for (HashMap<String, Object> campo : struct.getLista()) {
-            String nombreCampo = (String) campo.get("id");
-            Tipo tipoCampo = (Tipo) campo.get("tipo");
-            Object valorCampo = campo.get("vector");
-
-            VarStruct varStruct = new VarStruct(tipoCampo, this.linea, this.columna, nombreCampo, 0);
-            varStruct.setExpresion(tipoCampo);
-            varStruct.interpretar(arbol, newTabla);
-        }
-
-        return null;
-    }
-
 }

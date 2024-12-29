@@ -200,10 +200,10 @@ INSTRUCCIONES_GLOBALES ::= INSTRUCCIONES_GLOBALES:a INSTRUCCION_GLOBAL:b   {: RE
 INSTRUCCION_GLOBAL ::= DECLARACION_MAIN:m        SEMICOLON {: RESULT = m; :}
                      | DECLARACION_METODO:m                {: RESULT = m; :}
                      | DECLARACION_STRUCT:s      SEMICOLON {: RESULT = s; :}
+                     | DECLARACION_STRUCT_INST:s SEMICOLON {: RESULT = s; :}
                      | DECLARACION_FUNCION:f               {: RESULT = f; :}
                      | DECLARACION_VARIABLE:v    SEMICOLON {: RESULT = v; :}
                      | DECLARACION_VECTORES:d    SEMICOLON {: RESULT = d; :}
-                     | DECLARACION_STRUCT_INST:s SEMICOLON {: RESULT = s; :}
                      | LISTA:l                   SEMICOLON {: RESULT = l; :}
 ;
 
@@ -266,6 +266,7 @@ INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b   {: RESULT = a; RESULT.add(b); 
 
 // ** INSTRUCCION  LOCAL **
 INSTRUCCION ::= IMPRESION:i               SEMICOLON {: RESULT = i; :}
+              | DECLARACION_STRUCT_INST:s SEMICOLON {: RESULT = s; :}
               | DECLARACION_VARIABLE:v    SEMICOLON {: RESULT = v; :}
               | LISTA:l                   SEMICOLON {: RESULT = l; :}
               | LLAMADA:l                 SEMICOLON {: RESULT = l; :}
@@ -285,7 +286,6 @@ INSTRUCCION ::= IMPRESION:i               SEMICOLON {: RESULT = i; :}
               | RETURN EXPRESION:e        SEMICOLON {: RESULT = new Return(e, eleft, eright); :}
               | DECRACION_ROUND:r         SEMICOLON {: RESULT = r; :}
               | LENGTH_FUNC:l             SEMICOLON {: RESULT = l; :}
-              | DECLARACION_STRUCT_INST:s SEMICOLON {: RESULT = s; :}
               | error                     SEMICOLON {: RESULT = new instruccionError("Sintactico Error"); :}
 ;
 

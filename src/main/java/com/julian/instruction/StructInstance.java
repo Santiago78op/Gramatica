@@ -38,7 +38,21 @@ public class StructInstance extends Instruccion {
             String nombreCampo = (String) campo.get("id");
             // Valido el tipo, si es un tipo nativo o es de tipo struct
 
-            Tipo tipoCampo = (Tipo) campo.get("tipo");
+            // Validammos que el campo sea de Tipo o ID
+            // Tipo tipoCampo = (Tipo) campo.get("tipo");
+            Object tipoCampo = campo.get("tipo");
+            if(tipoCampo instanceof Tipo){
+                // Si es un tipo nativo
+                tipoCampo = (Tipo) campo.get("tipo");
+            }else{
+                // Busca la definición de la estructura
+                // Recupera la estructura
+                Simbolo nuevaStruct = tablaDeSimbolos.getVariable(tipoCampo.toString());
+                if (nuevaStruct == null) {
+                    return new Errores("Semantico", "La estructura " + tipoCampo + " no está definida", this.linea, this.columna);
+                }
+                tipoCampo = new Tipo(tipoDato.STRUCT, nuevaStruct.getId());
+            }
             Object valorCampo = null;
 
             // Busca el valor del campo en la lista de valores
@@ -55,10 +69,8 @@ public class StructInstance extends Instruccion {
                 return new Errores("Semantico", "El campo " + nombreCampo + " no tiene un valor asignado", this.linea, this.columna);
             }
 
-            // Como el valor no ti
-
             // Valida que el tipo del campo coincida con el valor asignado
-            if (tipoCampo.getTipo() != tipoDato.getType(valorCampo)) {
+            if (((Tipo) tipoCampo).getTipo() != tipoDato.getType(valorCampo)) {
                 return new Errores("Semantico", "El tipo del campo " + nombreCampo + " no coincide con el valor asignado", this.linea, this.columna);
             }
 
@@ -66,6 +78,8 @@ public class StructInstance extends Instruccion {
             structInstance.setValorCampo(nombreCampo, valorCampo);
         }
 
+        // Actualiza el tipo de la estructura
+        structInstance.getTipo().setTipo(tipoDato.STRUCT);
         // Add the struct instance to the symbol table
         if (!tablaDeSimbolos.setVariable(structInstance)) {
             return new Errores("Semantico", "La variable " + id + " ya existe en la tabla de símbolos", this.linea, this.columna);
