@@ -1,0 +1,358 @@
+//declaramos structs
+struct Particion{
+    status: char;
+    tipo: char;
+    ajuste: char;
+    inicio: int;
+    size: int;
+    nombre: string;
+    siguiente: bool;
+};
+
+struct Inodo {
+    uid: int;
+    gid: int;
+    size: int;
+    fechaCreacion: string;
+    fechaModificacion: string;
+    bloqueDirecto: int;
+    tipo: char;
+};
+
+
+void archivo3(){
+    console.log("-----------------CALIFICACION ARCHIVO 3-----------------\n");
+    ListasDinamicas();
+    MetodoStruct();
+    FuncionesNativas();
+}
+
+let EntradaCola: List<int>;
+let SalidaCola: List<int>;
+
+void enqueue(valor: int){
+    EntradaCola.append(valor);
+}
+int dequeue(){
+    if (length(SalidaCola) == 0) {
+        while (length(EntradaCola) > 0) {
+            SalidaCola.append(EntradaCola.pop());
+        }
+    }
+    if (length(SalidaCola) > 0) {
+        return SalidaCola.pop();
+    } else {
+        return -1;
+    }
+
+}
+
+int peekCola(){
+    if (length(SalidaCola) == 0) {
+        while (length(EntradaCola) > 0) {
+            SalidaCola.append(EntradaCola.remove(length(EntradaCola) - 1));
+        }
+    }
+    if (length(SalidaCola) > 0) {
+        return SalidaCola.get(length(SalidaCola) - 1);
+    } else {
+        return -1;
+    }
+}
+
+void MostrarCola(){
+    if (length(EntradaCola) == 0 && length(SalidaCola) == 0) {
+        console.log("La cola esta vacia");
+    } else {
+        let resultado: string = "";
+        let i: int;
+        for (i = length(SalidaCola) - 1; i >= 0; i--) {
+            resultado = resultado + SalidaCola.get(i) + " ";
+        }
+        for (i = 0; i < length(EntradaCola); i++) {
+            resultado = resultado + EntradaCola.get(i) + " ";
+        }
+        console.log("La cola es: " + resultado);
+    }
+}
+
+void ListasDinamicas(){
+    console.log("========= Listas Dinamicas =========");
+    // vamos a usar la cola con dos listas
+    enqueue(valor = 10);
+    enqueue(valor = 20);
+    enqueue(valor = 30);
+    enqueue(valor = 40);
+    enqueue(valor = 50);
+    // Mostramos la cola
+    MostrarCola();
+    // Sacamos un elemento
+    let valor: int = dequeue();
+    if (valor == -1 || valor != 10) {
+        console.log("Error al sacar el valor de la cola");
+    }
+    // agregamos un valor
+    enqueue(valor = 60);
+    // Mostramos la cola
+    MostrarCola();
+    // Sacamos un elemento
+    valor = dequeue();
+    if (valor == -1 || valor != 20) {
+        console.log("Error al sacar el valor de la cola");
+    }
+    // sacamos un elemento
+    valor = dequeue();
+    if (valor == -1 || valor != 30) {
+        console.log("Error al sacar el valor de la cola");
+    }
+    // Mostramos la cola
+    MostrarCola();
+    // Sacamos un elemento
+    valor = dequeue();
+    if (valor == -1 || valor != 40) {
+        console.log("Error al sacar el valor de la cola");
+    }
+    // mostramos la cola
+    MostrarCola();
+
+    // vamos a probar el metodo peek
+    let peek: int = peekCola();
+    if (peek == -1 || peek != 50) {
+        console.log("Error al obtener el valor de la cola");
+    } else {
+        console.log("El valor de la cola es: " + peek);
+    }
+
+    // ahora vamos a probar el metodo set y reverse con otra lista
+    let listaString: List<string>;
+    listaString.append("compi1");
+    listaString.append("de");
+    listaString.append("aux");
+    listaString.append("mejor");
+    listaString.append("el");
+    listaString.append(": ");
+    listaString.append("Reyna");
+    listaString.append("Fabian");
+
+    // reverse
+    listaString.reverse();
+    let resultado: string = "";
+    let i: int;
+    for (i = 0; i < length(listaString); i++) {
+        resultado = resultado + listaString.get(i) + " ";
+    }
+    console.log(resultado);
+
+    // ahora vamos al set
+    listaString.set(0, "Si");
+    listaString.set(1, "sale");
+    listaString.set(2, "compi1");
+    listaString.set(3, "en");
+    listaString.set(4, "escuela");
+    listaString.set(5, "de");
+    listaString.set(6, "diciembre");
+    listaString.set(7, "2024");
+
+    resultado = "";
+    for (i = 0; i < length(listaString); i++) {
+        resultado = resultado + listaString.get(i) + " ";
+    }
+    console.log(resultado);
+
+}
+
+struct MBR {
+    size: int;
+    fechaCreacion: string;
+    fechaModificacion: string;
+    particion1: Particion;
+    particion2: Particion;
+    particion3: Particion;
+    particion4: Particion;
+};
+
+
+
+void MetodoStruct(){
+    console.log("========= Metodo Struct =========");
+    // creacion de un struct
+    let p1: Particion = { status:'1', tipo:'P', ajuste:'B', inicio:0, size:100, nombre:"particion1", siguiente:true };
+    let p2: Particion = { status:'1', tipo:'S', ajuste:'W', inicio:100, size:200, nombre:"particion2", siguiente:false };
+    let p3: Particion = { status:'0', tipo:' ', ajuste:' ', inicio:0, size:0, nombre:"", siguiente:false };
+    let p4: Particion = { status:'0', tipo:' ', ajuste:' ', inicio:0, size:0, nombre:"", siguiente:false };
+
+    // creacion de un struct con un struct
+    let mbr: MBR = { size:1000, fechaCreacion:"01/01/2021", fechaModificacion:"01/01/2021", particion1:p1, particion2:p2, particion3:p3, particion4:p4 };
+
+    let cadenaP1: string = "\tparticion 1 -> nombre:" + mbr.particion1.nombre + " status:"
+        + mbr.particion1.status + " tipo:" + mbr.particion1.tipo + " ajuste:" + mbr.particion1.ajuste + " inicio:"
+        + mbr.particion1.inicio + " tamaño:" + mbr.particion1.size + " siguiente:" + mbr.particion1.siguiente;
+
+    let cadenaP2: string = "\tparticion 2 -> nombre:" + mbr.particion2.nombre + " status:"
+        + mbr.particion2.status + " tipo:" + mbr.particion2.tipo + " ajuste:" + mbr.particion2.ajuste + " inicio:"
+        + mbr.particion2.inicio + " tamaño:" + mbr.particion2.size + " siguiente:" + mbr.particion2.siguiente;
+
+
+    let cadenaP3: string = "\tparticion 3 -> nombre:" + mbr.particion3.nombre + " status:"
+        + mbr.particion3.status + " tipo:" + mbr.particion3.tipo + " ajuste:" + mbr.particion3.ajuste + " inicio:"
+        + mbr.particion3.inicio + " tamaño:" + mbr.particion3.size + " siguiente:" + mbr.particion3.siguiente;
+
+    let cadenaP4: string = "\tparticion 4 -> nombre:" + mbr.particion4.nombre + " status:"
+        + mbr.particion4.status + " tipo:" + mbr.particion4.tipo + " ajuste:" + mbr.particion4.ajuste + " inicio:"
+        + mbr.particion4.inicio + " tamaño:" + mbr.particion4.size + " siguiente:" + mbr.particion4.siguiente;
+
+    // mostrar struct mbr inicial
+    console.log("El tamaño del MBR es: " + mbr.size);
+    console.log("La fecha de creacion del MBR es: " + mbr.fechaCreacion);
+    console.log("La fecha de modificacion del MBR es: " + mbr.fechaModificacion);
+    console.log(cadenaP1);
+    console.log(cadenaP2);
+    console.log(cadenaP3);
+    console.log(cadenaP4);
+
+    // vamos a modificar la particion 3 dentro del struct
+    console.log("Vamos a crear particion 3");
+    mbr.particion3.status = '1';
+    mbr.particion3.tipo = 'P';
+    mbr.particion3.ajuste = 'B';
+    mbr.particion3.inicio = 300;
+    mbr.particion3.size = 300;
+    mbr.particion3.nombre = "particion3";
+    mbr.particion3.siguiente = false;
+    mbr.particion2.siguiente = true;
+    mbr.fechaModificacion = "02/01/2021";
+
+    cadenaP1 = "\tparticion 1 -> nombre:" + mbr.particion1.nombre + " status:"
+        + mbr.particion1.status + " tipo:" + mbr.particion1.tipo + " ajuste:" + mbr.particion1.ajuste + " inicio:"
+        + mbr.particion1.inicio + " tamaño:" + mbr.particion1.size + " siguiente:" + mbr.particion1.siguiente;
+
+    cadenaP2 = "\tparticion 2 -> nombre:" + mbr.particion2.nombre + " status:"
+        + mbr.particion2.status + " tipo:" + mbr.particion2.tipo + " ajuste:" + mbr.particion2.ajuste + " inicio:"
+        + mbr.particion2.inicio + " tamaño:" + mbr.particion2.size + " siguiente:" + mbr.particion2.siguiente;
+
+    cadenaP3 = "\tparticion 3 -> nombre:" + mbr.particion3.nombre + " status:"
+        + mbr.particion3.status + " tipo:" + mbr.particion3.tipo + " ajuste:" + mbr.particion3.ajuste + " inicio:"
+        + mbr.particion3.inicio + " tamaño:" + mbr.particion3.size + " siguiente:" + mbr.particion3.siguiente;
+
+    cadenaP4 = "\tparticion 4 -> nombre:" + mbr.particion4.nombre + " status:"
+        + mbr.particion4.status + " tipo:" + mbr.particion4.tipo + " ajuste:" + mbr.particion4.ajuste + " inicio:"
+        + mbr.particion4.inicio + " tamaño:" + mbr.particion4.size + " siguiente:" + mbr.particion4.siguiente;
+
+
+    // mostrar struct mbr modificado
+    console.log("El tamaño del MBR es: " + mbr.size);
+    console.log("La fecha de creacion del MBR es: " + mbr.fechaCreacion);
+    console.log("La fecha de modificacion del MBR es: " + mbr.fechaModificacion);
+    console.log(cadenaP1);
+    console.log(cadenaP2);
+    console.log(cadenaP3);
+    console.log(cadenaP4);
+
+    // vamos a modificar la particion 4 dentro del struct
+    console.log("Vamos a crear particion 4");
+    mbr.particion4.status = '1';
+    mbr.particion4.tipo = 'S';
+    mbr.particion4.ajuste = 'W';
+    mbr.particion4.inicio = 600;
+    mbr.particion4.size = 400;
+    mbr.particion4.nombre = "particion4";
+    mbr.particion4.siguiente = false;
+    mbr.particion3.siguiente = true;
+    mbr.fechaModificacion = "03/01/2021";
+
+    cadenaP1 = "\tparticion 1 -> nombre:" + mbr.particion1.nombre + " status:"
+        + mbr.particion1.status + " tipo:" + mbr.particion1.tipo + " ajuste:" + mbr.particion1.ajuste + " inicio:"
+        + mbr.particion1.inicio + " tamaño:" + mbr.particion1.size + " siguiente:" + mbr.particion1.siguiente;
+
+    cadenaP2 = "\tparticion 2 -> nombre:" + mbr.particion2.nombre + " status:"
+        + mbr.particion2.status + " tipo:" + mbr.particion2.tipo + " ajuste:" + mbr.particion2.ajuste + " inicio:"
+        + mbr.particion2.inicio + " tamaño:" + mbr.particion2.size + " siguiente:" + mbr.particion2.siguiente;
+
+    cadenaP3 = "\tparticion 3 -> nombre:" + mbr.particion3.nombre + " status:"
+        + mbr.particion3.status + " tipo:" + mbr.particion3.tipo + " ajuste:" + mbr.particion3.ajuste + " inicio:"
+        + mbr.particion3.inicio + " tamaño:" + mbr.particion3.size + " siguiente:" + mbr.particion3.siguiente;
+
+    cadenaP4 = "\tparticion 4 -> nombre:" + mbr.particion4.nombre + " status:"
+        + mbr.particion4.status + " tipo:" + mbr.particion4.tipo + " ajuste:" + mbr.particion4.ajuste + " inicio:"
+        + mbr.particion4.inicio + " tamaño:" + mbr.particion4.size + " siguiente:" + mbr.particion4.siguiente;
+
+
+    // mostrar struct mbr modificado
+    console.log("El tamaño del MBR es: " + mbr.size);
+    console.log("La fecha de creacion del MBR es: " + mbr.fechaCreacion);
+    console.log("La fecha de modificacion del MBR es: " + mbr.fechaModificacion);
+    console.log(cadenaP1);
+    console.log(cadenaP2);
+    console.log(cadenaP3);
+    console.log(cadenaP4);
+
+    console.log("Validemos constantes");
+
+    const p5: Particion = { status:'1', tipo:'P', ajuste:'B', inicio:0, size:100, nombre:"particion5", siguiente:true };
+    p5.status = '0';
+    p5.tipo = ' ';
+    p5.ajuste = ' ';
+    p5.inicio = 0;
+    p5.size = 0;
+    p5.nombre = "";
+    p5.siguiente = false;
+    let cadenaP5: string = "\tparticion 5 -> nombre:" + p5.nombre + " status:"
+        + p5.status + " tipo:" + p5.tipo + " ajuste:" + p5.ajuste + " inicio:"
+        + p5.inicio + " tamaño:" + p5.size + " siguiente:" + p5.siguiente;
+    console.log(cadenaP5);
+    console.log("");
+
+}
+
+
+void FuncionesNativas(){
+    console.log("========= Funcion Round =========");
+    let r1: int = round(2.5);
+    let r2: int = round(2.4);
+    let r3: int = round(-2.6);
+    let r4: int = round(-2.2);
+    let r5: int = round(10 / 3);
+    console.log("El round de 2.5 es: " + r1);
+    console.log("El round de 2.4 es: " + r2);
+    console.log("El round de -2.6 es: " + r3);
+    console.log("El round de -2.2 es: " + r4);
+    console.log("El round de 10/3 es: " + r5);
+    console.log("========= Funcion ToString =========");
+    // tipos primitivos
+    let numString: string = toString(123);
+    let numString2: string = toString(123.456);
+    let numString3: string = toString(true);
+    let numString4: string = toString(false);
+    let numString5: string = toString('F');
+    let numString6: string = toString('R');
+    //tipos struct
+    let particion1: Particion = { status:'1', tipo:'P', ajuste:'B', inicio:0, size:100, nombre:"particion1", siguiente:true };
+    let inodo1: Inodo = { uid:1, gid:1, size:100, fechaCreacion:"01/01/2021", fechaModificacion:"01/01/2021", bloqueDirecto:1, tipo:'C' };
+    console.log("El valor de 123 es: " + numString);
+    console.log("El valor de 123.456 es: " + numString2);
+    console.log("El valor de true es: " + numString3);
+    console.log("El valor de false es: " + numString4);
+    console.log("El valor de 'F' es: " + numString5);
+    console.log("El valor de 'R' es: " + numString6);
+    console.log("El valor de la particion es: " + toString(particion1));
+    console.log("El valor del inodo es: " + toString(inodo1));
+    console.log("========= Funcion Length =========");
+    let vector1: char[] = ['a', 'b', 'c', 'd', 'e'];
+    let matriz1: char[][] = [['a', 'b', 'c'], ['d', 'e', 'f'], ['g', 'h', 'i']];
+    let cadena1: string = "Fabian Reyna";
+    let lista1: List<int>;
+    let lista2: List<bool>;
+    lista1.append(1);
+    lista1.append(2);
+    lista1.append(3);
+    lista1.append(4);
+    lista1.append(5);
+    lista1.append(6);
+    console.log("El tamaño del vector es: " + length(vector1));
+    console.log("El tamaño de la matriz es: " + length(matriz1));
+    console.log("El tamaño de la cadena es: " + length(cadena1));
+    console.log("El tamaño de la lista1 es: " + length(lista1));
+    console.log("El tamaño de la lista2 es: " + length(lista2));
+}
+
+RUN_MAIN archivo3();

@@ -59,9 +59,6 @@ public class Funcion extends Instruccion {
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         // Interpretacion de una funcion
         for (var instruccion: this.instruccions) {
-            if (instruccion == null) {
-                continue;
-            }
             var result = instruccion.interpretar(arbol, tablaDeSimbolos);
             // Recuperacion de errores
             if (result instanceof Errores) {
@@ -69,7 +66,6 @@ public class Funcion extends Instruccion {
             }else if (result instanceof Return) {
                 return result;
             }
-            return result;
         }
         return null;
     }

@@ -72,9 +72,6 @@ public class Metodo extends Instruccion {
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         // Interpretacion de una funcion
         for (var instruccion: this.instrucciones){
-            if ( instruccion == null){
-                continue;
-            }
             var result = instruccion.interpretar(arbol, tablaDeSimbolos);
             // Recuperacion de errores
             if (result instanceof Errores) {

@@ -66,16 +66,28 @@ public class Llamada extends Instruccion {
         var newTabla = new tablaSimbolo(arbol.getTablaSimbolosGlobal());
         newTabla.setNombre(this.id);
 
-        // for para recorrer los parametros
+        // Declaramos los parametros del Metodo ¡No es la llamada!
         for (int i = 0; i < metodo.getParametros().size(); i++) {
             // Obtenemos el identificador
             var identificador = metodo.getParametros().get(i).get("id").toString();
             // Obtenemos el tipo
             var tipo = (Tipo) metodo.getParametros().get(i).get("tipo");
             // Obtenemos el valor
-            var valor = (Instruccion) this.parametros.get(i).get("valor");
-            // Creamos el simbolo
-            var simbolo = new Simbolo(tipo, identificador, valor, false, "Externo", "", this.linea, this.columna);
+            var valor = (Instruccion) metodo.getParametros().get(i).get("valor");
+
+            // Validamos el largo de los parametros y los valores
+            Object valorExp = null;
+            if (valor != null){
+                valorExp = valor.interpretar(arbol, newTabla);
+                if (valorExp instanceof Errores) return valorExp;
+                // Valida tipos
+                if (tipo.getTipo() != valor.tipo.getTipo()){
+                    semanticErrorManager.addError(new Errores("Semantico", "Error en el parametro", this.linea, this.columna));
+                    return new Errores("Semantico", "Error en el parametro", this.linea, this.columna);
+                }
+            }
+
+            var simbolo = new Simbolo(tipo, identificador, valorExp, false, "Externo", "", this.linea, this.columna);
             // Agregamos el simbolo a la tabla de simbolos
             if (!newTabla.setVariable(simbolo)){
                 semanticErrorManager.addError(new Errores("Semantico", "La variable " + identificador + " ya existe en la tabla de simbolos", this.linea, this.columna));
@@ -83,7 +95,7 @@ public class Llamada extends Instruccion {
             }
         }
 
-        // Registramos el valor
+        // Reasiganamos los valores que estan en la Llamada
         for (int i = 0; i < this.parametros.size(); i++){
             // Obtenemos el identificador
             var identificador = newTabla.getVariable(this.parametros.get(i).get("id").toString());
@@ -126,7 +138,7 @@ public class Llamada extends Instruccion {
         }
         var resultadoMetodo = metodo.interpretar(arbol, newTabla);
         if (resultadoMetodo instanceof Errores) return resultadoMetodo;
-        return resultadoMetodo; // Return the result of the method
+        return null;
     }
 
     private Object ejectarFuncion(Arbol arbol, tablaSimbolo tablaDeSimbolos, Funcion funcion){
@@ -134,16 +146,27 @@ public class Llamada extends Instruccion {
         var newTabla = new tablaSimbolo(arbol.getTablaSimbolosGlobal());
         newTabla.setNombre(this.id);
 
-        // for para recorrer los parametros
+        // Declaramos los parametros del Metodo ¡No es la llamada!
         for (int i = 0; i < funcion.getParametros().size(); i++) {
             // Obtenemos el identificador
             var identificador = funcion.getParametros().get(i).get("id").toString();
             // Obtenemos el tipo
             var tipo = (Tipo) funcion.getParametros().get(i).get("tipo");
             // Obtenemos el valor
-            var valor = (Instruccion) this.parametros.get(i).get("valor");
+            var valor = (Instruccion) funcion.getParametros().get(i).get("valor");
+            // Validamos el largo de los parametros y los valores
+            Object valorExp = null;
+            if (valor != null){
+                valorExp = valor.interpretar(arbol, newTabla);
+                if (valorExp instanceof Errores) return valorExp;
+                // Valida tipos
+                if (tipo.getTipo() != valor.tipo.getTipo()){
+                    semanticErrorManager.addError(new Errores("Semantico", "Error en el parametro", this.linea, this.columna));
+                    return new Errores("Semantico", "Error en el parametro", this.linea, this.columna);
+                }
+            }
             // Creamos el simbolo
-            var simbolo = new Simbolo(tipo, identificador, valor, false, "Externo", "", this.linea, this.columna);
+            var simbolo = new Simbolo(tipo, identificador, valorExp, false, "Externo", "", this.linea, this.columna);
             // Agregamos el simbolo a la tabla de simbolos
             if (!newTabla.setVariable(simbolo)){
                 semanticErrorManager.addError(new Errores("Semantico", "La variable " + identificador + " ya existe en la tabla de simbolos", this.linea, this.columna));
@@ -151,7 +174,7 @@ public class Llamada extends Instruccion {
             }
         }
 
-        // Registramos el valor
+        // Reasiganamos los valores que estan en la Llamada
         for (int i = 0; i < this.parametros.size(); i++){
             // Obtenemos el identificador
             var identificador = newTabla.getVariable(this.parametros.get(i).get("id").toString());
@@ -161,11 +184,6 @@ public class Llamada extends Instruccion {
             }
             // Obtenemos el valor
             var valor = (Instruccion) this.parametros.get(i).get("valor");
-            if ( valor == null){
-                semanticErrorManager.addError(new Errores("Semantico", "El valor de la variable " + identificador + " no puede ser nulo", this.linea, this.columna));
-                return new Errores("Semantico", "El valor de la variable " + identificador + " no puede ser nulo", this.linea, this.columna);
-            }
-
             var resValor = valor.interpretar(arbol, tablaDeSimbolos);
             if (resValor instanceof Errores) return resValor;
 
