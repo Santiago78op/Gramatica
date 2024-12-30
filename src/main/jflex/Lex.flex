@@ -193,7 +193,6 @@ break  = "break"
 consol = "console"
 log    = "log"
 conti  = "continue"
-print  = "print"
 // LEXICO FASE 2
 stuct    = "struct"
 list     = "list"
@@ -208,6 +207,7 @@ run_main = "run_main"
 return   = "return"
 round    = "round"
 length   = "length"
+toString = "toString"
 
 // Estados del analizador lexico.
 %state STRING_STATE
@@ -258,6 +258,7 @@ length   = "length"
 <YYINITIAL> { return }   { addToken("RETURN",   yytext()); return new Symbol(sym.RETURN, yyline, yycolumn, yytext()); }
 <YYINITIAL> { round }    { addToken("ROUND",    yytext()); return new Symbol(sym.ROUND, yyline, yycolumn, yytext()); }
 <YYINITIAL> { length }   { addToken("LENGTH",   yytext()); return new Symbol(sym.LENGTH, yyline, yycolumn, yytext()); }
+<YYINITIAL> { toString } { addToken("TOSTRING", yytext()); return new Symbol(sym.TOSTRING, yyline, yycolumn, yytext()); }
 
 <YYINITIAL>{
     /* number y boolean */

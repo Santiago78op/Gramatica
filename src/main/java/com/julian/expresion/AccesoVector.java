@@ -111,6 +111,9 @@ public class AccesoVector extends Instruccion {
                 // Ya que el vector es de una sola dimension, se puede acceder directamente a los valores.
                 var valor = lista.get(0);
                 var nuevoValor = (Vector) valor;
+                if (this.nestedAccess == null) {
+                    return nuevoValor;
+                }
                 var nestedAccess2 = this.nestedAccess.interpretar(arbol, tablaDeSimbolos);
                 if (nestedAccess2 instanceof Errores) {
                     return nestedAccess2;

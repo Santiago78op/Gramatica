@@ -3,6 +3,7 @@ package com.julian.expresion;
 import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
+import com.julian.instruction.Struct;
 import com.julian.symbol.*;
 
 /**
@@ -12,6 +13,7 @@ import com.julian.symbol.*;
 public class AccesoVar extends Instruccion {
 
     private String id;
+    private Object valorStruct;
 
     /**
      * Constructor de la clase AccesoVar.
@@ -33,7 +35,6 @@ public class AccesoVar extends Instruccion {
             return addSemanticError(this.id, this.linea,  this.columna);
         }
 
-
         // Actulizar el tipo de la variable
         this.tipo.setTipo(simbolo.getTipo().getTipo());
         // Se retorna el valor de la variable
@@ -46,5 +47,9 @@ public class AccesoVar extends Instruccion {
                 "La variable " + id + " es constante", linea, columna);
         semanticErrorManager.addError(error);
         return error;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
 }

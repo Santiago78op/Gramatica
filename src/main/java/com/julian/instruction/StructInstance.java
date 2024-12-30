@@ -2,6 +2,7 @@ package com.julian.instruction;
 
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
+import com.julian.expresion.AccesoVar;
 import com.julian.symbol.*;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ public class StructInstance extends Instruccion {
     private String idStruct;
     private LinkedList<HashMap> valores;
     private int mutable;
+    private LinkedList<HashMap> lista;
 
     public StructInstance(String id, String idStruct, LinkedList<HashMap> valores, int mutable, int linea, int columna) {
         super(new Tipo(tipoDato.STRUCT), linea, columna);
@@ -20,6 +22,7 @@ public class StructInstance extends Instruccion {
         this.idStruct = idStruct;
         this.valores = valores;
         this.mutable = mutable;
+        this.lista = new LinkedList<>();
     }
 
     @Override
@@ -31,7 +34,12 @@ public class StructInstance extends Instruccion {
         }
 
         // Crea la instancia de la estructura
-        Simbolo structInstance = new Simbolo(new Tipo(tipoDato.STRUCT), id, null, mutable == 1, "Externo", idStruct, this.linea, this.columna);
+        Simbolo structInstance = new Simbolo(new Tipo(tipoDato.STRUCT), id, null, false, "Externo", idStruct, this.linea, this.columna);
+        if (this.mutable == 0) {
+            structInstance.setConstante(false);
+        } else {
+            structInstance.setConstante(true);
+        }
 
         // Set el valor de cada campo de la estructura
         for (HashMap<String, Object> campo : structDef.getLista()) {
@@ -48,6 +56,7 @@ public class StructInstance extends Instruccion {
                 // Busca la definición de la estructura
                 // Recupera la estructura
                 Simbolo nuevaStruct = tablaDeSimbolos.getVariable(tipoCampo.toString());
+                this.lista = (LinkedList<HashMap>) nuevaStruct.getValor();
                 if (nuevaStruct == null) {
                     return new Errores("Semantico", "La estructura " + tipoCampo + " no está definida", this.linea, this.columna);
                 }
@@ -69,13 +78,19 @@ public class StructInstance extends Instruccion {
                 return new Errores("Semantico", "El campo " + nombreCampo + " no tiene un valor asignado", this.linea, this.columna);
             }
 
-            // Valida que el tipo del campo coincida con el valor asignado
-            if (((Tipo) tipoCampo).getTipo() != tipoDato.getType(valorCampo)) {
-                return new Errores("Semantico", "El tipo del campo " + nombreCampo + " no coincide con el valor asignado", this.linea, this.columna);
-            }
+            // Validamos si el valoCampo es AccesoVar
+            if(valorCampo instanceof AccesoVar){
+                // Set el valor del campo
+                 structInstance.setValorCampo(nombreCampo, this.lista);
+            } else {
+                // Valida que el tipo del campo coincida con el valor asignado
+                if (((Tipo) tipoCampo).getTipo() != tipoDato.getType(valorCampo)) {
+                    return new Errores("Semantico", "El tipo del campo " + nombreCampo + " no coincide con el valor asignado", this.linea, this.columna);
+                }
 
-            // Set the value in the struct instance
-            structInstance.setValorCampo(nombreCampo, valorCampo);
+                // Set el valor del campo
+                structInstance.setValorCampo(nombreCampo, valorCampo);
+            }
         }
 
         // Actualiza el tipo de la estructura

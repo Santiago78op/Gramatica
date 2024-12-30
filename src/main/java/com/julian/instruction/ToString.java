@@ -31,8 +31,11 @@ public class ToString extends Instruccion {
             case DECIMAL:
             case BOOLEANO:
             case CARACTER:
+                // Actulizar el tipo de la variable
+                this.tipo.setTipo(tipoDato.CADENA);
                 return valor.toString();
             case STRUCT:
+                this.tipo.setTipo(tipoDato.CADENA);
                 return valor.toString(); // Assuming the struct has a proper toString() method
             default:
                 return new Errores("Semantico", "La funcion toString solo se puede aplicar a tipos numericos, caracter, booleano o struct", this.linea, this.columna);

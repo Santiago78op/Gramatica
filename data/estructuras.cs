@@ -31,12 +31,11 @@ int suma(a:int, b:int){
 void miMetodo(){
     //aqui vamos a tener los structs
     let p1: persona = { nombre: "Luis", edad: 20, estatura: 1.60 };
-    const p2: persona = { nombre: "Maria", edad: 25, estatura: 1.50 };
 
-    console.log("La persona " + p1.nombre + " tiene " + p1.edad + " años");
-    console.log("La persona " + p2.nombre + " tiene " + p2.edad + " años");
 
     let id1: identificacion = { cui: "3548265470101", p: p1 };
+
+     console.log("La persona " + id1.p.nombre + " se identifica con el cui " + id1.cui);
     
 }
 

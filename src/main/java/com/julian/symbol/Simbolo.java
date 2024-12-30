@@ -54,6 +54,10 @@ public class Simbolo {
         return this.camposStruct.get(campo);
     }
 
+    public HashMap<String, Object> getCamposStruct() {
+        return camposStruct;
+    }
+
     public Tipo getTipoCampo(String campo) {
         return (Tipo) this.camposStruct.get(campo);
     }

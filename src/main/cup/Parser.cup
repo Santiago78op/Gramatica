@@ -424,10 +424,10 @@ EXPRESION ::= SUB EXPRESION:a                 {: RESULT = new Negacion(a, aleft,
             | REMOVE_LISTA:r                  {: RESULT = r; :}
             | POP_LISTA:o                     {: RESULT = o; :}
             | LLAMADA:l                       {: RESULT = l; :}
-            | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
             | DECRACION_ROUND:r               {: RESULT = r; :}
             | LENGTH_FUNC:l                   {: RESULT = l; :}
             | TOSTRING_FUNC:t                 {: RESULT = t; :}
+            | ID:i                            {: RESULT = new AccesoVar(i, ileft, iright); :}
 ;
 
 // ** CASTEO DE TIPOS **
@@ -528,6 +528,18 @@ REVERSE_LISTA ::= ID:i DOT REVERSE LPAREN RPAREN {: RESULT = new ReverseLista(i,
 ;
 
 // ** DECLARACION DE ESTRUCTURAS **
+/**
+Struct persona{
+    nombre: string;
+    edad: int;
+    estatura: double;
+};
+
+Struct identificacion{
+    cui: string;
+    p: persona;
+};
+*/
 DECLARACION_STRUCT ::= TIPO ID:i LBRACE LISTA_STRUCTS:l RBRACE {: RESULT = new Struct(i, l, ileft, iright); :}
 ;
 
@@ -580,4 +592,5 @@ VALOR_STRUCT ::= ID:i COLON EXPRESION:e {: var valor = new HashMap<String, Objec
 
 // ** ACCESO A ESTRUCTURAS **
 ACCESO_STRUCT ::= ID:i DOT ID:t {: RESULT = new AccesoStruct(i, t, ileft, iright); :}
+                | ACCESO_STRUCT:s DOT ID:t {: RESULT = new AccesoStruct(s, t, sleft, sright); :}
 ;
