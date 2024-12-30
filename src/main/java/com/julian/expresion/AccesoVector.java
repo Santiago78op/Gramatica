@@ -69,25 +69,31 @@ public class AccesoVector extends Instruccion {
         if (indice instanceof Errores) {
             return indice;
         }
+
         if (!(indice instanceof Integer)) {
             return new Errores("Semantico", "El indice del vector debe ser de tipo entero", this.linea, this.columna);
         }
+
         var index = (int) indice;
         if (index < 0 || index >= vector.getValores().size()) {
             return new Errores("Semantico", "El indice del vector esta fuera de rango", this.linea, this.columna);
         }
+
         var valorVector = vector.getValores().get(index);
         if (valorVector instanceof Vector) {
             if (this.nestedAccess != null) {
                 return this.nestedAccess.interpretar(arbol, tablaDeSimbolos);
             }
-            return valorVector;
+        } else {
+            var valorCampo = ((Instruccion) valorVector).interpretar(arbol, tablaDeSimbolos);
+            // Validar si la expresion es un error
+            if (valorCampo instanceof Errores) {
+                return valorCampo;
+            }
+            this.tipo.setTipo(tipoDato.getType(valorVector));
+            return valorCampo;
         }
-        this.tipo.setTipo(tipoDato.getType(valorVector));
-        if (valorVector instanceof Nativo) {
-            valorVector = ((Nativo) valorVector).getValor();
-        }
-        return valorVector;
+        return null;
     }
 
     private Object interpretarMultiDimensionalVector(Arbol arbol, tablaSimbolo tablaDeSimbolos, MultiDimensionalVector vector) {
@@ -126,11 +132,13 @@ public class AccesoVector extends Instruccion {
                     return new Errores("Semantico", "El indice del vector esta fuera de rango", this.linea, this.columna);
                 }
                 var valorNuevo = nuevoValor.getValores().get(index2);
-                this.tipo.setTipo(tipoDato.getType(valorNuevo));
-                if (valorNuevo instanceof Nativo) {
-                    valorNuevo = ((Nativo) valorNuevo).getValor();
+                var valorCampo = ((Instruccion) valorNuevo).interpretar(arbol, tablaDeSimbolos);
+                // Validar si la expresion es un error
+                if (valorCampo instanceof Errores) {
+                    return valorCampo;
                 }
-                return valorNuevo;
+                this.tipo.setTipo(tipoDato.getType(valorNuevo));
+                return valorCampo;
             }
         }
         return null;

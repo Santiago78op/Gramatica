@@ -70,7 +70,10 @@ public class AsignacionVector extends Instruccion {
 
         var valor = simbolo.getValor();
         if (valor instanceof Vector) {
-            return asignarValorVector(arbol, tablaDeSimbolos, (Vector) valor);
+            asignarValorVector(arbol, tablaDeSimbolos, (Vector) valor);
+            this.tipo.setTipo(simbolo.getTipo().getTipo());
+            simbolo.setValor(valor);
+            return null;
         } else if (valor instanceof MultiDimensionalVector) {
             return asignarValorMultiDimensionalVector(arbol, tablaDeSimbolos, (MultiDimensionalVector) valor);
         }
@@ -94,7 +97,13 @@ public class AsignacionVector extends Instruccion {
         if (valorAsignar instanceof Errores) {
             return valorAsignar;
         }
-        vector.getValores().set(index, valorAsignar);
+        var valorVector = vector.getValores().get(index);
+        if(valorVector instanceof Nativo){
+            // Actualizamos el tipo
+            this.tipo.setTipo(tipoDato.getType(valorVector));
+            // Actualizar el valor del Nativo
+            ((Nativo) valorVector).setValor(valorAsignar);
+        }
         return null;
     }
 
@@ -141,7 +150,15 @@ public class AsignacionVector extends Instruccion {
                         if (valorAsignar instanceof Errores) {
                             return valorAsignar;
                         }
-                        vector2.getValores().set(index2, valorAsignar);
+
+                        var valorVector2 = vector2.getValores().get(index);
+                        if(valorVector2 instanceof Nativo){
+                            // Actualizamos el tipo
+                            this.tipo.setTipo(tipoDato.getType(valorVector2));
+                            // Actualizar el valor del Nativo
+                            ((Nativo) valorVector2).setValor(valorAsignar);
+                        }
+
                         return null;
                     }
 
