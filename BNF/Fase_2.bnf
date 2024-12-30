@@ -1,0 +1,151 @@
+
+<INICIO> ::= <INSTRUCCIONES_GLOBALES> ;
+
+<INSTRUCCIONES_GLOBALES> ::= <INSTRUCCIONES_GLOBALES> <INSTRUCCION_GLOBAL>
+                          | <INSTRUCCION_GLOBAL> ;
+
+<INSTRUCCION_GLOBAL> ::= <DECLARACION_MAIN> ";"
+                     | <DECLARACION_METODO>
+                     | <DECLARACION_STRUCT> ";"
+                     | <DECLARACION_STRUCT_INST> ";"
+                     | <DECLARACION_FUNCION>
+                     | <DECLARACION_VARIABLE> ";"
+                     | <DECLARACION_VECTORES> ";"
+                     | <LISTA> ";" ;
+
+<DECLARACION_MAIN> ::= "RUN_MAIN" <ID> "(" <CALL_PARAMETRO> ")"
+                   | "RUN_MAIN" <ID> "(" ")" ;
+
+<CALL_PARAMETRO> ::= <CALL_PARAMETRO> "," <ID> "=" <EXPRESION>
+                  | <ID> "=" <EXPRESION> ;
+
+<DECLARACION_METODO> ::= "VOID" <ID> "(" ")" "{" <INSTRUCCIONES> "}"
+                     | "VOID" <ID> "(" <LISTA_PARAMETRO> ")" "{" <INSTRUCCIONES> "}" ;
+
+<DECLARACION_FUNCION> ::= <TIPO> <ID> "(" ")" "{" <INSTRUCCIONES> "}"
+                      | <TIPO> <ID> "(" <LISTA_PARAMETRO> ")" "{" <INSTRUCCIONES> "}" ;
+
+<LISTA_PARAMETRO> ::= <LISTA_PARAMETRO> "," <PARAMETRO>
+                    | <PARAMETRO> ;
+
+<PARAMETRO> ::= <ID> ":" <TIPO> "=" <EXPRESION>
+              | <ID> ":" <TIPO> ;
+
+<LLAMADA> ::= <ID> "(" <CALL_PARAMETRO> ")"
+          | <ID> "(" ")" ;
+
+<INSTRUCCIONES> ::= <INSTRUCCIONES> <INSTRUCCION>
+                | <INSTRUCCION> ;
+
+<INSTRUCCION> ::= <IMPRESION> ";"
+              | <DECLARACION_STRUCT_INST> ";"
+              | <DECLARACION_VARIABLE> ";"
+              | <LISTA> ";"
+              | <LLAMADA> ";"
+              | <DECLARACION_VECTORES> ";"
+              | <ASIGNACION> ";"
+              | <CONDICION>
+              | <SELECCION>
+              | <CICLOWHILE>
+              | <CICLODO> ";"
+              | <CICLOFOR>
+              | <ASIGNACION_VECTOR> ";"
+              | <PUSH_LISTA> ";"
+              | <SET_LISTA> ";"
+              | <REMOVE_LISTA> ";"
+              | <POP_LISTA> ";"
+              | <REVERSE_LISTA> ";"
+              | "RETURN" <EXPRESION> ";"
+              | <DECRACION_ROUND> ";"
+              | <LENGTH_FUNC> ";"
+              | "error" ";" ;
+
+<IMPRESION> ::= "CONSOLE" "." "LOG" "(" <EXPRESION> ")" ;
+
+<DECRACION_ROUND> ::= "ROUND" "(" <EXPRESION> ")" ;
+
+<LENGTH_FUNC> ::= "LENGTH" "(" <EXPRESION> ")" ;
+
+<TOSTRING_FUNC> ::= "TOSTRING" "(" <EXPRESION> ")" ;
+
+<DECLARACION_VARIABLE> ::= "LET" <ID> ":" <TIPO> "=" <EXPRESION>
+            | "LET" <ID> ":" <TIPO>
+            | "CONST" <ID> ":" <TIPO> "=" <EXPRESION>
+            | "CONST" <ID> ":" <TIPO> ;
+
+<TIPO> ::= "INT"
+       | "FLOAT"
+       | "BOOL"
+       | "CHAR"
+       | "STRING"
+       | "LIST"
+       | "STRUCT" ;
+
+<ASIGNACION> ::= <ID> "=" <EXPRESION>
+            | <ID> "++"
+            | <ID> "--"
+            | <TRANSFERENCIA> ;
+
+<TRANSFERENCIA> ::= "BREAK"
+                | "CONTINUE" ;
+
+<CONDICION> ::= <CONDIF>
+            | <CONDELSE>
+            | <CONDELSEIF> ;
+
+<CONDIF> ::= "IF" "(" <EXPRESION> ")" "{" <INSTRUCCIONES> "}" ;
+
+<CONDELSE> ::= "IF" "(" <EXPRESION> ")" "{" <INSTRUCCIONES> "}" "ELSE" "{" <INSTRUCCIONES> "}" ;
+
+<CONDELSEIF> ::= "IF" "(" <EXPRESION> ")" "{" <INSTRUCCIONES> "}" "ELSE" <CONDICION> ;
+
+<CICLOFOR> ::= "FOR" "(" <ASIGNACION> ";" <EXPRESION> ";" <ACTUALIZFOR> ")" "{" <INSTRUCCIONES> "}" ;
+
+<ACTUALIZFOR> ::= <ASIGNACION> ;
+
+<SELECCION> ::= "MATCH" <EXPRESION> "{" <CASELIST> <DEFAULTCASE> "}"
+            | "MATCH" <EXPRESION> "{" <CASELIST> "}"
+            | "MATCH" <EXPRESION> "{" <DEFAULTCASE> "}" ;
+
+<CASELIST> ::= <CASELIST> <CASE>
+           | <CASE> ;
+
+<CASE> ::= <EXPRESION> "=>" "{" <INSTRUCCIONES> "}" ;
+
+<DEFAULTCASE> ::= "DEFAULT" "=>" "{" <INSTRUCCIONES> "}" ;
+
+<CICLOWHILE> ::= "WHILE" "(" <EXPRESION> ")" "{" <INSTRUCCIONES> "}" ;
+
+<CICLODO> ::= "DO" "{" <INSTRUCCIONES> "}" "WHILE" "(" <EXPRESION> ")" ;
+
+<VALOR> ::= "ENTERO"
+          | "DECIMAL"
+          | "BOOLEANO"
+          | "CADENA"
+          | "CARACTER" ;
+
+<EXPRESION> ::= "-" <EXPRESION>
+              | <EXPRESION> "^" <EXPRESION>
+              | <EXPRESION> "√" <EXPRESION>
+              | <EXPRESION> "*" <EXPRESION>
+              | <EXPRESION> "/" <EXPRESION>
+              | <EXPRESION> "%" <EXPRESION>
+              | <EXPRESION> "+" <EXPRESION>
+              | <EXPRESION> "-" <EXPRESION>
+              | <EXPRESION> "==" <EXPRESION>
+              | <EXPRESION> "!=" <EXPRESION>
+              | <EXPRESION> "<" <EXPRESION>
+              | <EXPRESION> "<=" <EXPRESION>
+              | <EXPRESION> ">" <EXPRESION>
+              | <EXPRESION> ">=" <EXPRESION>
+              | "!" <EXPRESION>
+              | <EXPRESION> "&&" <EXPRESION>
+              | <EXPRESION> "||" <EXPRESION>
+              | "(" <EXPRESION> ")"
+              | <CASTEO>
+              | <VALOR>
+              | <ID> ;
+
+<CASTEO> ::= "CAST" "(" <EXPRESION> "AS" <TIPO> ")" ;
+
+<ID> ::= cualquier identificador válido ;
