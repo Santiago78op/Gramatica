@@ -90,7 +90,17 @@ public class AccesoVector extends Instruccion {
             if (valorCampo instanceof Errores) {
                 return valorCampo;
             }
-            this.tipo.setTipo(tipoDato.getType(valorVector));
+            // Validar para nativo y negacion
+            if (valorVector instanceof Nativo) {
+                this.tipo.setTipo(((Nativo) valorVector).getTipo().getTipo());
+            } else if (valorVector instanceof Negacion) {
+                var negacion = ((Negacion) valorVector).getOper();
+                if (negacion instanceof Nativo) {
+                    this.tipo.setTipo(((Nativo) negacion).getTipo().getTipo());
+                } else if (negacion instanceof Negacion) {
+                    this.tipo.setTipo(((Negacion) negacion).getTipo().getTipo());
+                }
+            }
             return valorCampo;
         }
         return null;
@@ -137,7 +147,17 @@ public class AccesoVector extends Instruccion {
                 if (valorCampo instanceof Errores) {
                     return valorCampo;
                 }
-                this.tipo.setTipo(tipoDato.getType(valorNuevo));
+                // Validar para nativo y negacion
+                if (valorNuevo instanceof Nativo) {
+                    this.tipo.setTipo(((Nativo) valorNuevo).getTipo().getTipo());
+                } else if (valorNuevo instanceof Negacion) {
+                    var negacion = ((Negacion) valorNuevo).getOper();
+                    if (negacion instanceof Nativo) {
+                        this.tipo.setTipo(((Nativo) negacion).getTipo().getTipo());
+                    } else if (negacion instanceof Negacion) {
+                        this.tipo.setTipo(((Negacion) negacion).getTipo().getTipo());
+                    }
+                }
                 return valorCampo;
             }
         }

@@ -86,6 +86,14 @@ void multiplicacionMatrices(){
     let i: int;
     let j: int;
     let k: int;
-
+    
+    // multiplicar las matrices
+    for (i = 0; i < length(matrizA); i++) {
+        for (j = 0; j < length(matrizB[0]); j++) {
+            for (k = 0; k < length(matrizA[0]); k++) {
+                matrizResultado[i][j] = matrizResultado[i][j] + matrizA[i][k] * matrizB[k][j];
+            }
+        }
+    }
 
 }

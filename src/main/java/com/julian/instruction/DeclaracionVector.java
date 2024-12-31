@@ -4,6 +4,7 @@ import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.expresion.Nativo;
+import com.julian.expresion.Negacion;
 import com.julian.symbol.*;
 
 import java.util.LinkedList;
@@ -56,14 +57,22 @@ public class DeclaracionVector extends Instruccion {
                 if (valor instanceof Errores) {
                     return valor;
                 }
+
                 // Interpretar el valor
-                Object tipo = null;
-                if(valor instanceof Nativo){
-                    // Obtener el tipo de dato del valor
-                    tipo = ((Nativo) valor).tipo.getTipo();
+                Object tipoDato = null;
+                if (valor instanceof Nativo) {
+                    tipoDato = ((Nativo) valor).getTipo().getTipo();
+                } else if (valor instanceof Negacion) {
+                    var negacion = ((Negacion) valor).getOper();
+                    if (negacion instanceof Nativo) {
+                        tipoDato = ((Nativo) negacion).getTipo().getTipo();
+                    } else if (negacion instanceof Negacion) {
+                        tipoDato = ((Negacion) negacion).getTipo().getTipo();
+                    }
                 }
+
                 // Se valida si el valor es de tipo correcto
-                if (tipo != this.tipoVector.getTipo()) {
+                if (tipoDato != this.tipoVector.getTipo()) {
                     semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato del vector no coincide con el tipo de dato declarado", this.linea, this.columna));
                     return new Errores("Semantico", "El tipo de dato del vector no coincide con el tipo de dato declarado", this.linea, this.columna);
                 }
@@ -97,14 +106,20 @@ public class DeclaracionVector extends Instruccion {
                             }
 
                             // Interpretar el valor
-                            Object tipo = null;
-                            if(valor3 instanceof Nativo){
-                                // Obtener el tipo de dato del valor
-                                tipo = ((Nativo) valor3).tipo.getTipo();
+                            Object tipoDato = null;
+                            if (valor3 instanceof Nativo) {
+                                tipoDato = ((Nativo) valor3).getTipo().getTipo();
+                            } else if (valor3 instanceof Negacion) {
+                                var negacion = ((Negacion) valor3).getOper();
+                                if (negacion instanceof Nativo) {
+                                    tipoDato = ((Nativo) negacion).getTipo().getTipo();
+                                } else if (negacion instanceof Negacion) {
+                                    tipoDato = ((Negacion) negacion).getTipo().getTipo();
+                                }
                             }
 
                             // Se valida si el valor es de tipo correcto
-                            if (tipo != this.tipoVector.getTipo()) {
+                            if (tipoDato != this.tipoVector.getTipo()) {
                                 semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato del vector no coincide con el tipo de dato declarado", this.linea, this.columna));
                                 return new Errores("Semantico", "El tipo de dato del vector no coincide con el tipo de dato declarado", this.linea, this.columna);
                             }

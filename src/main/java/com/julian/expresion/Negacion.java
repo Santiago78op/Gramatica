@@ -28,6 +28,10 @@ public class Negacion extends Instruccion {
         this.oper = oper;
     }
 
+    public Instruccion getOper() {
+        return oper;
+    }
+
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         // Se interpreta el operando de la expresión.
@@ -60,5 +64,9 @@ public class Negacion extends Instruccion {
                 "\n No se puede realizar la Negacion con\n" + tipoOper, linea, columna);
         semanticErrorManager.addError(error);
         return error;
+    }
+
+    public void setOper(Object valorAsignar) {
+        this.oper = oper;
     }
 }

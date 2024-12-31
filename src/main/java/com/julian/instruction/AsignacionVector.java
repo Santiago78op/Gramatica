@@ -4,6 +4,7 @@ import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
 import com.julian.expresion.Nativo;
+import com.julian.expresion.Negacion;
 import com.julian.symbol.*;
 
 import java.util.LinkedList;
@@ -106,6 +107,15 @@ public class AsignacionVector extends Instruccion {
             this.tipo.setTipo(tipoDato.getType(valorVector));
             // Actualizar el valor del Nativo
             ((Nativo) valorVector).setValor(valorAsignar);
+        }else if (valorVector instanceof Negacion) {
+            var negacion = ((Negacion) valorVector).getOper();
+            if (negacion instanceof Nativo) {
+                this.tipo.setTipo(((Nativo) negacion).getTipo().getTipo());
+            } else if (negacion instanceof Negacion) {
+                this.tipo.setTipo(((Negacion) negacion).getTipo().getTipo());
+            }
+            // Actualizar el valor de la negacion
+            ((Negacion) valorVector).setOper(valorAsignar);
         }
         return null;
     }
@@ -160,6 +170,15 @@ public class AsignacionVector extends Instruccion {
                             this.tipo.setTipo(tipoDato.getType(valorVector2));
                             // Actualizar el valor del Nativo
                             ((Nativo) valorVector2).setValor(valorAsignar);
+                        } else if (valorVector2 instanceof Negacion) {
+                            var negacion = ((Negacion) valorVector2).getOper();
+                            if (negacion instanceof Nativo) {
+                                this.tipo.setTipo(((Nativo) negacion).getTipo().getTipo());
+                            } else if (negacion instanceof Negacion) {
+                                this.tipo.setTipo(((Negacion) negacion).getTipo().getTipo());
+                            }
+                            // Actualizar el valor de la negacion
+                            ((Negacion) valorVector2).setOper(valorAsignar);
                         }
 
                         return null;
