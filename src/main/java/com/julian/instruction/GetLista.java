@@ -60,7 +60,10 @@ public class GetLista extends Instruccion {
 
         var value = lista.get(index);
         // Actulizar el tipo de la variable
-        this.tipo.setTipo(simbolo.getTipo().getTipo());
+        Object nuevoTipo = null;
+        nuevoTipo = Tipo.validarTipo(simbolo.getTipoDato().toString());
+        // Actulizar el tipo de la variable
+        this.tipo.setTipo(((Tipo) nuevoTipo).getTipo());
         // Se retorna el valor de la variable
         if (value instanceof Nativo) {
             return ((Nativo) value).getValor();

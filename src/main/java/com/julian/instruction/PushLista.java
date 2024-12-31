@@ -51,6 +51,14 @@ public class PushLista extends Instruccion {
         }
 
         LinkedList<Object> lista = (LinkedList<Object>) simbolo.getValor();
+
+        // Validamos el tipo de la lista con el tipo de la expresion
+        if (simbolo.getTipoDato().toString() != expresion.getTipo().getTipo().toString()) {
+            semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato de la lista " + id + " no es correcto", linea, columna));
+            return new Errores("Semantico", "El tipo de dato de la lista " + id + " no es correcto", linea, columna);
+        }
+
+        // Agregar el valor a la lista
         lista.add(valorExpresion);
 
         return null;

@@ -23,7 +23,6 @@ struct Inodo {
 void archivo3(){
     console.log("-----------------CALIFICACION ARCHIVO 3-----------------\n");
     ListasDinamicas();
-    MetodoStruct();
     FuncionesNativas();
 }
 
@@ -33,6 +32,7 @@ let SalidaCola: List<int>;
 void enqueue(valor: int){
     EntradaCola.append(valor);
 }
+
 int dequeue(){
     if (length(SalidaCola) == 0) {
         while (length(EntradaCola) > 0) {
@@ -161,150 +161,6 @@ void ListasDinamicas(){
 
 }
 
-struct MBR {
-    size: int;
-    fechaCreacion: string;
-    fechaModificacion: string;
-    particion1: Particion;
-    particion2: Particion;
-    particion3: Particion;
-    particion4: Particion;
-};
-
-
-
-void MetodoStruct(){
-    console.log("========= Metodo Struct =========");
-    // creacion de un struct
-    let p1: Particion = { status:'1', tipo:'P', ajuste:'B', inicio:0, size:100, nombre:"particion1", siguiente:true };
-    let p2: Particion = { status:'1', tipo:'S', ajuste:'W', inicio:100, size:200, nombre:"particion2", siguiente:false };
-    let p3: Particion = { status:'0', tipo:' ', ajuste:' ', inicio:0, size:0, nombre:"", siguiente:false };
-    let p4: Particion = { status:'0', tipo:' ', ajuste:' ', inicio:0, size:0, nombre:"", siguiente:false };
-
-    // creacion de un struct con un struct
-    let mbr: MBR = { size:1000, fechaCreacion:"01/01/2021", fechaModificacion:"01/01/2021", particion1:p1, particion2:p2, particion3:p3, particion4:p4 };
-
-    let cadenaP1: string = "\tparticion 1 -> nombre:" + mbr.particion1.nombre + " status:"
-        + mbr.particion1.status + " tipo:" + mbr.particion1.tipo + " ajuste:" + mbr.particion1.ajuste + " inicio:"
-        + mbr.particion1.inicio + " tamaño:" + mbr.particion1.size + " siguiente:" + mbr.particion1.siguiente;
-
-    let cadenaP2: string = "\tparticion 2 -> nombre:" + mbr.particion2.nombre + " status:"
-        + mbr.particion2.status + " tipo:" + mbr.particion2.tipo + " ajuste:" + mbr.particion2.ajuste + " inicio:"
-        + mbr.particion2.inicio + " tamaño:" + mbr.particion2.size + " siguiente:" + mbr.particion2.siguiente;
-
-
-    let cadenaP3: string = "\tparticion 3 -> nombre:" + mbr.particion3.nombre + " status:"
-        + mbr.particion3.status + " tipo:" + mbr.particion3.tipo + " ajuste:" + mbr.particion3.ajuste + " inicio:"
-        + mbr.particion3.inicio + " tamaño:" + mbr.particion3.size + " siguiente:" + mbr.particion3.siguiente;
-
-    let cadenaP4: string = "\tparticion 4 -> nombre:" + mbr.particion4.nombre + " status:"
-        + mbr.particion4.status + " tipo:" + mbr.particion4.tipo + " ajuste:" + mbr.particion4.ajuste + " inicio:"
-        + mbr.particion4.inicio + " tamaño:" + mbr.particion4.size + " siguiente:" + mbr.particion4.siguiente;
-
-    // mostrar struct mbr inicial
-    console.log("El tamaño del MBR es: " + mbr.size);
-    console.log("La fecha de creacion del MBR es: " + mbr.fechaCreacion);
-    console.log("La fecha de modificacion del MBR es: " + mbr.fechaModificacion);
-    console.log(cadenaP1);
-    console.log(cadenaP2);
-    console.log(cadenaP3);
-    console.log(cadenaP4);
-
-    // vamos a modificar la particion 3 dentro del struct
-    console.log("Vamos a crear particion 3");
-    mbr.particion3.status = '1';
-    mbr.particion3.tipo = 'P';
-    mbr.particion3.ajuste = 'B';
-    mbr.particion3.inicio = 300;
-    mbr.particion3.size = 300;
-    mbr.particion3.nombre = "particion3";
-    mbr.particion3.siguiente = false;
-    mbr.particion2.siguiente = true;
-    mbr.fechaModificacion = "02/01/2021";
-
-    cadenaP1 = "\tparticion 1 -> nombre:" + mbr.particion1.nombre + " status:"
-        + mbr.particion1.status + " tipo:" + mbr.particion1.tipo + " ajuste:" + mbr.particion1.ajuste + " inicio:"
-        + mbr.particion1.inicio + " tamaño:" + mbr.particion1.size + " siguiente:" + mbr.particion1.siguiente;
-
-    cadenaP2 = "\tparticion 2 -> nombre:" + mbr.particion2.nombre + " status:"
-        + mbr.particion2.status + " tipo:" + mbr.particion2.tipo + " ajuste:" + mbr.particion2.ajuste + " inicio:"
-        + mbr.particion2.inicio + " tamaño:" + mbr.particion2.size + " siguiente:" + mbr.particion2.siguiente;
-
-    cadenaP3 = "\tparticion 3 -> nombre:" + mbr.particion3.nombre + " status:"
-        + mbr.particion3.status + " tipo:" + mbr.particion3.tipo + " ajuste:" + mbr.particion3.ajuste + " inicio:"
-        + mbr.particion3.inicio + " tamaño:" + mbr.particion3.size + " siguiente:" + mbr.particion3.siguiente;
-
-    cadenaP4 = "\tparticion 4 -> nombre:" + mbr.particion4.nombre + " status:"
-        + mbr.particion4.status + " tipo:" + mbr.particion4.tipo + " ajuste:" + mbr.particion4.ajuste + " inicio:"
-        + mbr.particion4.inicio + " tamaño:" + mbr.particion4.size + " siguiente:" + mbr.particion4.siguiente;
-
-
-    // mostrar struct mbr modificado
-    console.log("El tamaño del MBR es: " + mbr.size);
-    console.log("La fecha de creacion del MBR es: " + mbr.fechaCreacion);
-    console.log("La fecha de modificacion del MBR es: " + mbr.fechaModificacion);
-    console.log(cadenaP1);
-    console.log(cadenaP2);
-    console.log(cadenaP3);
-    console.log(cadenaP4);
-
-    // vamos a modificar la particion 4 dentro del struct
-    console.log("Vamos a crear particion 4");
-    mbr.particion4.status = '1';
-    mbr.particion4.tipo = 'S';
-    mbr.particion4.ajuste = 'W';
-    mbr.particion4.inicio = 600;
-    mbr.particion4.size = 400;
-    mbr.particion4.nombre = "particion4";
-    mbr.particion4.siguiente = false;
-    mbr.particion3.siguiente = true;
-    mbr.fechaModificacion = "03/01/2021";
-
-    cadenaP1 = "\tparticion 1 -> nombre:" + mbr.particion1.nombre + " status:"
-        + mbr.particion1.status + " tipo:" + mbr.particion1.tipo + " ajuste:" + mbr.particion1.ajuste + " inicio:"
-        + mbr.particion1.inicio + " tamaño:" + mbr.particion1.size + " siguiente:" + mbr.particion1.siguiente;
-
-    cadenaP2 = "\tparticion 2 -> nombre:" + mbr.particion2.nombre + " status:"
-        + mbr.particion2.status + " tipo:" + mbr.particion2.tipo + " ajuste:" + mbr.particion2.ajuste + " inicio:"
-        + mbr.particion2.inicio + " tamaño:" + mbr.particion2.size + " siguiente:" + mbr.particion2.siguiente;
-
-    cadenaP3 = "\tparticion 3 -> nombre:" + mbr.particion3.nombre + " status:"
-        + mbr.particion3.status + " tipo:" + mbr.particion3.tipo + " ajuste:" + mbr.particion3.ajuste + " inicio:"
-        + mbr.particion3.inicio + " tamaño:" + mbr.particion3.size + " siguiente:" + mbr.particion3.siguiente;
-
-    cadenaP4 = "\tparticion 4 -> nombre:" + mbr.particion4.nombre + " status:"
-        + mbr.particion4.status + " tipo:" + mbr.particion4.tipo + " ajuste:" + mbr.particion4.ajuste + " inicio:"
-        + mbr.particion4.inicio + " tamaño:" + mbr.particion4.size + " siguiente:" + mbr.particion4.siguiente;
-
-
-    // mostrar struct mbr modificado
-    console.log("El tamaño del MBR es: " + mbr.size);
-    console.log("La fecha de creacion del MBR es: " + mbr.fechaCreacion);
-    console.log("La fecha de modificacion del MBR es: " + mbr.fechaModificacion);
-    console.log(cadenaP1);
-    console.log(cadenaP2);
-    console.log(cadenaP3);
-    console.log(cadenaP4);
-
-    console.log("Validemos constantes");
-
-    const p5: Particion = { status:'1', tipo:'P', ajuste:'B', inicio:0, size:100, nombre:"particion5", siguiente:true };
-    p5.status = '0';
-    p5.tipo = ' ';
-    p5.ajuste = ' ';
-    p5.inicio = 0;
-    p5.size = 0;
-    p5.nombre = "";
-    p5.siguiente = false;
-    let cadenaP5: string = "\tparticion 5 -> nombre:" + p5.nombre + " status:"
-        + p5.status + " tipo:" + p5.tipo + " ajuste:" + p5.ajuste + " inicio:"
-        + p5.inicio + " tamaño:" + p5.size + " siguiente:" + p5.siguiente;
-    console.log(cadenaP5);
-    console.log("");
-
-}
-
-
 void FuncionesNativas(){
     console.log("========= Funcion Round =========");
     let r1: int = round(2.5);
@@ -354,5 +210,7 @@ void FuncionesNativas(){
     console.log("El tamaño de la lista1 es: " + length(lista1));
     console.log("El tamaño de la lista2 es: " + length(lista2));
 }
+
+
 
 RUN_MAIN archivo3();

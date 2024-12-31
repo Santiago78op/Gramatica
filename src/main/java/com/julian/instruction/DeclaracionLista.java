@@ -44,6 +44,10 @@ public class DeclaracionLista extends Instruccion {
         this.id = id;
     }
 
+    public Tipo getTipoLista() {
+        return tipoLista;
+    }
+
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         // Validar que el tipo sea de tipo lista
@@ -53,7 +57,7 @@ public class DeclaracionLista extends Instruccion {
         }
 
         // Se instancia el simbolo  de la lista
-        Simbolo simbolo = new Simbolo(this.tipoLista, this.id, new LinkedList<HashMap>(), false, "Externo", "",this.linea, this.columna);
+        Simbolo simbolo = new Simbolo(this.tipoLista, this.id, new LinkedList<HashMap>(), false, "Externo", this.tipo.getTipo().toString(),this.linea, this.columna);
         // Se agrega el simbolo a la tabla de simbolos
         if (tablaDeSimbolos.setVariable(simbolo)) {
             return null;

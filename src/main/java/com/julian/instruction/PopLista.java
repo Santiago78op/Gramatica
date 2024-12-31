@@ -2,9 +2,9 @@ package com.julian.instruction;
 
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
-import com.julian.expresion.Nativo;
 import com.julian.symbol.*;
 
+import java.io.CharArrayReader;
 import java.util.LinkedList;
 
 public class PopLista extends Instruccion {
@@ -39,8 +39,10 @@ public class PopLista extends Instruccion {
 
         // Obtenemos el ultimo elemento de la lista
         Object valor = lista.getLast();
+        Object nuevoTipo = null;
+        nuevoTipo = Tipo.validarTipo(simbolo.getTipoDato().toString());
         // Actulizar el tipo de la variable
-        this.tipo.setTipo(simbolo.getTipo().getTipo());
+        this.tipo.setTipo(((Tipo) nuevoTipo).getTipo());
         // Remover el último elemento de la lista
         lista.removeLast();
         return valor;

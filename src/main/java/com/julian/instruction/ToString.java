@@ -25,6 +25,8 @@ public class ToString extends Instruccion {
             return valor;
         }
 
+        if (this.expression.tipo.getTipo() == tipoDato.STRUCT)
+
         // Verificamos el tipo de la expresion
         switch (this.expression.tipo.getTipo()) {
             case ENTERO:

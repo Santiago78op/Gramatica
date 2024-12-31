@@ -44,4 +44,27 @@ public class Tipo {
     public void setId(String id) {
         this.id = id;
     }
+
+    public static Tipo validarTipo(String tipo){
+        switch (tipo){
+            case "ENTERO":
+                return new Tipo(tipoDato.ENTERO);
+            case "DECIMAL":
+                return new Tipo(tipoDato.DECIMAL);
+            case "BOOLEANO":
+                return new Tipo(tipoDato.BOOLEANO);
+            case "CARACTER":
+                return new Tipo(tipoDato.CARACTER);
+            case "CADENA":
+                return new Tipo(tipoDato.CADENA);
+            case "STRUCT":
+                return new Tipo(tipoDato.STRUCT);
+            case "VECTOR":
+                return new Tipo(tipoDato.VECTOR);
+            case "LISTA":
+                return new Tipo(tipoDato.LISTA);
+            default:
+                return new Tipo(tipoDato.VOID);
+        }
+    }
 }
