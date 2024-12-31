@@ -52,4 +52,8 @@ public class AccesoVar extends Instruccion {
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
+
+    public String getId() {
+        return id;
+    }
 }

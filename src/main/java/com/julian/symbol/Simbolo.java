@@ -1,5 +1,9 @@
 package com.julian.symbol;
 
+import com.julian.expresion.Nativo;
+import com.julian.expresion.Negacion;
+
+import java.lang.annotation.Native;
 import java.util.HashMap;
 
 /**
@@ -128,6 +132,26 @@ public class Simbolo {
 
     public void setColumna(int columna) {
         this.columna = columna;
+    }
+
+    // Retorna el valor de camposStruct en formato de cadena.
+    public String getCamposStructString() {
+        // Recorre los campos de la camposStruct -> {campo: valor, campo: valor}
+        // Ejemplo: {nombre: "Julian", edad: 20}
+        StringBuilder campos = new StringBuilder("{");
+        for (String campo : camposStruct.keySet()) {
+            var valor = camposStruct.get(campo);
+            if (valor instanceof Nativo){
+                // Si el valor es de tipo Nativo, se obtiene el valor.
+                valor = ((Nativo) valor).getValor();
+            } else if (valor instanceof Negacion) {
+                // Si el valor es de tipo Negacion, se obtiene el valor.
+                valor = ((Negacion) valor).getOper();
+            }
+            campos.append(campo).append(": ").append(valor).append(", ");
+        }
+        campos.append("}");
+        return campos.toString();
     }
 
     @Override

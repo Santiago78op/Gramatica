@@ -2,6 +2,7 @@ package com.julian.instruction;
 
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
+import com.julian.expresion.AccesoVar;
 import com.julian.symbol.Arbol;
 import com.julian.symbol.Tipo;
 import com.julian.symbol.tablaSimbolo;
@@ -25,7 +26,17 @@ public class ToString extends Instruccion {
             return valor;
         }
 
-        if (this.expression.tipo.getTipo() == tipoDato.STRUCT)
+        if (this.expression.tipo.getTipo() == tipoDato.STRUCT) {
+            if(this.expression instanceof AccesoVar){
+                AccesoVar accesoVar = (AccesoVar) this.expression;
+                var simbolo = tablaDeSimbolos.getVariable(accesoVar.getId());
+                if (simbolo == null) {
+                    return new Errores("Semantico", "La estructura " + accesoVar.getId() + " no está definida", this.linea, this.columna);
+                }
+                valor = simbolo.getCamposStructString();
+            }
+
+        }
 
         // Verificamos el tipo de la expresion
         switch (this.expression.tipo.getTipo()) {
