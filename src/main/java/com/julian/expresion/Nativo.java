@@ -32,6 +32,8 @@ public class Nativo extends Instruccion {
         return valor;
     }
 
+
+
     @Override
     public Object interpretar(Arbol arbol, tablaSimbolo tablaDeSimbolos) {
         // Secuencias de escape.

@@ -446,6 +446,14 @@ DECLARACION_VECTORES ::= LET ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN VECTOR:v
     {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
     | CONST ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN VECTOR2D:v
     {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
+    | LET ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN ACCESO_VECTOR:v
+    {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
+    | CONST ID:i COLON TIPO:t LBRACKET RBRACKET ASSIGN ACCESO_VECTOR:v
+    {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
+    | LET ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN ACCESO_VECTOR:v
+    {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 0); :}
+    | CONST ID:i COLON TIPO:t LBRACKET RBRACKET LBRACKET RBRACKET ASSIGN ACCESO_VECTOR:v
+    {: RESULT = new DeclaracionVector(t, ileft, iright, i, v, 1); :}
 ;
 
 // Definición de un vector
@@ -471,9 +479,9 @@ VECTOR2D ::= LBRACKET LISTA_VECTORES:v RBRACKET
 ;
 
 // Lista de valores para un vector
-LISTA_VALORES ::= LISTA_VALORES:a COMMA VALOR:b
+LISTA_VALORES ::= LISTA_VALORES:a COMMA EXPRESION:b
     {: RESULT = a; RESULT.add(b); :}
-    | VALOR:a
+    | EXPRESION:a
     {: RESULT = new LinkedList<Object>(); RESULT.add(a); :}
 ;
 

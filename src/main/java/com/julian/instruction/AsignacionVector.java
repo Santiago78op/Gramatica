@@ -75,7 +75,10 @@ public class AsignacionVector extends Instruccion {
             simbolo.setValor(valor);
             return null;
         } else if (valor instanceof MultiDimensionalVector) {
-            return asignarValorMultiDimensionalVector(arbol, tablaDeSimbolos, (MultiDimensionalVector) valor);
+            asignarValorMultiDimensionalVector(arbol, tablaDeSimbolos, (MultiDimensionalVector) valor);
+            this.tipo.setTipo(simbolo.getTipo().getTipo());
+            simbolo.setValor(valor);
+            return null;
         }
 
         return addSemanticError(this.id, this.linea, this.columna);
@@ -123,7 +126,7 @@ public class AsignacionVector extends Instruccion {
         var valorVector = vector.getValores().get(index);
         if (valorVector instanceof LinkedList) {
             // Acceso a la lista
-            var lista = (LinkedList<Object>) valorVector;
+            var lista = valorVector;
             // Verificar si hay un indice anidado
             if (lista.get(0) instanceof Vector) {
                 // Validamos el indice anidado
@@ -162,6 +165,16 @@ public class AsignacionVector extends Instruccion {
                         return null;
                     }
 
+                } else {
+                    var valorAsignar = this.value.interpretar(arbol, tablaDeSimbolos);
+                    if (valorAsignar instanceof Errores) {
+                        return valorAsignar;
+                    }
+                    if (valorAsignar instanceof Vector) {
+                        // Actualizamos el valor de valorVector
+                        lista.set(0, valorAsignar);
+                    }
+                    return null;
                 }
                 return new Errores("Semantico", "El valor no es un vector multidimensional", this.linea, this.columna);
             }

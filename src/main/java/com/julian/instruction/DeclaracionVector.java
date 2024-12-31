@@ -3,6 +3,7 @@ package com.julian.instruction;
 import com.julian.LinkedList.semanticErrorManager;
 import com.julian.abstracto.Instruccion;
 import com.julian.exception.Errores;
+import com.julian.expresion.Nativo;
 import com.julian.symbol.*;
 
 import java.util.LinkedList;
@@ -55,8 +56,14 @@ public class DeclaracionVector extends Instruccion {
                 if (valor instanceof Errores) {
                     return valor;
                 }
+                // Interpretar el valor
+                Object tipo = null;
+                if(valor instanceof Nativo){
+                    // Obtener el tipo de dato del valor
+                    tipo = ((Nativo) valor).tipo.getTipo();
+                }
                 // Se valida si el valor es de tipo correcto
-                if (tipoDato.getType(valor) != this.tipoVector.getTipo()) {
+                if (tipo != this.tipoVector.getTipo()) {
                     semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato del vector no coincide con el tipo de dato declarado", this.linea, this.columna));
                     return new Errores("Semantico", "El tipo de dato del vector no coincide con el tipo de dato declarado", this.linea, this.columna);
                 }
@@ -88,8 +95,16 @@ public class DeclaracionVector extends Instruccion {
                             if (valor3 instanceof Errores) {
                                 return valor3;
                             }
+
+                            // Interpretar el valor
+                            Object tipo = null;
+                            if(valor3 instanceof Nativo){
+                                // Obtener el tipo de dato del valor
+                                tipo = ((Nativo) valor3).tipo.getTipo();
+                            }
+
                             // Se valida si el valor es de tipo correcto
-                            if (tipoDato.getType(valor3) != this.tipoVector.getTipo()) {
+                            if (tipo != this.tipoVector.getTipo()) {
                                 semanticErrorManager.addError(new Errores("Semantico", "El tipo de dato del vector no coincide con el tipo de dato declarado", this.linea, this.columna));
                                 return new Errores("Semantico", "El tipo de dato del vector no coincide con el tipo de dato declarado", this.linea, this.columna);
                             }

@@ -11,6 +11,9 @@ void vectores_2_Dim(){
     ImprimirMensaje();
     voltearFilas();
     console.log("Matriz Volteada");
+    ImprimirMensaje();
+    console.log("========= Multiplicacion de Matrices =========");
+    multiplicacionMatrices();
 }
 
 
@@ -60,4 +63,29 @@ void ImprimirMensaje(){
         }
         console.log(linea);
     }
+}
+
+void multiplicacionMatrices(){
+    let matrizA: int[][] = [
+        [5, 3, -4, -2],
+        [8, -1, 0, -3]
+    ];
+
+    let matrizB: int[][] = [
+        [1, 4, 0],
+        [-5, 3, 7],
+        [0, -9, 5],
+        [5, 1, 4]
+    ];
+
+    let matrizResultado: int[][] = [
+        [0, 0, 0],
+        [0, 0, 0]
+    ];
+
+    let i: int;
+    let j: int;
+    let k: int;
+
+
 }
